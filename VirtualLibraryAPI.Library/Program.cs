@@ -1,26 +1,31 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using Serilog;
+using VirtualLibraryAPI.Library;
+using Host = Microsoft.Extensions.Hosting.Host;
 
-namespace VirtualLibraryAPI.Library
+namespace VirtualLibraryAPI.Service
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .CreateLogger();
+            ConfigureLogger();
 
             try
             {
                 Log.Information("Starting up...");
-                RunHost(args);
+
+                IHost host = CreateHostBuilder(args).Build();
+
+                if (args.Contains("--run-as-service"))
+                {
+                    Log.Information("Running as a service");
+                    host.RunAsService();
+                }
+                else
+                {
+                    Log.Information("Running as a web server");
+                    host.Run();
+                }
             }
             catch (Exception ex)
             {
@@ -32,20 +37,37 @@ namespace VirtualLibraryAPI.Library
             }
         }
         /// <summary>
-        ///  Ñreates a default host
+        /// Configure Logger
+        /// </summary>
+        private static void ConfigureLogger()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+        /// <summary>
+        /// Create host
         /// </summary>
         /// <param name="args"></param>
-        private static void RunHost(string[] args)
+        /// <returns></returns>
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var host = Host.CreateDefaultBuilder(args)
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddJsonFile("appsettings.json", optional: true);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                .UseSerilog()
-                .Build();
-
-            host.Run();
+                .UseSerilog();
         }
     }
 }
