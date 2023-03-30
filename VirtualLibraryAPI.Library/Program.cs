@@ -1,4 +1,6 @@
 using Serilog;
+using System.Diagnostics;
+using System.Reflection;
 using VirtualLibraryAPI.Library;
 using Host = Microsoft.Extensions.Hosting.Host;
 
@@ -6,8 +8,20 @@ namespace VirtualLibraryAPI.Service
 {
     public class Program
     {
+        /// <summary>
+        /// Argument name for console 
+        /// </summary>
+        private const string CONSOLE_ARG_NAME = "--console";
+        /// <summary>
+        /// Starting method 
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
+            //
+            var pathToContentRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Directory.SetCurrentDirectory(pathToContentRoot!);
+
             ConfigureLogger();
 
             try
@@ -15,15 +29,15 @@ namespace VirtualLibraryAPI.Service
                 Log.Information("Starting up...");
 
                 IHost host = CreateHostBuilder(args).Build();
-
-                if (args.Contains("--run-as-service"))
+                var isService = !Debugger.IsAttached && !args.ToList().Contains(CONSOLE_ARG_NAME);
+                if (isService)
                 {
                     Log.Information("Running as a service");
                     host.RunAsService();
                 }
                 else
                 {
-                    Log.Information("Running as a web server");
+                    Log.Information("Running as console");
                     host.Run();
                 }
             }

@@ -8,16 +8,29 @@ namespace VirtualLibraryAPI.Library.Services
     /// </summary>
     public class LibraryService : ServiceBase
     {
+        /// <summary>
+        /// Logger
+        /// </summary>
         private readonly ILogger<LibraryService> _logger;
+        /// <summary>
+        /// Host
+        /// </summary>
         private readonly IHost _host;
+        /// <summary>
+        /// Cancellation Token Source
+        /// </summary>
         private readonly CancellationTokenSource _stopHostToken;
-
+        /// <summary>
+        /// Settings for library service with host 
+        /// </summary>
+        /// <param name="host"></param>
         public LibraryService(IHost host)
         {
             ILoggerFactory? loggerFactory = (ILoggerFactory?)host.Services.GetService(typeof(ILoggerFactory));
             _logger = loggerFactory?.CreateLogger<LibraryService>() ?? NullLogger<LibraryService>.Instance;
             _host = host;
-             _stopHostToken = new CancellationTokenSource();
+            _stopHostToken = new CancellationTokenSource();
+            
         }
 
         /// <summary>

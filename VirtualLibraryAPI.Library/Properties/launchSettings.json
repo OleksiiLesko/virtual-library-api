@@ -2,7 +2,7 @@
   "profiles": {
     "VirtualLibraryAPI.Library": {
       "commandName": "Project",
-      "commandLineArgs": "\r\n--run-as-service",
+      "commandLineArgs": "\r\n\r\n",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
