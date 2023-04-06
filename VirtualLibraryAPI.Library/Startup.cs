@@ -1,4 +1,9 @@
-﻿namespace VirtualLibraryAPI.Library
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Configuration;
+using VirtualLibraryAPI.Domain;
+namespace VirtualLibraryAPI.Library
 {
     /// <summary>
     /// Settings configuration
@@ -24,6 +29,20 @@
         /// </summary>
         public IHostEnvironment Environment { get; }
         /// <summary>
+        /// Create database connection string
+        /// </summary>
+        /// <returns></returns>
+        private static string CreateConnectionString(IConfiguration configuration)
+        {
+            SqlConnectionStringBuilder builder = new();
+            builder.DataSource = configuration["DefaultConnection:Server"];
+            builder.InitialCatalog = configuration["DefaultConnection:DataBaseName"];
+            builder.IntegratedSecurity = true;
+            builder.ConnectRetryCount = 1; 
+
+            return builder.ConnectionString;
+        }
+        /// <summary>
         /// Adding services to the collection of services
         /// </summary>
         /// <param name="services"></param>
@@ -32,6 +51,10 @@
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            Configuration.Bind("DbHostName", connection);
+            services.AddDbContextPool<ApplicationContext>(options =>
+               options.UseSqlServer(CreateConnectionString(Configuration.GetSection("DefaultConnection"))));
         }
         /// <summary>
         /// Responsible for building the application's request processing pipeline.

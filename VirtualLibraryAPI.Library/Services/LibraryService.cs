@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.ServiceProcess;
+using VirtualLibraryAPI.Domain;
 
 namespace VirtualLibraryAPI.Library.Services
 {
@@ -21,6 +23,11 @@ namespace VirtualLibraryAPI.Library.Services
         /// </summary>
         private readonly CancellationTokenSource _stopHostToken;
         /// <summary>
+        /// 
+        /// </summary>
+        private readonly ApplicationContext _dbContext;
+
+        /// <summary>
         /// Settings for library service with host 
         /// </summary>
         /// <param name="host"></param>
@@ -30,7 +37,8 @@ namespace VirtualLibraryAPI.Library.Services
             _logger = loggerFactory?.CreateLogger<LibraryService>() ?? NullLogger<LibraryService>.Instance;
             _host = host;
             _stopHostToken = new CancellationTokenSource();
-            
+            _dbContext = _host.Services.GetRequiredService<ApplicationContext>();
+
         }
 
         /// <summary>
@@ -38,6 +46,17 @@ namespace VirtualLibraryAPI.Library.Services
         /// </summary>
         protected override void OnStart(string[] args)
         {
+            _logger.LogInformation("Library service is starting");
+
+            try
+            {
+                _dbContext.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database migration failed");
+            }
+
             Task.Run(async () =>
             {
                 try
@@ -49,8 +68,6 @@ namespace VirtualLibraryAPI.Library.Services
                     _logger.LogCritical(e, "Host builder init is failed");
                 }
             });
-
-            base.OnStart(args);
 
             _logger.LogInformation("Library service is started");
         }

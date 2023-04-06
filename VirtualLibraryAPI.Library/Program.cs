@@ -1,8 +1,16 @@
+using VirtualLibraryAPI.Domain;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Diagnostics;
+using System.Configuration;
 using System.Reflection;
 using VirtualLibraryAPI.Library;
 using Host = Microsoft.Extensions.Hosting.Host;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
+using VirtualLibraryAPI.Library.Services;
+using Microsoft.AspNetCore;
 
 namespace VirtualLibraryAPI.Service
 {
@@ -18,7 +26,7 @@ namespace VirtualLibraryAPI.Service
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            //
+            //path to content root
             var pathToContentRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Directory.SetCurrentDirectory(pathToContentRoot!);
 
@@ -27,6 +35,19 @@ namespace VirtualLibraryAPI.Service
             try
             {
                 Log.Information("Starting up...");
+                string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+                optionsBuilder.UseSqlServer(connectionString);
+                using (var context = new ApplicationContext(optionsBuilder.Options))
+                {
+                    context.Database.Migrate();
+                    var table = new MyTable() 
+                    {
+                        Name = "Table"
+                    };
+                    context.Tables.Add(table);
+                    context.SaveChanges();
+                }
 
                 IHost host = CreateHostBuilder(args).Build();
                 var isService = !Debugger.IsAttached && !args.ToList().Contains(CONSOLE_ARG_NAME);
@@ -40,6 +61,7 @@ namespace VirtualLibraryAPI.Service
                     Log.Information("Running as console");
                     host.Run();
                 }
+
             }
             catch (Exception ex)
             {
@@ -50,6 +72,7 @@ namespace VirtualLibraryAPI.Service
                 Log.CloseAndFlush();
             }
         }
+
         /// <summary>
         /// Configure Logger
         /// </summary>
