@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Configuration;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library
 {
@@ -32,13 +33,14 @@ namespace VirtualLibraryAPI.Library
         /// Create database connection string
         /// </summary>
         /// <returns></returns>
-        private static string CreateConnectionString(IConfiguration configuration)
+        public static string CreateConnectionString(IConfiguration configuration)
         {
             SqlConnectionStringBuilder builder = new();
-            builder.DataSource = configuration["DefaultConnection:Server"];
-            builder.InitialCatalog = configuration["DefaultConnection:DataBaseName"];
+            builder.DataSource = configuration.GetSection("DbHostName")["Server"];
+            builder.InitialCatalog = configuration.GetSection("DbHostName")["Database"];
+            builder.TrustServerCertificate = true;
             builder.IntegratedSecurity = true;
-            builder.ConnectRetryCount = 1; 
+            builder.ConnectRetryCount = 1;
 
             return builder.ConnectionString;
         }
@@ -51,10 +53,9 @@ namespace VirtualLibraryAPI.Library
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            Configuration.Bind("DbHostName", connection);
+            string connectionString = DatabaseUtils.CreateConnectionString(Configuration);
             services.AddDbContextPool<ApplicationContext>(options =>
-               options.UseSqlServer(CreateConnectionString(Configuration.GetSection("DefaultConnection"))));
+             options.UseSqlServer(connectionString ,b => b.MigrationsAssembly("VirtualLibraryAPI.Library")));
         }
         /// <summary>
         /// Responsible for building the application's request processing pipeline.
