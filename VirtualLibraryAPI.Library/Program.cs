@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using VirtualLibraryAPI.Library.Services;
 using Microsoft.AspNetCore;
-using VirtualLibraryAPI.Domain.Models;
+using VirtualLibraryAPI.Domain.Entities;
 
 namespace VirtualLibraryAPI.Library
 {
@@ -26,84 +26,12 @@ namespace VirtualLibraryAPI.Library
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            //path to content root
             var pathToContentRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Directory.SetCurrentDirectory(pathToContentRoot!);
             try
             {
                 Log.Information("Starting up...");
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                     .Build();
-
-                Log.Logger = new LoggerConfiguration()
-                    .ReadFrom.Configuration(configuration)
-                    .CreateLogger();
-
-                string connectionString = DatabaseUtils.CreateConnectionString(configuration);
-                var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
-                optionsBuilder.UseSqlServer(connectionString,b => b.MigrationsAssembly("VirtualLibraryAPI.Library"));
-                using (var context = new ApplicationContext(optionsBuilder.Options))
-                {
-                     //context.Database.Migrate();
-
-
-                    var book = new Books
-                    {
-                        Name = "The Great Gatsby",
-                        Author = "F. Scott Fitzgerald",
-                        ISBN = "978-3-16-148410-0",
-                        Type = ItemType.Book,
-                        PublishingDate = new DateTime(1925, 4, 10),
-                        Publisher = "Charles Scribner's Sons"
-                    };
-                    context.Books.Add(book);
-
-                    var item = new Items
-                    {
-                        Name = "The Great Gatsby",
-                        ItemID = book.ItemID,
-                        Type = ItemType.Book
-                    };
-                    context.Items.Add(item);
-
-
-                    var magazine = new Magazines
-                    {
-                        Name = "National Geographic",
-                        IssueNumber = 257,
-                        Type = ItemType.Magazine,
-                        PublishingDate = new DateTime(2015, 11, 1),
-                        Publisher = "National Geographic Society"
-                    };
-                    context.Magazines.Add(magazine);
-
-
-                    var article = new Articles
-                    {
-                        Name = "The Science of Sleep",
-                        Author = "Karen Wright",
-                        MagazinesIssueNumber = "January/February 2017",
-                        MagazineName = "Scientific American Mind",
-                        Type = ItemType.Article,
-                        PublishingDate = new DateTime(2017, 1, 1),
-                        Publisher = "Scientific American, a division of Springer Nature America, Inc."
-                    };
-                    context.Articles.Add(article);
-
-                    // Add new copy to table Copies
-                    var copy = new Copies
-                    {
-                        ItemID = book.ItemID,
-                        CopyID = 1,
-                        Type = ItemType.Copy,
-                        PublishingDate = book.PublishingDate,
-                        Publisher = book.Publisher
-                    };
-                    context.Copies.Add(copy);
-                    context.SaveChanges();
-                }
+                ConfigureLogger();
 
                 IHost host = CreateHostBuilder(args).Build();
                 var isService = !Debugger.IsAttached && !args.ToList().Contains(CONSOLE_ARG_NAME);
@@ -127,6 +55,20 @@ namespace VirtualLibraryAPI.Library
             {
                 Log.CloseAndFlush();
             }
+        }
+        /// <summary>
+        /// Configure Logger
+        /// </summary>
+        private static void ConfigureLogger()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
         }
         /// <summary>
         /// Create host

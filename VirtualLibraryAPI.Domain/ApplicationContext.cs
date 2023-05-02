@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Configuration;
 using System.Reflection;
-using VirtualLibraryAPI.Domain.Models;
+using System.IO;
+using VirtualLibraryAPI.Domain.Entities;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace VirtualLibraryAPI.Domain
 {
@@ -13,23 +16,27 @@ namespace VirtualLibraryAPI.Domain
         /// <summary>
         ///  Items entity type  used to interact with a corresponding table in the database.
         /// </summary>
-        public DbSet<Items> Items { get; set; }
+        public DbSet<Item> Items { get; set; }
         /// <summary>
         ///  Books entity type  used to interact with a corresponding table in the database.
         /// </summary>
-        public DbSet<Books> Books { get; set; }
+        public DbSet<Book> Books { get; set; }
         /// <summary>
         ///  Articles entity type  used to interact with a corresponding table in the database.
         /// </summary>
-        public DbSet<Articles> Articles { get; set; }
+        public DbSet<Article> Articles { get; set; }
         /// <summary>
         ///  Magazines entity type  used to interact with a corresponding table in the database.
         /// </summary>
-        public DbSet<Magazines> Magazines { get; set; }
+        public DbSet<Magazine> Magazines { get; set; }
         /// <summary>
         ///  Copies entity type  used to interact with a corresponding table in the database.
         /// </summary>
-        public DbSet<Copies> Copies { get; set; }
+        public DbSet<Copy> Copies { get; set; }
+        /// <summary>
+        ///  ItemType entity type  used to interact with a corresponding table in the database.
+        /// </summary>
+        public DbSet<ItemType> ItemTypes { get; set; }
 
         /// <summary>
         /// Application context that has options 
@@ -44,33 +51,21 @@ namespace VirtualLibraryAPI.Domain
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Items>()
-                .ToTable("Items")
-                .HasKey(i => i.ItemID);
+            modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
+            modelBuilder.Entity<Item>()
+               .ToTable("Items");
 
-            modelBuilder.Entity<Articles>()
-                 .ToTable("Articles")
-                .HasOne(a => a.Item)
-                .WithMany(i => i.Articles)
-                .HasForeignKey(a => a.ItemID);
+            modelBuilder.Entity<Article>()
+                 .ToTable("Articles");
 
-            modelBuilder.Entity<Books>()
-                .ToTable("Books")
-                .HasOne(b => b.Item)
-                .WithMany(i => i.Books)
-                .HasForeignKey(b => b.ItemID);
+            modelBuilder.Entity<Book>()
+                .ToTable("Books");
 
-            modelBuilder.Entity<Magazines>()
-                .ToTable("Magazines")
-                .HasOne(m => m.Item)
-                .WithMany(i => i.Magazines)
-                .HasForeignKey(m => m.ItemID);
+            modelBuilder.Entity<Magazine>()
+                .ToTable("Magazines");
 
-            modelBuilder.Entity<Copies>()
-                .ToTable("Copies")
-                .HasOne(c => c.Item)
-                .WithMany(i => i.Copies)
-                .HasForeignKey(c => c.ItemID);
+            modelBuilder.Entity<Copy>()
+                .ToTable("Copies");
         }
     }
 }

@@ -4,6 +4,12 @@ using Microsoft.Extensions.Options;
 using System.Configuration;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using VirtualLibraryAPI.Domain;
+using VirtualLibraryAPI.Domain.Entities;
+using VirtualLibraryAPI.Repository;
+using VirtualLibraryAPI.Models;
+using VirtualLibraryAPI.Repository.Repositories;
+using Serilog;
+
 namespace VirtualLibraryAPI.Library
 {
     /// <summary>
@@ -33,7 +39,7 @@ namespace VirtualLibraryAPI.Library
         /// Create database connection string
         /// </summary>
         /// <returns></returns>
-        public static string CreateConnectionString(IConfiguration configuration)
+        public  string CreateConnectionString(IConfiguration configuration)
         {
             SqlConnectionStringBuilder builder = new();
             builder.DataSource = configuration.GetSection("DbHostName")["Server"];
@@ -50,10 +56,12 @@ namespace VirtualLibraryAPI.Library
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IBook, Repository.Repositories.Book>();
+            services.AddScoped<BookModel>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            string connectionString = DatabaseUtils.CreateConnectionString(Configuration);
+            string connectionString = CreateConnectionString(Configuration);
             services.AddDbContextPool<ApplicationContext>(options =>
              options.UseSqlServer(connectionString ,b => b.MigrationsAssembly("VirtualLibraryAPI.Library")));
         }
@@ -68,6 +76,8 @@ namespace VirtualLibraryAPI.Library
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<Middleware>();
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
