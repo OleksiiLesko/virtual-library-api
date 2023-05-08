@@ -17,14 +17,13 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         ///  ID of item
         /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? ItemID { get; set; }
+        [ForeignKey("ItemID")]
+        public int ItemID { get; set; }
         /// <summary>
         /// ID of copy
         /// </summary>
-        [ForeignKey("ItemID")]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? CopyID { get; set; }
         /// <summary>
         /// Type of  copy

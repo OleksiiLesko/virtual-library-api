@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     /// <inheritdoc />
-    public partial class VirtualLibraryMigration : Migration
+    public partial class VirtualLibraryAPIMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,13 +47,13 @@ namespace VirtualLibraryAPI.Library.Migrations
                 name: "Copies",
                 columns: table => new
                 {
-                    ItemID = table.Column<int>(type: "int", nullable: false)
+                    CopyID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CopyID = table.Column<int>(type: "int", nullable: true)
+                    ItemID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Copies", x => x.ItemID);
+                    table.PrimaryKey("PK_Copies", x => x.CopyID);
                 });
 
             migrationBuilder.CreateTable(

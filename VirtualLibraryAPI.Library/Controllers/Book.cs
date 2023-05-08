@@ -1,41 +1,30 @@
 ﻿using Azure.Core;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2016.Excel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Serilog;
-using Serilog.Context;
-using Swashbuckle.Swagger.Annotations;
-using System.Data.Common;
-using VirtualLibraryAPI.Domain;
-using VirtualLibraryAPI.Domain.DTOs;
-using VirtualLibraryAPI.Domain.Entities;
 using VirtualLibraryAPI.Models;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace VirtualLibraryAPI.Library.Controllers
 {
     /// <summary>
-    /// Add item controlller 
+    /// Add book controlller 
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class BookController : ControllerBase
+    public class Book : ControllerBase
     {
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<BookController> _logger;
+        private readonly ILogger<Book> _logger;
         /// <summary>
         /// Book model
         /// </summary>
-        private readonly BookModel _model;
+        private readonly Models.Book _model;
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public BookController(ILogger<BookController> logger,  BookModel model)
+        public Book(ILogger<Book> logger, Models.Book model)
         {
             _logger = logger;
             _model = model;
@@ -51,6 +40,10 @@ namespace VirtualLibraryAPI.Library.Controllers
             {
                 _logger.LogInformation("Get all books ");
                 var books = _model.GetAllBooks();
+                if (books == null)
+                {
+                    return NotFound();
+                }
                 _logger.LogInformation("Books received ");
                 return Ok(_model.GetAllBooksResponse());
             }
@@ -70,12 +63,16 @@ namespace VirtualLibraryAPI.Library.Controllers
             try
             {
                 var addedBook = _model.AddBook(request);
+                if (addedBook == null)
+                {
+                    return NotFound();
+                }
                 _logger.LogInformation("Adding book:{BookID}", addedBook.ItemID);
 
                 _logger.LogInformation("Book added");
-                return base.Ok(new Domain.DTOs.Book
+                return Ok(new Domain.DTOs.Book
                 {
-                    ItemID = addedBook.ItemID,
+                    BookID = addedBook.ItemID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -90,10 +87,36 @@ namespace VirtualLibraryAPI.Library.Controllers
             }
         }
         /// <summary>
+        /// Add copies of a book by id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("{id}/Copy")]
+        public IActionResult AddCopyOfBookById(int id)
+        {
+            try
+            {
+                var addedBook = _model.AddCopyOfBookById(id);
+                if (addedBook == null)
+                {
+                    return NotFound();
+                }
+                _logger.LogInformation("Adding copy:{CopyID}", id);
+
+                _logger.LogInformation("Copy added");
+                return Ok(_model.AddCopyOfBookByIdResponse(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while processing the request: {Error}", ex.Message);
+                return BadRequest($"Failed");
+            }
+        }
+        /// <summary>
         ///  Get book by Id 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        //ToDo required fields , tests for model and controller
         [HttpGet("{id}")]
         public IActionResult GetBookById(int id)
         {
@@ -135,9 +158,9 @@ namespace VirtualLibraryAPI.Library.Controllers
                 _logger.LogInformation("Updating book by ID:{BookID}", updatedBook.ItemID);
                 _logger.LogInformation("Book updated ");
 
-                return base.Ok(new Domain.DTOs.Book
+                return Ok(new Domain.DTOs.Book
                 {
-                    ItemID = updatedBook.ItemID,
+                    BookID = updatedBook.ItemID,
                     Name = request.Name,
                     Author = updatedBook.Author,
                     ISBN = updatedBook.ISBN,

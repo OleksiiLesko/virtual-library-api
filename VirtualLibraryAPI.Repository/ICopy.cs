@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace VirtualLibraryAPI.Repository
 {
+    /// <summary>
+    /// Copy repository interface
+    /// </summary>
     public interface ICopy
     {
-        /// <summary>
-        /// Method for get all copies
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Domain.Entities.Copy> GetAllCopies();
         /// <summary>
         /// Method for get copy by id
         /// </summary>
@@ -20,18 +18,12 @@ namespace VirtualLibraryAPI.Repository
         /// <returns></returns>
         Domain.Entities.Copy GetCopyById(int id);
         /// <summary>
-        /// Method for add copy
-        /// </summary>
-        /// <param name="book"></param>
-        /// <returns></returns>
-        Domain.Entities.Copy AddCopy(Domain.DTOs.Book book);
-        /// <summary>
         /// Method for update copy
         /// </summary>
         /// <param name="id"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.Entities.Copy UpdateCopy(int id, Domain.DTOs.Book book);
+        Domain.Entities.Copy UpdateCopy(int id, Domain.DTOs.Copy book);
         /// <summary>
         /// Method for delete copy
         /// </summary>
@@ -43,11 +35,6 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Domain.DTOs.Book GetBookByIdResponse(int id);
-        /// <summary>
-        /// Get all books for response DTO
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Domain.DTOs.Book> GetAllBooksResponse();
+        Domain.DTOs.Copy GetCopyByIdResponse(int id);
     }
 }

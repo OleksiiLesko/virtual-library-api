@@ -8,7 +8,7 @@ namespace VirtualLibraryAPI.Models
     /// <summary>
     /// Model for book
     /// </summary>
-    public class BookModel : IBook
+    public class Book : IBook
     {
         /// <summary>
         /// Using book repository
@@ -17,14 +17,14 @@ namespace VirtualLibraryAPI.Models
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<BookModel> _logger;
+        private readonly ILogger<Book> _logger;
 
         /// <summary>
         /// Constructor with book Repository and logger
         /// </summary>
         /// <param name="bookRepository"></param>
         /// <param name="logger"></param>
-        public BookModel(IBook bookRepository, ILogger<BookModel> logger)
+        public Book(IBook bookRepository, ILogger<Book> logger)
         {
             _bookRepository = bookRepository;
             _logger = logger;
@@ -100,6 +100,27 @@ namespace VirtualLibraryAPI.Models
         {
             _logger.LogInformation("Get all books for response DTO from Book model  ");
             return _bookRepository.GetAllBooksResponse();
+        }
+        /// <summary>
+        /// Add copy of a book by id  from Book model
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="numberOfCopies"></param>
+        /// <returns></returns>
+        public Domain.Entities.Copy AddCopyOfBookById(int id)
+        {
+            _logger.LogInformation($"Add copy of a book by id  from Book model: CopyID {id}  ");
+            return _bookRepository.AddCopyOfBookById(id);
+        }
+        /// <summary>
+        /// Add copy of a book by id for response
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Domain.DTOs.Book AddCopyOfBookByIdResponse(int id)
+        {
+            _logger.LogInformation($"Add copy of a book by id  from Book model: CopyID {id}  ");
+            return _bookRepository.AddCopyOfBookByIdResponse(id);
         }
     }
 }

@@ -26,6 +26,12 @@ namespace VirtualLibraryAPI.Repository
         /// <returns></returns>
         Domain.Entities.Book AddBook(Domain.DTOs.Book book);
         /// <summary>
+        /// Method for add copy of a book
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        Domain.Entities.Copy AddCopyOfBookById(int id);
+        /// <summary>
         /// Method for update book
         /// </summary>
         /// <param name="id"></param>
@@ -49,6 +55,7 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<Domain.DTOs.Book> GetAllBooksResponse();
+        Domain.DTOs.Book AddCopyOfBookByIdResponse(int id);
     }
 }
 

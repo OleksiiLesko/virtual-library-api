@@ -1,37 +1,59 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
-    
+    /// <summary>
+    /// Book DTO
+    /// </summary>
+   
     public class Book
     {
         /// <summary>
         /// Item ID of book
         /// </summary>
-        public int? ItemID { get; set; } 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? BookID { get; set; }
+        /// <summary>
+        /// ID of copy
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? CopyID { get; set; }
+        /// <summary>
+        /// Count of copies
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? CountOfCopies { get; set; }
         /// <summary>
         /// Name of item
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        [Required]
+        public string? Name { get; set; } = null;
         /// <summary>
         /// Publishing date of item
         /// </summary>
-        public DateTime PublishingDate { get; set; }
+        [Required]
+        public DateTime? PublishingDate { get; set; }
         /// <summary>
         /// Publisher of item
         /// </summary>
-        public string Publisher { get; set; } = string.Empty;
+        [Required]
+        public string? Publisher { get; set; } = null;
         /// <summary>
         /// Author of item
         /// </summary>
-        public string Author { get; set; } = string.Empty;
+        [Required]
+        public string? Author { get; set; } = null;
         /// <summary>
         /// ISBN of item
-        /// </summary>
-        public string ISBN { get; set; } = string.Empty;
+        /// </summary> 
+        [Required]
+        public string? ISBN { get; set; } = null;
     }
 }

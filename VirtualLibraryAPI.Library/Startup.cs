@@ -57,7 +57,9 @@ namespace VirtualLibraryAPI.Library
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IBook, Repository.Repositories.Book>();
-            services.AddScoped<BookModel>();
+            services.AddScoped<Models.Book>();
+            services.AddScoped<ICopy, Repository.Repositories.Copy>();
+            services.AddScoped<Models.Copy>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

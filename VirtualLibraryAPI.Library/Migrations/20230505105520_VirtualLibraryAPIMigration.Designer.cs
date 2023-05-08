@@ -12,8 +12,8 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230426114119_VirtualLibraryMigration")]
-    partial class VirtualLibraryMigration
+    [Migration("20230505105520_VirtualLibraryAPIMigration")]
+    partial class VirtualLibraryAPIMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,16 +77,16 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Copy", b =>
                 {
-                    b.Property<int?>("ItemID")
+                    b.Property<int?>("CopyID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("ItemID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("CopyID"));
 
-                    b.Property<int?>("CopyID")
+                    b.Property<int>("ItemID")
                         .HasColumnType("int");
 
-                    b.HasKey("ItemID");
+                    b.HasKey("CopyID");
 
                     b.ToTable("Copies", (string)null);
                 });
