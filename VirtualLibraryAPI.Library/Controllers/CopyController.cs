@@ -9,12 +9,12 @@ namespace VirtualLibraryAPI.Library.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class Copy : ControllerBase
+    public class CopyController : ControllerBase
     {
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<Copy> _logger;
+        private readonly ILogger<CopyController> _logger;
         /// <summary>
         /// Book model
         /// </summary>
@@ -23,7 +23,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public Copy(ILogger<Copy> logger, Models.Copy model)
+        public CopyController(ILogger<CopyController> logger, Models.Copy model)
         {
             _logger = logger;
             _model = model;

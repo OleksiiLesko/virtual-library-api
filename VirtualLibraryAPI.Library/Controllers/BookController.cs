@@ -6,25 +6,26 @@ using VirtualLibraryAPI.Models;
 namespace VirtualLibraryAPI.Library.Controllers
 {
     /// <summary>
-    /// Add book controlller 
+    /// Controller for add,get,update and delete book
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class Book : ControllerBase
+    public class BookController : ControllerBase
     {
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<Book> _logger;
+        private readonly ILogger<BookController> _logger;
         /// <summary>
         /// Book model
         /// </summary>
-        private readonly Models.Book _model;
+        private readonly Book _model;
+
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public Book(ILogger<Book> logger, Models.Book model)
+        public BookController(ILogger<BookController> logger, Book model)
         {
             _logger = logger;
             _model = model;

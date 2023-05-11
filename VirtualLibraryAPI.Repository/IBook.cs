@@ -55,6 +55,11 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<Domain.DTOs.Book> GetAllBooksResponse();
+        /// <summary>
+        /// Add copy to book for response
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Domain.DTOs.Book AddCopyOfBookByIdResponse(int id);
     }
 }

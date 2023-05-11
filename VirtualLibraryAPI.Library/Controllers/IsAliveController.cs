@@ -7,17 +7,17 @@ namespace VirtualLibraryAPI.Library.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class IsAlive : ControllerBase
+    public class IsAliveController : ControllerBase
     {
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<IsAlive> _logger;
+        private readonly ILogger<IsAliveController> _logger;
         /// <summary>
         /// Constructor with Serilog logger
         /// </summary>
         /// <param name="logger"></param>
-        public IsAlive(ILogger<IsAlive> logger)
+        public IsAliveController(ILogger<IsAliveController> logger)
         {
             _logger = logger;
         }

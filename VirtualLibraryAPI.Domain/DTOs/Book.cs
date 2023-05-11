@@ -39,7 +39,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Publishing date of item
         /// </summary>
         [Required]
-        public DateTime? PublishingDate { get; set; }
+        public DateTime? PublishingDate { get; set; } 
         /// <summary>
         /// Publisher of item
         /// </summary>

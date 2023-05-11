@@ -119,7 +119,7 @@ namespace VirtualLibraryAPI.Models
         /// <returns></returns>
         public Domain.DTOs.Book AddCopyOfBookByIdResponse(int id)
         {
-            _logger.LogInformation($"Add copy of a book by id  from Book model: CopyID {id}  ");
+            _logger.LogInformation($"Add copy of a book by id for response  from Book model: CopyID {id}  ");
             return _bookRepository.AddCopyOfBookByIdResponse(id);
         }
     }
