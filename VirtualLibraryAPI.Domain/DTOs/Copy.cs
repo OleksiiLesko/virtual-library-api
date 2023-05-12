@@ -11,7 +11,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
     public class Copy
     {
         /// <summary>
-        ///  ID of item
+        ///  ID of copy
         /// </summary>
         public int ItemID { get; set; }
         /// <summary>
@@ -19,23 +19,23 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         public int CopyID { get; set; }
         /// <summary>
-        /// Name of item
+        /// Name of copy
         /// </summary>
         public string? Name { get; set; } = string.Empty;
         /// <summary>
-        /// Publishing date of item
+        /// Publishing date of copy
         /// </summary>
         public DateTime? PublishingDate { get; set; }
         /// <summary>
-        /// Publisher of item
+        /// Publisher of copy
         /// </summary>
         public string? Publisher { get; set; } = string.Empty;
         /// <summary>
-        /// Author of item
+        /// Author of copy
         /// </summary>
         public string? Author { get; set; } = string.Empty;
         /// <summary>
-        /// ISBN of item
+        /// ISBN of copy
         /// </summary>
         public string? ISBN { get; set; } = string.Empty;
     }

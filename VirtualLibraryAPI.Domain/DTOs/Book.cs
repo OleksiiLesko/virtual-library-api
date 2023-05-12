@@ -16,7 +16,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
     public class Book
     {
         /// <summary>
-        /// Item ID of book
+        ///  ID of book
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? BookID { get; set; }
@@ -31,29 +31,29 @@ namespace VirtualLibraryAPI.Domain.DTOs
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? CountOfCopies { get; set; }
         /// <summary>
-        /// Name of item
+        /// Name of book
         /// </summary>
         [Required]
-        public string Name { get; set; } = null;
+        public string Name { get; set; }
         /// <summary>
-        /// Publishing date of item
+        /// Publishing date of book
         /// </summary>
         [Required]
-        public DateTime PublishingDate { get; set; } 
+        public DateTime PublishingDate { get; set; }
         /// <summary>
-        /// Publisher of item
+        /// Publisher of book
         /// </summary>
         [Required]
-        public string Publisher { get; set; } = null;
+        public string Publisher { get; set; }
         /// <summary>
-        /// Author of item
+        /// Author of book
         /// </summary>
         [Required]
-        public string Author { get; set; } = null;
+        public string Author { get; set; }
         /// <summary>
-        /// ISBN of item
+        /// ISBN of book
         /// </summary> 
         [Required]
-        public string ISBN { get; set; } = null;
+        public string ISBN { get; set; } 
     }
 }
