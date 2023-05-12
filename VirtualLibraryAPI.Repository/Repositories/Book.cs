@@ -16,7 +16,7 @@ using Type = VirtualLibraryAPI.Domain.Entities.Type;
 namespace VirtualLibraryAPI.Repository.Repositories
 {
     /// <summary>
-    /// Book repository for implement IBook
+    /// Book repository 
     /// </summary>
     public class Book : IBook
     {

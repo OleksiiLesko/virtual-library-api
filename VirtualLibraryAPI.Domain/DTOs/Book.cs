@@ -34,26 +34,26 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Name of item
         /// </summary>
         [Required]
-        public string? Name { get; set; } = null;
+        public string Name { get; set; } = null;
         /// <summary>
         /// Publishing date of item
         /// </summary>
         [Required]
-        public DateTime? PublishingDate { get; set; } 
+        public DateTime PublishingDate { get; set; } 
         /// <summary>
         /// Publisher of item
         /// </summary>
         [Required]
-        public string? Publisher { get; set; } = null;
+        public string Publisher { get; set; } = null;
         /// <summary>
         /// Author of item
         /// </summary>
         [Required]
-        public string? Author { get; set; } = null;
+        public string Author { get; set; } = null;
         /// <summary>
         /// ISBN of item
         /// </summary> 
         [Required]
-        public string? ISBN { get; set; } = null;
+        public string ISBN { get; set; } = null;
     }
 }

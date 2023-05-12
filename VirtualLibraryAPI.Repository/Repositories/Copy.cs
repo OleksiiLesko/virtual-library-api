@@ -8,6 +8,9 @@ using VirtualLibraryAPI.Domain;
 
 namespace VirtualLibraryAPI.Repository.Repositories
 {
+    /// <summary>
+    /// Copy repository 
+    /// </summary>
     public class Copy : ICopy
     {
         /// <summary>
