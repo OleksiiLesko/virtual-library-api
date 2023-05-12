@@ -16,7 +16,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         ///  ID of magazine
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? BookID { get; set; }
+        public int? MagazineID { get; set; }
         /// <summary>
         /// ID of copy
         /// </summary>
