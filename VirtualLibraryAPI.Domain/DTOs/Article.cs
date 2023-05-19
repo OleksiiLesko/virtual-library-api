@@ -38,6 +38,11 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [Required]
         public DateTime PublishingDate { get; set; }
+        [Required]
+        /// <summary>
+        /// Author of article 
+        /// </summary>
+        public string Author { get; set; }
         /// <summary>
         /// Publisher of article
         /// </summary>

@@ -43,6 +43,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         {
             var newArticle = new Domain.Entities.Article()
             {
+                Author = article.Author,
                 Version = article.Version,
                 MagazineName = article.MagazineName,
                 MagazinesIssueNumber = article.MagazinesIssueNumber
@@ -113,6 +114,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
+                Author = result.Article.Author,
                 Version = result.Article.Version,
                 MagazinesIssueNumber = result.Article.MagazinesIssueNumber,
                 MagazineName = result.Article.MagazineName
@@ -175,6 +177,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                Name = x.Item.Name,
                                PublishingDate = x.Item.PublishingDate,
                                Publisher = x.Item.Publisher,
+                               Author = x.Article.Author,
                                Version = x.Article.Version,
                                MagazinesIssueNumber = x.Article.MagazinesIssueNumber,
                                MagazineName = x.Article.MagazineName
@@ -215,6 +218,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
+                Author = result.Article.Author,
                 Version = result.Article.Version,
                 MagazinesIssueNumber = result.Article.MagazinesIssueNumber,
                 MagazineName = result.Article.MagazineName
@@ -234,6 +238,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 return null;
             }
+            existingArticle.Author = article.Author;
             existingArticle.MagazinesIssueNumber = article.MagazinesIssueNumber;
             existingArticle.MagazineName = article.MagazineName;
             existingArticle.Version = article.Version;

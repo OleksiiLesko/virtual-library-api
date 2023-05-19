@@ -58,6 +58,8 @@ namespace VirtualLibraryAPI.Library
         {
             services.AddScoped<IMagazine, Repository.Repositories.Magazine>();
             services.AddScoped<Models.Magazine>();
+            services.AddScoped<IArticle, Repository.Repositories.Article>();
+            services.AddScoped<Models.Article>();
             services.AddScoped<IBook, Repository.Repositories.Book>();
             services.AddScoped<Models.Book>();
             services.AddScoped<ICopy, Repository.Repositories.Copy>();

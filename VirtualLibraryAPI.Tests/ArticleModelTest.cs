@@ -152,18 +152,18 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfArticleByIdResponse_ReturnsAddedCopy()
         {
             var articleModel = new Models.Article(_articleRepository.Object, _logger);
-            var bookId = 1;
+            var articleId = 1;
             var copy = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
-            _articleRepository.Setup(repo => repo.AddCopyOfArticlesByIdResponse(bookId)).Returns(copy);
+            _articleRepository.Setup(repo => repo.AddCopyOfArticlesByIdResponse(articleId)).Returns(copy);
 
-            var addedCopy = articleModel.AddCopyOfArticlesByIdResponse(bookId);
+            var addedCopy = articleModel.AddCopyOfArticlesByIdResponse(articleId);
 
             Assert.NotNull(addedCopy);
             Assert.Equal(copy.ArticleID, addedCopy.ArticleID);
             Assert.Equal(copy.Version, addedCopy.Version);
             Assert.Equal(copy.MagazineName, addedCopy.MagazineName);
             Assert.Equal(copy.MagazinesIssueNumber, addedCopy.MagazinesIssueNumber);
-            _articleRepository.Verify(x => x.AddCopyOfArticlesByIdResponse(bookId), Times.Once);
+            _articleRepository.Verify(x => x.AddCopyOfArticlesByIdResponse(articleId), Times.Once);
         }
     }
 }
