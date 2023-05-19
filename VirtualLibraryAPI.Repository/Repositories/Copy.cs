@@ -65,7 +65,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _logger.LogInformation($"Get copy by id for response:BookID {id}");
             return new Domain.DTOs.Copy
             {
-                ItemID = result.Item.ItemID,
+                ItemID = (int)result.Item.ItemID,
                 CopyID = id,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,

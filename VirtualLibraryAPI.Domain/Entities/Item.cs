@@ -18,8 +18,6 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// ID of item
         /// </summary>
-        [Key, ForeignKey("ItemID")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ItemID { get; set; }
         /// <summary>
         /// Name of item
@@ -28,7 +26,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// Type of item (book, magazine, article, copy)
         /// </summary>
-        public virtual Type Type { get; set; } 
+        public  Type Type { get; set; } 
         /// <summary>
         /// Publishing date of item
         /// </summary>
@@ -37,6 +35,13 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Publisher of item
         /// </summary>
         public string Publisher { get; set; } = string.Empty;
+
+        public virtual Book Book { get; set; }
+        public virtual Article Article { get; set; }
+        public virtual Magazine Magazine { get; set; }
+        public virtual Copy Copy { get; set; }
+        public virtual ItemType ItemType { get; set; }
+
     }
 }
 

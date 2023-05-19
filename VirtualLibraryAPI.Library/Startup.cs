@@ -56,6 +56,8 @@ namespace VirtualLibraryAPI.Library
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IMagazine, Repository.Repositories.Magazine>();
+            services.AddScoped<Models.Magazine>();
             services.AddScoped<IBook, Repository.Repositories.Book>();
             services.AddScoped<Models.Book>();
             services.AddScoped<ICopy, Repository.Repositories.Copy>();

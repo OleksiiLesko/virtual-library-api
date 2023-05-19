@@ -69,7 +69,15 @@ namespace VirtualLibraryAPI.Models
         public IEnumerable<Domain.Entities.Book> GetAllBooks()
         {
             _logger.LogInformation($"Getting all books from Book model ");
-            return _bookRepository.GetAllBooks();
+            var books = _bookRepository.GetAllBooks();
+            if (books.Any())
+            {
+                return books;
+            }
+            else
+            {
+                return null;
+            }
         }
         /// <summary>
         /// Getting book by id from Book model

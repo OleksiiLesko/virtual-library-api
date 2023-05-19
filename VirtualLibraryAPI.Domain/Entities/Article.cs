@@ -17,13 +17,14 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         ///  ID of article
         /// </summary>
-        [Key, ForeignKey("ItemID")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ItemID { get; set; }
+        /// <summary>
+        /// Connect with Item
+        /// </summary>
+        public virtual Item Item { get; set; }
         /// <summary>
         /// Type of item (book, magazine, article, copy)
         /// </summary>
-        [NotMapped]
         public virtual Type Type { get; set; } = Type.Article;
         /// <summary>
         /// Author of article 

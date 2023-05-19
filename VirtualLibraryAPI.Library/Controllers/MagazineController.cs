@@ -4,47 +4,47 @@ using VirtualLibraryAPI.Models;
 namespace VirtualLibraryAPI.Library.Controllers
 {
     /// <summary>
-    /// Controller for add,get,update and delete book
+    /// Controller for add,get,update and delete magazine
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class BookController : ControllerBase
+    public class MagazineController : ControllerBase
     {
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<BookController> _logger;
+        private readonly ILogger<MagazineController> _logger;
         /// <summary>
-        /// Book model
+        /// Magazine model
         /// </summary>
-        private readonly Book _model;
+        private readonly Magazine _model;
 
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public BookController(ILogger<BookController> logger, Book model)
+        public MagazineController(ILogger<MagazineController> logger, Magazine model)
         {
             _logger = logger;
             _model = model;
         }
         /// <summary>
-        /// Get all books
+        /// Get all magazines
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetAllBooks()
+        public IActionResult GetAllMagazines()
         {
             try
             {
-                _logger.LogInformation("Get all books ");
-                var books = _model.GetAllBooks();
-                if (books == null)
+                _logger.LogInformation("Get all magazines ");
+                var magazines = _model.GetAllMagazines();
+                if (magazines == null)
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Books received ");
-                return Ok(_model.GetAllBooksResponse());
+                _logger.LogInformation("Magazines received ");
+                return Ok(_model.GetAllMagazinesResponse());
             }
             catch (Exception ex)
             {
@@ -53,30 +53,29 @@ namespace VirtualLibraryAPI.Library.Controllers
             }
         }
         /// <summary>
-        /// Add Book
+        /// Add magazine
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddBook([FromBody] Domain.DTOs.Book request)
+        public IActionResult AddMagazine([FromBody] Domain.DTOs.Magazine request)
         {
             try
             {
-                var addedBook = _model.AddBook(request);
-                if (addedBook == null)
+                var addedMagazine = _model.AddMagazine(request);
+                if (addedMagazine == null)
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Adding book:{BookID}", addedBook.ItemID);
+                _logger.LogInformation("Adding magazine:{MagazineID}", addedMagazine.ItemID);
 
-                _logger.LogInformation("Book added");
-                return Ok(new Domain.DTOs.Book
+                _logger.LogInformation("Magazine added");
+                return Ok(new Domain.DTOs.Magazine
                 {
-                    BookID = addedBook.ItemID,
+                    MagazineID = addedMagazine.ItemID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
-                    ISBN = addedBook.ISBN,
-                    Author = addedBook.Author,
+                    IssueNumber = addedMagazine.IssueNumber
                 });
             }
             catch (Exception ex)
@@ -85,25 +84,24 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return BadRequest($"Failed");
             }
         }
-
         /// <summary>
-        /// Add copies of a book by id
+        /// Add copies of a magazine by id
         /// </summary>
         /// <returns></returns>
         [HttpPost("{id}/Copy")]
-        public IActionResult AddCopyOfBookById(int id)
+        public IActionResult AddCopyOfMagazineById(int id)
         {
             try
             {
-                var addedBook = _model.AddCopyOfBookById(id);
-                if (addedBook == null)
+                var addedMagazine = _model.AddCopyOfMagazineById(id);
+                if (addedMagazine == null)
                 {
                     return NotFound();
                 }
                 _logger.LogInformation("Adding copy:{CopyID}", id);
 
                 _logger.LogInformation("Copy added");
-                return Ok(_model.AddCopyOfBookByIdResponse(id));
+                return Ok(_model.AddCopyOfMagazineByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -112,25 +110,25 @@ namespace VirtualLibraryAPI.Library.Controllers
             }
         }
         /// <summary>
-        ///  Get book by Id 
+        ///  Get magazine by Id 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public IActionResult GetBookById(int id)
+        public IActionResult GetMagazineById(int id)
         {
             try
             {
-                var book = _model.GetBookById(id);
+                var magazine = _model.GetMagazineById(id);
 
-                if (book == null)
+                if (magazine == null)
                 {
                     return NotFound();
                 }
 
-                _logger.LogInformation("Getting book by ID:{BookID}", book.ItemID);
-                _logger.LogInformation("Book received ");
-                return Ok(_model.GetBookByIdResponse(id));
+                _logger.LogInformation("Getting magazine by ID:{MagazineID}", magazine.ItemID);
+                _logger.LogInformation("Magazine received ");
+                return Ok(_model.GetMagazineByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -139,32 +137,31 @@ namespace VirtualLibraryAPI.Library.Controllers
             }
         }
         /// <summary>
-        /// Update book by id
+        /// Update magazine by id
         /// </summary>
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateBook(int id, [FromBody] Domain.DTOs.Book request)
+        public ActionResult UpdateMagazine(int id, [FromBody] Domain.DTOs.Magazine request)
         {
             try
             {
-                var updatedBook = _model.UpdateBook(id, request);
-                if (updatedBook == null)
+                var updatedMagazine = _model.UpdateMagazine(id, request);
+                if (updatedMagazine == null)
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Updating book by ID:{BookID}", updatedBook.ItemID);
-                _logger.LogInformation("Book updated ");
+                _logger.LogInformation("Updating magazine by ID:{MagazineID}", updatedMagazine.ItemID);
+                _logger.LogInformation("Magazine updated ");
 
-                return Ok(new Domain.DTOs.Book
+                return Ok(new Domain.DTOs.Magazine
                 {
-                    BookID = updatedBook.ItemID,
+                    MagazineID = updatedMagazine.ItemID,
                     Name = request.Name,
-                    Author = updatedBook.Author,
-                    ISBN = updatedBook.ISBN,
                     Publisher = request.Publisher,
-                    PublishingDate = request.PublishingDate
+                    PublishingDate = request.PublishingDate,
+                    IssueNumber = updatedMagazine.IssueNumber
                 });
             }
 
@@ -175,24 +172,24 @@ namespace VirtualLibraryAPI.Library.Controllers
             }
         }
         /// <summary>
-        /// Delete book
+        /// Delete magazine
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public ActionResult DeleteBook(int id)
+        public ActionResult DeleteMagazine(int id)
         {
             try
             {
-                var book = _model.GetBookById(id);
-                if (book == null)
+                var magazine = _model.GetMagazineById(id);
+                if (magazine == null)
                 {
                     return NotFound();
                 }
 
-                _model.DeleteBook(id);
-                _logger.LogInformation("Deleting book by ID:{BookID}", book.ItemID);
-                _logger.LogInformation("Book deleted ");
+                _model.DeleteMagazine(id);
+                _logger.LogInformation("Deleting magazine by ID:{MagazineID}", magazine.ItemID);
+                _logger.LogInformation("Magazine deleted ");
 
                 return NoContent();
             }
@@ -205,4 +202,3 @@ namespace VirtualLibraryAPI.Library.Controllers
         }
     }
 }
-

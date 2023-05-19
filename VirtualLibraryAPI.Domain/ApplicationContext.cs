@@ -5,6 +5,8 @@ using System.Reflection;
 using System.IO;
 using VirtualLibraryAPI.Domain.Entities;
 using static System.Reflection.Metadata.BlobBuilder;
+using VirtualLibraryAPI.Domain.EntitiesConfiguration;
+using System.Reflection.Metadata;
 
 namespace VirtualLibraryAPI.Domain
 {
@@ -51,7 +53,6 @@ namespace VirtualLibraryAPI.Domain
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
             modelBuilder.Entity<Item>()
                .ToTable("Items");
 
@@ -66,6 +67,13 @@ namespace VirtualLibraryAPI.Domain
 
             modelBuilder.Entity<Copy>()
                 .ToTable("Copies");
+
+            modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemConfiguration());
+            modelBuilder.ApplyConfiguration(new BookConfiguration());
+            modelBuilder.ApplyConfiguration(new ArticleConfiguration());
+            modelBuilder.ApplyConfiguration(new MagazineConfiguration());
+            modelBuilder.ApplyConfiguration(new CopyConfiguration());
         }
     }
 }

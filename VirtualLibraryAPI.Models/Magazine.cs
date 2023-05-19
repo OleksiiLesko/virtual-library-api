@@ -83,7 +83,15 @@ namespace VirtualLibraryAPI.Models
         public IEnumerable<Domain.Entities.Magazine> GetAllMagazines()
         {
             _logger.LogInformation($"Getting all magazines from magazine model ");
-            return _magazineRepository.GetAllMagazines();
+           var magazines =  _magazineRepository.GetAllMagazines();
+            if (magazines.Any())
+            {
+                return magazines;
+            }
+            else
+            {
+                return null;
+            }
         }
         /// <summary>
         /// Get all magazines for response

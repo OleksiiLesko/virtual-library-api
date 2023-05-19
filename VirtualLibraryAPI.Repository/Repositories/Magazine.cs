@@ -44,14 +44,14 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 IssueNumber = magazine.IssueNumber
             };
-            var item = new Item
+            var item = new Domain.Entities.Item
             {
                 Type = Type.Magazine,
                 Name = magazine.Name,
                 PublishingDate = (DateTime)magazine.PublishingDate,
-                Publisher = magazine.Publisher
+                Publisher = magazine.Publisher,
+                Magazine = newMagazine
             };
-            _context.Magazines.Add(newMagazine);
             _context.Items.Add(item);
             _context.SaveChanges();
             _logger.LogInformation("Adding magazine to the database: {MagazineID}", newMagazine.ItemID);
@@ -141,6 +141,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         {
             var result = _context.Items
                                   .Join(_context.Magazines, item => item.ItemID, magazine => magazine.ItemID, (item, magazine) => new { Item = item, Magazine = magazine })
+                                    .Where(x => x.Item.Type == Type.Magazine)
                                   .FirstOrDefault(x => x.Magazine.ItemID == id);
 
             if (result == null)
@@ -166,6 +167,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _logger.LogInformation(" Get all magazines for response DTO:");
             return _context.Items
                            .Join(_context.Magazines, item => item.ItemID, magazine => magazine.ItemID, (item, magazine) => new { Item = item, Magazine = magazine })
+                             .Where(x => x.Item.Type == Type.Magazine)
                            .Select(x => new Domain.DTOs.Magazine
                            {
                                MagazineID = x.Item.ItemID,
@@ -220,6 +222,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var result = _context.Copies
                                   .Join(_context.Magazines, copy => copy.ItemID, magazine => magazine.ItemID, (copy, magazine) => new { Copy = copy, Magazine = magazine })
                                   .Join(_context.Items, b => b.Copy.ItemID, item => item.ItemID, (b, item) => new { Copy = b.Copy, Magazine = b.Magazine, Item = item })
+                                    .Where(x => x.Item.Type == Type.Magazine)
                                   .Where(x => x.Copy.ItemID == id)
                                   .OrderByDescending(x => x.Copy.CopyID)
                                   .FirstOrDefault();

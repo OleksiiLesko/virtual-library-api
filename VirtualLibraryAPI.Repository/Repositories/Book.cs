@@ -49,14 +49,14 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Author = book.Author,
                 ISBN = book.ISBN
             };
-            var item = new Item
+            var item = new Item()
             {
                 Type = Type.Book,
                 Name = book.Name,
-                PublishingDate = (DateTime)book.PublishingDate,
-                Publisher = book.Publisher
+                PublishingDate = book.PublishingDate,
+                Publisher = book.Publisher,
+                Book = newBook
             };
-            _context.Books.Add(newBook);
             _context.Items.Add(item);
             _context.SaveChanges();
             _logger.LogInformation("Adding book to the database: {BookID}", newBook.ItemID);
@@ -147,6 +147,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         {
             var result = _context.Items
                                   .Join(_context.Books, item => item.ItemID, book => book.ItemID, (item, book) => new { Item = item, Book = book })
+                                   .Where(x => x.Item.Type == Type.Book)
                                   .FirstOrDefault(x => x.Book.ItemID == id);
 
             if (result == null)
@@ -173,6 +174,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _logger.LogInformation(" Get all books for response DTO:");
             return _context.Items
                            .Join(_context.Books, item => item.ItemID, book => book.ItemID, (item, book) => new { Item = item, Book = book })
+                            .Where(x => x.Item.Type == Type.Book)
                            .Select(x => new Domain.DTOs.Book
                            {
                                BookID = x.Item.ItemID,
@@ -228,6 +230,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var result = _context.Copies
                                   .Join(_context.Books, copy => copy.ItemID, book => book.ItemID, (copy, book) => new { Copy = copy, Book = book })
                                   .Join(_context.Items, b => b.Copy.ItemID, item => item.ItemID, (b, item) => new { Copy = b.Copy, Book = b.Book, Item = item })
+                                   .Where(x => x.Item.Type == Type.Book)
                                   .Where(x => x.Copy.ItemID == id)
                                   .OrderByDescending(x => x.Copy.CopyID)
                                   .FirstOrDefault();

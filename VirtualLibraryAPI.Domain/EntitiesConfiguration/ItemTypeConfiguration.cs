@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using VirtualLibraryAPI.Domain.Entities;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
 
-namespace VirtualLibraryAPI.Domain
+namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 {
     /// <summary>
     /// Configuration for ItemType
@@ -25,20 +25,18 @@ namespace VirtualLibraryAPI.Domain
             builder.Property(e => e.ItemTypeId)
                 .HasConversion<short>()
                 .IsRequired()
-                .HasColumnName("ItemTypeId")
                 .ValueGeneratedNever();
 
             builder.Property(e => e.ItemTypeName)
                 .IsRequired()
                 .HasMaxLength(50)
-                .HasColumnName("ItemTypeName")
                 .IsUnicode(false);
 
             builder.HasData(Enum.GetValues(typeof(Type))
                 .Cast<Type>()
                 .Select(e => new ItemType
                 {
-                    ItemTypeId = (int)e,
+                    ItemTypeId = e,
                     ItemTypeName = e.ToString()
                 }));
         }

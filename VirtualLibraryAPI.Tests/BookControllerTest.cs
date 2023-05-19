@@ -50,7 +50,7 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GettAllBooks_ReturnNotFound()
         {
-            _bookRepository.Setup(model => model.GetAllBooks()).Returns((List<Domain.Entities.Book>)null);
+            _bookRepository.Setup(model => model.GetAllBooks()).Returns(new List<Domain.Entities.Book>());
 
             var result = _bookController.GetAllBooks();
 

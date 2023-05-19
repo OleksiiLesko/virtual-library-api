@@ -17,10 +17,14 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// Type id
         /// </summary>
-        public int ItemTypeId { get; set; } 
+        public Type ItemTypeId { get; set; } 
         /// <summary>
         /// Type name
         /// </summary>
         public string ItemTypeName { get; set; } = string.Empty;
+        /// <summary>
+        /// Connect with Item
+        /// </summary>
+        public virtual ICollection<Item> Item { get; set; }
     }
 }
