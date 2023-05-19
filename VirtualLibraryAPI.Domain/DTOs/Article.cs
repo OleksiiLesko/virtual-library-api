@@ -11,12 +11,13 @@ namespace VirtualLibraryAPI.Domain.DTOs
     /// <summary>
     /// Magazine DTO
     /// </summary>
-    public class Magazine
+    public class Article
     {
-        ///  ID of magazine
+        /// <summary>
+        ///  ID of article
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? MagazineID { get; set; }
+        public int? ArticleID { get; set; }
         /// <summary>
         /// ID of copy
         /// </summary>
@@ -28,24 +29,34 @@ namespace VirtualLibraryAPI.Domain.DTOs
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? CountOfCopies { get; set; }
         /// <summary>
-        /// Name of magazine
+        /// Name of article
         /// </summary>
         [Required]
         public string Name { get; set; }
         /// <summary>
-        /// Publishing date of magazine
+        /// Publishing date of article
         /// </summary>
         [Required]
         public DateTime PublishingDate { get; set; }
         /// <summary>
-        /// Publisher of magazine
+        /// Publisher of article
         /// </summary>
         [Required]
         public string Publisher { get; set; }
         /// <summary>
-        /// Issue number of magazine 
+        /// Author of article
         /// </summary>
         [Required]
-        public string IssueNumber { get; set; }
+        public string Version { get; set; }
+        /// <summary>
+        /// Magazines issue number of article 
+        /// </summary>
+        [Required]
+        public string MagazinesIssueNumber { get; set; }
+        /// <summary>
+        /// Magazine name of article 
+        /// </summary>
+        [Required]
+        public string MagazineName { get; set; }
     }
 }
