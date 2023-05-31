@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Mvc;
 using VirtualLibraryAPI.Models;
 
 namespace VirtualLibraryAPI.Library.Controllers
@@ -95,7 +96,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedBook = _model.AddCopyOfBookById(id);
+                var addedBook = _model.AddCopyOfBookById(id, isAvailable: true);
                 if (addedBook == null)
                 {
                     return NotFound();

@@ -49,10 +49,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Copy AddCopyOfArticleById(int id)
+        public Domain.Entities.Copy AddCopyOfArticleById(int id, bool isAvailable)
         {
             _logger.LogInformation($"Add copy of a article by id  from Article model: CopyID {id}  ");
-            return _articleRepository.AddCopyOfArticleById(id);
+            return _articleRepository.AddCopyOfArticleById(id, isAvailable);
         }
         /// <summary>
         /// 

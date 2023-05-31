@@ -21,6 +21,9 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
             builder.Property(e => e.ItemID)
                 .HasMaxLength(50)
                 .IsRequired();
+           
+            builder.Property(e => e.IsAvailable)
+              .IsRequired();
 
             builder.Ignore(e => e.Type);
 

@@ -126,13 +126,14 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfArticleById_ReturnOK()
         {
             var articleId = 1;
+            var isAvailable = true;
             var addedBook = new Domain.Entities.Copy
             {
                 ItemID = 2,
                 CopyID = articleId
             };
 
-            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId)).Returns(addedBook);
+            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId, isAvailable)).Returns(addedBook);
 
             var result = _articleController.AddCopyOfArticleById(articleId);
 
@@ -142,7 +143,8 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfArticleById_ReturnNotFound()
         {
             var articleId = 1;
-            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId)).Returns((Domain.Entities.Copy)null);
+            var isAvailable = true;
+            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId, isAvailable)).Returns((Domain.Entities.Copy)null);
 
             var result = _articleController.AddCopyOfArticleById(articleId);
 
@@ -152,7 +154,8 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfBookById_ReturnbBadRequest()
         {
             var articleId = 1;
-            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId)).Throws(new Exception("Some error message"));
+            var isAvailable = true;
+            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId, isAvailable)).Throws(new Exception("Some error message"));
 
 
             var result = _articleController.AddCopyOfArticleById(articleId);

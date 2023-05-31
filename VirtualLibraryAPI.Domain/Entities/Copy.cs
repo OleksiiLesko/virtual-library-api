@@ -30,5 +30,9 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Type of  copy
         /// </summary>
         public virtual Type Type { get; set; } = Type.Copy;
+        /// <summary>
+        /// Status of copy
+        /// </summary>
+        public bool IsAvailable { get; set; }
     }
 }

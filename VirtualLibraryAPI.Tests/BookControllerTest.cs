@@ -135,13 +135,14 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfBookById_ReturnOK()
         {
             var bookId = 1;
+            var isAvailable = true;
             var addedBook = new Domain.Entities.Copy
             {
                 ItemID = 2,
                 CopyID = bookId
             };
 
-            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId)).Returns(addedBook);
+            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Returns(addedBook);
 
             var result = _bookController.AddCopyOfBookById(bookId);
 
@@ -151,7 +152,8 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfBookById_ReturnNotFound()
         {
             var bookId = 1;
-            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId)).Returns((Domain.Entities.Copy)null);
+            var isAvailable = true;
+            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Returns((Domain.Entities.Copy)null);
 
             var result = _bookController.AddCopyOfBookById(bookId);
 
@@ -161,7 +163,8 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfBookById_ReturnbBadRequest()
         {
             var bookId = 1;
-            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId)).Throws(new Exception("Some error message"));
+            var isAvailable = true;
+            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Throws(new Exception("Some error message"));
 
 
             var result = _bookController.AddCopyOfBookById(bookId);
@@ -305,6 +308,5 @@ namespace VirtualLibraryAPI.Tests
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
-
     }
 }

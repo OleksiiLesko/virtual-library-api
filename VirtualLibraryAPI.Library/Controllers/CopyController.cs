@@ -28,60 +28,7 @@ namespace VirtualLibraryAPI.Library.Controllers
             _logger = logger;
             _model = model;
         }
-        /// <summary>
-        /// Get all books
-        /// </summary>
-        /// <returns></returns>
-        //[HttpGet]
-        //public IActionResult GetAllCopies()
-        //{
-        //    try
-        //    {
-        //        _logger.LogInformation("Get all copies ");
-        //        var books = _model.GetAllCopies();
-        //        _logger.LogInformation("Copies received ");
-        //        return Ok(_model.GetAllBooksResponse());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError("An error occurred while processing the request: {Error}", ex.Message);
-        //        return BadRequest($"Failed");
-        //    }
-        //}
-        /// <summary>
-        /// Add Book
-        /// </summary>
-        /// <returns></returns>
-        //[HttpPost]
-        //public IActionResult AddCopy([FromBody] Domain.DTOs.Copy request)
-        //{
-        //    try
-        //    {
-        //        var addedCopy = _model.AddCopy(request);
-        //        _logger.LogInformation("Adding copy:{CopyID}", addedCopy.ItemID);
-
-        //        _logger.LogInformation("Copy added");
-        //        return Ok(new Domain.DTOs.Copy
-        //        {
-        //            ItemID = request.ItemID,
-        //            Name = request.Name,
-        //            PublishingDate = (DateTime)request.PublishingDate,
-        //            Publisher = request.Publisher,
-        //            ISBN = request.ISBN,
-        //            Author = request.Author
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError("An error occurred while processing the request: {Error}", ex.Message);
-        //        return BadRequest($"Failed");
-        //    }
-        //}
-        /// <summary>
-        ///  Get book by Id 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+     
         [HttpGet("{id}")]
         public IActionResult GetCopyById(int id)
         {

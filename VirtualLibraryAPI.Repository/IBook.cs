@@ -30,7 +30,7 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.Entities.Copy AddCopyOfBookById(int id);
+        Domain.Entities.Copy AddCopyOfBookById(int id, bool isAvailable);
         /// <summary>
         /// Method for update book
         /// </summary>
@@ -61,6 +61,7 @@ namespace VirtualLibraryAPI.Repository
         /// <param name="id"></param>
         /// <returns></returns>
         Domain.DTOs.Book AddCopyOfBookByIdResponse(int id);
+
     }
 }
 

@@ -24,11 +24,6 @@ namespace VirtualLibraryAPI.Domain.DTOs
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? CopyID { get; set; }
         /// <summary>
-        /// Count of copies
-        /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? CountOfCopies { get; set; }
-        /// <summary>
         /// Name of article
         /// </summary>
         [Required]
@@ -38,10 +33,10 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [Required]
         public DateTime PublishingDate { get; set; }
-        [Required]
         /// <summary>
         /// Author of article 
         /// </summary>
+        [Required]
         public string Author { get; set; }
         /// <summary>
         /// Publisher of article
@@ -63,5 +58,10 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [Required]
         public string MagazineName { get; set; }
+        /// <summary>
+        /// Copy information
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public CopyInfo? CopyInfo { get; set; }
     }
 }

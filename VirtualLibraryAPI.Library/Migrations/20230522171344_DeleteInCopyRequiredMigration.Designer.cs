@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualLibraryAPI.Domain;
 
@@ -11,9 +12,11 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230522171344_DeleteInCopyRequiredMigration")]
+    partial class DeleteInCopyRequiredMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,6 +89,12 @@ namespace VirtualLibraryAPI.Library.Migrations
                     b.Property<int>("ItemID")
                         .HasMaxLength(50)
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TakenDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("CopyID");
 

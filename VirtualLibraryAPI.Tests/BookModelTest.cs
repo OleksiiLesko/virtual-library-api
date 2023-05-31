@@ -131,15 +131,16 @@ namespace VirtualLibraryAPI.Tests
             var bookModel = new Models.Book(_bookRepository.Object, _logger);
             var bookId = 1;
             var expectedCopyId = 2;
+            var isAvailable = true;
             var expectedCopy = new Domain.Entities.Copy { CopyID = expectedCopyId, ItemID = bookId };
-            _bookRepository.Setup(x => x.AddCopyOfBookById(bookId)).Returns(expectedCopy);
+            _bookRepository.Setup(x => x.AddCopyOfBookById(bookId, isAvailable)).Returns(expectedCopy);
 
-            var addedCopy = bookModel.AddCopyOfBookById(bookId);
+            var addedCopy = bookModel.AddCopyOfBookById(bookId, isAvailable);
 
             Assert.NotNull(addedCopy);
             Assert.Equal(expectedCopyId, addedCopy.CopyID);
             Assert.Equal(bookId, addedCopy.ItemID);
-            _bookRepository.Verify(x => x.AddCopyOfBookById(bookId), Times.Once);
+            _bookRepository.Verify(x => x.AddCopyOfBookById(bookId, isAvailable), Times.Once);
         }
         [Fact]
         public void AddCopyOfBookByIdResponse_ReturnsAddedCopy()

@@ -93,7 +93,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedMagazine = _model.AddCopyOfMagazineById(id);
+                var addedMagazine = _model.AddCopyOfMagazineById(id, isAvailable: true);
                 if (addedMagazine == null)
                 {
                     return NotFound();

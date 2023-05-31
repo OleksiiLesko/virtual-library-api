@@ -33,7 +33,7 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.Entities.Copy AddCopyOfArticleById(int id);
+        Domain.Entities.Copy AddCopyOfArticleById(int id, bool isAvailable);
         /// <summary>
         /// Method for update article
         /// </summary>

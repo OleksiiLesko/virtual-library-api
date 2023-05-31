@@ -115,10 +115,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="numberOfCopies"></param>
         /// <returns></returns>
-        public Domain.Entities.Copy AddCopyOfBookById(int id)
+        public Domain.Entities.Copy AddCopyOfBookById(int id, bool isAvailable)
         {
             _logger.LogInformation($"Add copy of a book by id  from Book model: CopyID {id}  ");
-            return _bookRepository.AddCopyOfBookById(id);
+            return _bookRepository.AddCopyOfBookById(id, isAvailable);
         }
         /// <summary>
         /// Add copy of a book by id for response

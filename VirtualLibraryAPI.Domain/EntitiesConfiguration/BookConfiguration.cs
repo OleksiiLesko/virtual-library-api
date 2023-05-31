@@ -23,6 +23,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                 .IsRequired();
 
             builder.Property(e => e.ISBN)
+                .HasMaxLength(50)
                 .IsRequired();
 
             builder.Ignore(e => e.Type);

@@ -131,13 +131,14 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfMagazineById_ReturnOK()
         {
             var magazineId = 1;
+            var isAvailable = true;
             var addedMagazine = new Domain.Entities.Copy
             {
                 ItemID = 2,
                 CopyID = magazineId
             };
 
-            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId)).Returns(addedMagazine);
+            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Returns(addedMagazine);
 
             var result = _magazineController.AddCopyOfMagazineById(magazineId);
 
@@ -147,7 +148,8 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfMagazineById_ReturnNotFound()
         {
             var magazineId = 1;
-            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId)).Returns((Domain.Entities.Copy)null);
+            var isAvailable = true;
+            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Returns((Domain.Entities.Copy)null);
 
             var result = _magazineController.AddCopyOfMagazineById(magazineId);
 
@@ -157,7 +159,8 @@ namespace VirtualLibraryAPI.Tests
         public void AddCopyOfMagazineById_ReturnbBadRequest()
         {
             var magazineId = 1;
-            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId)).Throws(new Exception("Some error message"));
+            var isAvailable = true;
+            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Throws(new Exception("Some error message"));
 
 
             var result = _magazineController.AddCopyOfMagazineById(magazineId);

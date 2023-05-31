@@ -8,6 +8,7 @@ using VirtualLibraryAPI.Domain.Entities;
 using VirtualLibraryAPI.Domain;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
 using VirtualLibraryAPI.Domain.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace VirtualLibraryAPI.Repository.Repositories
 {
@@ -149,14 +150,23 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 return null;
             }
             _logger.LogInformation($"Get magazine by id for response:MagazineID {id}");
-            return new Domain.DTOs.Magazine
+
+            var copies = _context.Copies.Where(c => c.ItemID == result.Item.ItemID && c.IsAvailable).ToList();
+
+            var magazineDTO = new Domain.DTOs.Magazine
             {
-                CountOfCopies = GetNumberOfCopiesOfMagazineById(id),
+                CopyInfo = new CopyInfo
+                {
+                    CountOfCopies = GetNumberOfCopiesOfMagazineById(id),
+                    CopiesAvailability = copies.Count
+        },
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
                 IssueNumber = result.Magazine.IssueNumber
             };
+
+            return magazineDTO;
         }
         /// <summary>
         /// Get all magazines for response DTO
@@ -165,18 +175,29 @@ namespace VirtualLibraryAPI.Repository.Repositories
         public IEnumerable<Domain.DTOs.Magazine> GetAllMagazinesResponse()
         {
             _logger.LogInformation(" Get all magazines for response DTO:");
-            return _context.Items
+            var magazines = _context.Items
                            .Join(_context.Magazines, item => item.ItemID, magazine => magazine.ItemID, (item, magazine) => new { Item = item, Magazine = magazine })
                              .Where(x => x.Item.Type == Type.Magazine)
                            .Select(x => new Domain.DTOs.Magazine
                            {
                                MagazineID = x.Item.ItemID,
-                               CountOfCopies = _context.Copies.Count(c => c.ItemID == x.Item.ItemID),
+                               CopyInfo = new CopyInfo
+                               {
+                                   CountOfCopies = 0,
+                                   CopiesAvailability = 0
+                               },
                                Name = x.Item.Name,
                                PublishingDate = x.Item.PublishingDate,
                                Publisher = x.Item.Publisher,
                                IssueNumber = x.Magazine.IssueNumber
-                           });
+                           }).ToList();
+            foreach (var magazine in magazines)
+            {
+                magazine.CopyInfo.CountOfCopies = _context.Copies.Count(c => c.ItemID == magazine.MagazineID);
+                magazine.CopyInfo.CopiesAvailability = _context.Copies.Count(c => c.ItemID == magazine.MagazineID && c.IsAvailable);
+            }
+
+            return magazines;
         }
         /// <summary>
         /// Get number of magazines copies
@@ -194,7 +215,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <param name="numberOfCopies"></param>
         /// <returns></returns>
-        public Domain.Entities.Copy AddCopyOfMagazineById(int id)
+        public Domain.Entities.Copy AddCopyOfMagazineById(int id, bool isAvailable)
         {
             var existingMagazine = _context.Magazines.Find(id);
             if (existingMagazine == null)
@@ -204,7 +225,8 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var newCopy = new Domain.Entities.Copy
             {
-                ItemID = id
+                ItemID = id,
+                IsAvailable = isAvailable
             };
             _context.Copies.Add(newCopy);
             _context.SaveChanges();

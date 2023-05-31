@@ -138,15 +138,16 @@ namespace VirtualLibraryAPI.Tests
             var articleModel = new Models.Article(_articleRepository.Object, _logger);
             var articleId = 1;
             var expectedCopyId = 2;
+            var isAvailable = true;
             var expectedCopy = new Domain.Entities.Copy { CopyID = expectedCopyId, ItemID = articleId };
-            _articleRepository.Setup(x => x.AddCopyOfArticleById(articleId)).Returns(expectedCopy);
+            _articleRepository.Setup(x => x.AddCopyOfArticleById(articleId, isAvailable)).Returns(expectedCopy);
 
-            var addedCopy = articleModel.AddCopyOfArticleById(articleId);
+            var addedCopy = articleModel.AddCopyOfArticleById(articleId,isAvailable);
 
             Assert.NotNull(addedCopy);
             Assert.Equal(expectedCopyId, addedCopy.CopyID);
             Assert.Equal(articleId, addedCopy.ItemID);
-            _articleRepository.Verify(x => x.AddCopyOfArticleById(articleId), Times.Once);
+            _articleRepository.Verify(x => x.AddCopyOfArticleById(articleId, isAvailable), Times.Once);
         }
         [Fact]
         public void AddCopyOfArticleByIdResponse_ReturnsAddedCopy()

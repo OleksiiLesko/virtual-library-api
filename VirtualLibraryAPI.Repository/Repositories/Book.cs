@@ -1,4 +1,4 @@
-﻿using Azure.Core;
+﻿ using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -146,24 +146,35 @@ namespace VirtualLibraryAPI.Repository.Repositories
         public Domain.DTOs.Book GetBookByIdResponse(int id)
         {
             var result = _context.Items
-                                  .Join(_context.Books, item => item.ItemID, book => book.ItemID, (item, book) => new { Item = item, Book = book })
-                                   .Where(x => x.Item.Type == Type.Book)
-                                  .FirstOrDefault(x => x.Book.ItemID == id);
+                .Join(_context.Books, item => item.ItemID, book => book.ItemID, (item, book) => new { Item = item, Book = book })
+                .Where(x => x.Item.Type == Type.Book && x.Book.ItemID == id)
+                .FirstOrDefault();
 
             if (result == null)
             {
                 return null;
             }
-            _logger.LogInformation($"Get book by id for response:BookID {id}");
-            return new Domain.DTOs.Book
+
+            var bookDto = new Domain.DTOs.Book
             {
-                CountOfCopies = GetNumberOfCopiesOfBookById(id),
+                BookID = result.Item.ItemID,
+                CopyID = result.Book.ItemID,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
                 ISBN = result.Book.ISBN,
-                Author = result.Book.Author
+                Author = result.Book.Author,
+                CopyInfo = new CopyInfo
+                {
+                    CountOfCopies = GetNumberOfCopiesOfBookById(id),
+                    CopiesAvailability = 0
+                }
             };
+
+            var copies = _context.Copies.Where(c => c.ItemID == result.Item.ItemID && c.IsAvailable).ToList();
+            bookDto.CopyInfo.CopiesAvailability = copies.Count;
+
+            return bookDto;
         }
         /// <summary>
         /// Get all books for response DTO
@@ -172,19 +183,30 @@ namespace VirtualLibraryAPI.Repository.Repositories
         public IEnumerable<Domain.DTOs.Book> GetAllBooksResponse()
         {
             _logger.LogInformation(" Get all books for response DTO:");
-            return _context.Items
+            var books =  _context.Items
                            .Join(_context.Books, item => item.ItemID, book => book.ItemID, (item, book) => new { Item = item, Book = book })
                             .Where(x => x.Item.Type == Type.Book)
                            .Select(x => new Domain.DTOs.Book
                            {
                                BookID = x.Item.ItemID,
-                               CountOfCopies = _context.Copies.Count(c => c.ItemID == x.Item.ItemID),
+                               CopyInfo = new CopyInfo
+                               {
+                                   CountOfCopies = 0,
+                                   CopiesAvailability = 0
+                               },
                                Name = x.Item.Name,
                                PublishingDate = x.Item.PublishingDate,
                                Publisher = x.Item.Publisher,
                                ISBN = x.Book.ISBN,
                                Author = x.Book.Author
-                           });
+                           }).ToList();
+            foreach (var book in books)
+            {
+                book.CopyInfo.CountOfCopies = _context.Copies.Count(c => c.ItemID == book.BookID);
+                book.CopyInfo.CopiesAvailability = _context.Copies.Count(c => c.ItemID == book.BookID && c.IsAvailable);
+            }
+
+            return books;
         }
         /// <summary>
         /// Get number of books copies
@@ -194,7 +216,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         public int GetNumberOfCopiesOfBookById(int bookId)
         {
             _logger.LogInformation($"Getting number of copies for book with id: {bookId}");
-            return _context.Copies.Count(c => c.ItemID == bookId);
+            return _context.Copies.Count(c => c.ItemID == bookId );
         }
         /// <summary>
         /// Add copies of Book by Id
@@ -202,7 +224,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <param name="numberOfCopies"></param>
         /// <returns></returns>
-        public Domain.Entities.Copy AddCopyOfBookById(int id)
+        public Domain.Entities.Copy AddCopyOfBookById(int id, bool isAvailable)
         {
             var existingBook = _context.Books.Find(id);
             if (existingBook == null)
@@ -212,7 +234,9 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var newCopy = new Domain.Entities.Copy
             {
-                ItemID = id
+                ItemID = id,
+                IsAvailable = isAvailable
+
             };
             _context.Copies.Add(newCopy);
             _context.SaveChanges();

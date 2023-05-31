@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Serilog;
-using Serilog.Events;
-using System.Diagnostics;
+﻿using Newtonsoft.Json;
 using System.Net;
-using ILogger = Serilog.ILogger;
 
 namespace VirtualLibraryAPI.Library
 {

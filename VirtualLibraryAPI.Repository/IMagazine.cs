@@ -30,7 +30,7 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.Entities.Copy AddCopyOfMagazineById(int id);
+        Domain.Entities.Copy AddCopyOfMagazineById(int id, bool isAvailable);
         /// <summary>
         /// Method for update magazine
         /// </summary>

@@ -97,7 +97,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedArticle = _model.AddCopyOfArticleById(id);
+                var addedArticle = _model.AddCopyOfArticleById(id, isAvailable: true);
                 if (addedArticle == null)
                 {
                     return NotFound();

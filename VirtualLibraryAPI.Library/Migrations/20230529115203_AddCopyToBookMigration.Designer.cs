@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualLibraryAPI.Domain;
 
@@ -11,9 +12,11 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230529115203_AddCopyToBookMigration")]
+    partial class AddCopyToBookMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,12 +65,17 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("CopyID")
+                        .HasColumnType("int");
+
                     b.Property<string>("ISBN")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ItemID");
+
+                    b.HasIndex("CopyID");
 
                     b.ToTable("Books", (string)null);
                 });
@@ -194,12 +202,20 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Book", b =>
                 {
+                    b.HasOne("VirtualLibraryAPI.Domain.Entities.Copy", "Copy")
+                        .WithMany()
+                        .HasForeignKey("CopyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("VirtualLibraryAPI.Domain.Entities.Item", "Item")
                         .WithOne("Book")
                         .HasForeignKey("VirtualLibraryAPI.Domain.Entities.Book", "ItemID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
                         .HasConstraintName("FK_Book_Item");
+
+                    b.Navigation("Copy");
 
                     b.Navigation("Item");
                 });

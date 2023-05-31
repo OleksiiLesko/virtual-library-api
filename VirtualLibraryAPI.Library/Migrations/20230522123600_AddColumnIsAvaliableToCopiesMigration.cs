@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMigration : Migration
+    public partial class AddColumnIsAvaliableToCopiesMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,7 +73,7 @@ namespace VirtualLibraryAPI.Library.Migrations
                 {
                     ItemID = table.Column<int>(type: "int", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ISBN = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ISBN = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,7 +91,8 @@ namespace VirtualLibraryAPI.Library.Migrations
                 {
                     CopyID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemID = table.Column<int>(type: "int", maxLength: 50, nullable: false)
+                    ItemID = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

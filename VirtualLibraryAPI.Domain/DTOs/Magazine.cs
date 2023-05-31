@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,11 +23,6 @@ namespace VirtualLibraryAPI.Domain.DTOs
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? CopyID { get; set; }
         /// <summary>
-        /// Count of copies
-        /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? CountOfCopies { get; set; }
-        /// <summary>
         /// Name of magazine
         /// </summary>
         [Required]
@@ -47,5 +42,10 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [Required]
         public string IssueNumber { get; set; }
+        /// <summary>
+        /// Copy information
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public CopyInfo? CopyInfo { get; set; }
     }
 }

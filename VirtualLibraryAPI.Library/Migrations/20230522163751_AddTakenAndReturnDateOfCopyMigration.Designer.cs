@@ -12,8 +12,8 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230519091913_AddMigration")]
-    partial class AddMigration
+    [Migration("20230522163751_AddTakenAndReturnDateOfCopyMigration")]
+    partial class AddTakenAndReturnDateOfCopyMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,7 +67,8 @@ namespace VirtualLibraryAPI.Library.Migrations
 
                     b.Property<string>("ISBN")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ItemID");
 
@@ -82,9 +83,20 @@ namespace VirtualLibraryAPI.Library.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CopyID"));
 
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ItemID")
                         .HasMaxLength(50)
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReturnDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TakenDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
                     b.HasKey("CopyID");
 

@@ -37,10 +37,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Copy AddCopyOfMagazineById(int id)
+        public Domain.Entities.Copy AddCopyOfMagazineById(int id, bool isAvailable)
         {
             _logger.LogInformation($"Add copy of a magazine by id  from magazine model: CopyID {id}  ");
-            return _magazineRepository.AddCopyOfMagazineById(id);
+            return _magazineRepository.AddCopyOfMagazineById(id, isAvailable);
         }
         /// <summary>
         /// Adding copy of magazine for response

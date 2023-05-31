@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using VirtualLibraryAPI.Domain;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
+using static System.Reflection.Metadata.BlobBuilder;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
 
 namespace VirtualLibraryAPI.Repository.Repositories
@@ -67,7 +69,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Copy AddCopyOfArticleById(int id)
+        public Domain.Entities.Copy AddCopyOfArticleById(int id, bool isAvailable)
         {
             var existingArticle = _context.Articles.Find(id);
             if (existingArticle == null)
@@ -77,7 +79,8 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var newCopy = new Domain.Entities.Copy
             {
-                ItemID = id
+                ItemID = id,
+                IsAvailable = isAvailable
             };
             _context.Copies.Add(newCopy);
             _context.SaveChanges();
@@ -166,22 +169,36 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <exception cref="NotImplementedException"></exception>
         public IEnumerable<Domain.DTOs.Article> GetAllArticlesResponse()
         {
-            _logger.LogInformation(" Get all articles for response DTO:");
-            return _context.Items
-                           .Join(_context.Articles, item => item.ItemID, article => article.ItemID, (item, article) => new { Item = item, Article = article })
-                            .Where(x => x.Item.Type == Type.Article)
-                           .Select(x => new Domain.DTOs.Article
-                           {
-                               ArticleID = x.Item.ItemID,
-                               CountOfCopies = _context.Copies.Count(c => c.ItemID == x.Item.ItemID),
-                               Name = x.Item.Name,
-                               PublishingDate = x.Item.PublishingDate,
-                               Publisher = x.Item.Publisher,
-                               Author = x.Article.Author,
-                               Version = x.Article.Version,
-                               MagazinesIssueNumber = x.Article.MagazinesIssueNumber,
-                               MagazineName = x.Article.MagazineName
-                           });
+            _logger.LogInformation("Get all articles for response DTO:");
+
+            var articles = _context.Items
+                .Join(_context.Articles, item => item.ItemID, article => article.ItemID, (item, article) => new { Item = item, Article = article })
+                .Where(x => x.Item.Type == Type.Article)
+                .Select(x => new Domain.DTOs.Article
+                {
+                    ArticleID = x.Item.ItemID,
+                    CopyInfo = new CopyInfo
+                    {
+                        CountOfCopies = 0,
+                        CopiesAvailability = 0
+                    },
+                    Name = x.Item.Name,
+                    PublishingDate = x.Item.PublishingDate,
+                    Publisher = x.Item.Publisher,
+                    Author = x.Article.Author,
+                    Version = x.Article.Version,
+                    MagazinesIssueNumber = x.Article.MagazinesIssueNumber,
+                    MagazineName = x.Article.MagazineName
+                })
+                .ToList(); 
+
+            foreach (var article in articles)
+            {
+                article.CopyInfo.CountOfCopies = _context.Copies.Count(c => c.ItemID == article.ArticleID);
+                article.CopyInfo.CopiesAvailability = _context.Copies.Count(c => c.ItemID == article.ArticleID && c.IsAvailable);
+            }
+
+            return articles;
         }
         /// <summary>
         /// Get article by id 
@@ -203,26 +220,36 @@ namespace VirtualLibraryAPI.Repository.Repositories
         public Domain.DTOs.Article GetArticleByIdResponse(int id)
         {
             var result = _context.Items
-                                .Join(_context.Articles, item => item.ItemID, article => article.ItemID, (item, article) => new { Item = item, Article = article })
-                                 .Where(x => x.Item.Type == Type.Article)
-                                .FirstOrDefault(x => x.Article.ItemID == id);
+                .Join(_context.Articles, item => item.ItemID, article => article.ItemID, (item, article) => new { Item = item, Article = article })
+                .Where(x => x.Item.Type == Type.Article)
+                .FirstOrDefault(x => x.Article.ItemID == id);
 
             if (result == null)
             {
                 return null;
             }
-            _logger.LogInformation($"Get article by id for response:ArticleID {id}");
-            return new Domain.DTOs.Article
+
+            _logger.LogInformation($"Get article by id for response: ArticleID {id}");
+
+            var copies = _context.Copies.Where(c => c.ItemID == result.Item.ItemID && c.IsAvailable).ToList();
+
+            var articleDTO = new Domain.DTOs.Article
             {
-                CountOfCopies = GetNumberOfCopiesOfArticleById(id),
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
                 Author = result.Article.Author,
                 Version = result.Article.Version,
                 MagazinesIssueNumber = result.Article.MagazinesIssueNumber,
-                MagazineName = result.Article.MagazineName
+                MagazineName = result.Article.MagazineName,
+                CopyInfo = new CopyInfo
+                {
+                    CountOfCopies = GetNumberOfCopiesOfArticleById(id),
+                    CopiesAvailability = copies.Count
+        }
             };
+
+            return articleDTO;
         }
         /// <summary>
         /// Update article

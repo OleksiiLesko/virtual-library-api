@@ -133,15 +133,16 @@ namespace VirtualLibraryAPI.Tests
             var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
             var magazineId = 1;
             var expectedCopyId = 2;
+            var isAvailable = true;
             var expectedCopy = new Domain.Entities.Copy { CopyID = expectedCopyId, ItemID = magazineId };
-            _magazineRepository.Setup(x => x.AddCopyOfMagazineById(magazineId)).Returns(expectedCopy);
+            _magazineRepository.Setup(x => x.AddCopyOfMagazineById(magazineId, isAvailable)).Returns(expectedCopy);
 
-            var addedCopy = magazineModel.AddCopyOfMagazineById(magazineId);
+            var addedCopy = magazineModel.AddCopyOfMagazineById(magazineId, isAvailable);
 
             Assert.NotNull(addedCopy);
             Assert.Equal(expectedCopyId, addedCopy.CopyID);
             Assert.Equal(magazineId, addedCopy.ItemID);
-            _magazineRepository.Verify(x => x.AddCopyOfMagazineById(magazineId), Times.Once);
+            _magazineRepository.Verify(x => x.AddCopyOfMagazineById(magazineId, isAvailable), Times.Once);
         }
         [Fact]
         public void AddCopyOfMagazineByIdResponse_ReturnsAddedCopy()
