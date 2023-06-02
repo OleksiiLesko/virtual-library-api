@@ -171,10 +171,11 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 }
             };
 
-            var copies = _context.Copies.Where(c => c.ItemID == result.Item.ItemID && c.IsAvailable).ToList();
-            bookDto.CopyInfo.CopiesAvailability = copies.Count;
+            bookDto.CopyInfo.CopiesAvailability = _context.Copies.Count(c => c.ItemID == bookDto.BookID && c.IsAvailable);
 
             return bookDto;
+
+           
         }
         /// <summary>
         /// Get all books for response DTO

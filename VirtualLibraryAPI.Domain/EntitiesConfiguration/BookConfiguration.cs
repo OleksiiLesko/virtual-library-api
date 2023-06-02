@@ -16,7 +16,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
             builder.HasKey(e => e.ItemID);
 
             builder.Property(e => e.ItemID)
-              .ValueGeneratedNever(); 
+              .ValueGeneratedNever();
 
             builder.Property(e => e.Author)
                 .HasMaxLength(50)

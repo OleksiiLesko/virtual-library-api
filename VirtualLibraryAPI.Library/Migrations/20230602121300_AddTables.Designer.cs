@@ -12,8 +12,8 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230522163751_AddTakenAndReturnDateOfCopyMigration")]
-    partial class AddTakenAndReturnDateOfCopyMigration
+    [Migration("20230602121300_AddTables")]
+    partial class AddTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,14 +89,6 @@ namespace VirtualLibraryAPI.Library.Migrations
                     b.Property<int>("ItemID")
                         .HasMaxLength(50)
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("ReturnDate")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TakenDate")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
 
                     b.HasKey("CopyID");
 

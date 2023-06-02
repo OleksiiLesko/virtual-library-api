@@ -34,7 +34,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// ISBN of book
         /// </summary>
-        public string ISBN { get; set; } = string.Empty;  
+        public string ISBN { get; set; } = string.Empty;
     }
 }
 

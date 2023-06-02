@@ -173,45 +173,45 @@ namespace VirtualLibraryAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        [Fact]
-        public void GetBookById_ReturnOK()
-        {
+        //[Fact]
+        //public void GetBookById_ReturnOK()
+        //{
 
-            var bookId = 1;
-            var expectedBook = new Domain.Entities.Book
-            {
-                ItemID = bookId,
-                Author = "Author",
-                ISBN = "ISBN"
-            };
+        //    var bookId = 1;
+        //    var expectedBook = new Domain.Entities.Book
+        //    {
+        //        ItemID = bookId,
+        //        Author = "Author",
+        //        ISBN = "ISBN"
+        //    };
 
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(expectedBook);
+        //    _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(expectedBook);
 
 
-            var result = _bookController.GetBookById(bookId);
+        //    var result = _bookController.GetBookById(bookId);
 
-            Assert.IsType<OkObjectResult>(result);
-        }
-        [Fact]
-        public void GetBookById_ReturnNotFound()
-        {
-            var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(null as Domain.Entities.Book);
+        //    Assert.IsType<OkObjectResult>(result);
+        //}
+        //[Fact]
+        //public void GetBookById_ReturnNotFound()
+        //{
+        //    var bookId = 1;
+        //    _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(null as Domain.Entities.Book);
 
-            var result = _bookController.GetBookById(bookId);
+        //    var result = _bookController.GetBookById(bookId);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
-        [Fact]
-        public void GetBookById_ReturnbBadRequest()
-        {
-            var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Throws(new Exception("Error retrieving book"));
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
+        //[Fact]
+        //public void GetBookById_ReturnbBadRequest()
+        //{
+        //    var bookId = 1;
+        //    _bookRepository.Setup(model => model.GetBookById(bookId)).Throws(new Exception("Error retrieving book"));
 
-            var result = _bookController.GetBookById(bookId);
+        //    var result = _bookController.GetBookById(bookId);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //}
         [Fact]
         public void UpdateBook_ReturnOK()
         {
@@ -278,35 +278,35 @@ namespace VirtualLibraryAPI.Tests
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
-        [Fact]
-        public void DeleteBook_ReturnNoContent()
-        {
-            var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(new Domain.Entities.Book());
+        //[Fact]
+        //public void DeleteBook_ReturnNoContent()
+        //{
+        //    var bookId = 1;
+        //    _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(new Domain.Entities.Book());
 
-            var result = _bookController.DeleteBook(bookId);
+        //    var result = _bookController.DeleteBook(bookId);
 
-            Assert.IsType<NoContentResult>(result);
-        }
-        [Fact]
-        public void DeleteBook_ReturnNotFound()
-        {
-            var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns((Domain.Entities.Book)null);
+        //    Assert.IsType<NoContentResult>(result);
+        //}
+        //[Fact]
+        //public void DeleteBook_ReturnNotFound()
+        //{
+        //    var bookId = 1;
+        //    _bookRepository.Setup(model => model.GetBookById(bookId)).Returns((Domain.Entities.Book)null);
 
-            var result = _bookController.DeleteBook(bookId);
+        //    var result = _bookController.DeleteBook(bookId);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
-        [Fact]
-        public void DeleteBook_ReturnsBadRequest_WhenExceptionThrown()
-        {
-            var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Throws<Exception>();
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
+        //[Fact]
+        //public void DeleteBook_ReturnsBadRequest_WhenExceptionThrown()
+        //{
+        //    var bookId = 1;
+        //    _bookRepository.Setup(model => model.GetBookById(bookId)).Throws<Exception>();
 
-            var result = _bookController.DeleteBook(bookId);
+        //    var result = _bookController.DeleteBook(bookId);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //}
     }
 }

@@ -38,7 +38,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 
             builder.HasOne(e => e.ItemType)
                .WithMany(e => e.Item)
-               .HasForeignKey(e => e.Type)  
+               .HasForeignKey(e => e.Type)
                .HasConstraintName("FK_Item_ItemType");
         }
     }

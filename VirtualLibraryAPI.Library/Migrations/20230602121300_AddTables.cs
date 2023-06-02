@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     /// <inheritdoc />
-    public partial class AddColumnIsAvaliableToCopiesMigration : Migration
+    public partial class AddTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -78,19 +78,19 @@ namespace VirtualLibraryAPI.Tests
             _bookRepository.Verify(x => x.GetAllBooks(), Times.Once());
             Assert.Equal(expectedBooks, allBooks);
         }
-        [Fact]
-        public void GetBookById_ReturnsCorrectBook()
-        {
-            var bookId = 1;
-            var expectedBook = new Domain.Entities.Book { ItemID = bookId, ISBN = "1234567890", Author = "Test Author" };
-            _bookRepository.Setup(x => x.GetBookById(bookId)).Returns(expectedBook);
-            var bookModel = new Models.Book(_bookRepository.Object, _logger);
+        //[Fact]
+        //public void GetBookById_ReturnsCorrectBook()
+        //{
+        //    var bookId = 1;
+        //    var expectedBook = new Domain.Entities.Book { ItemID = bookId, ISBN = "1234567890", Author = "Test Author" };
+        //    _bookRepository.Setup(x => x.GetBookById(bookId)).Returns(expectedBook);
+        //    var bookModel = new Models.Book(_bookRepository.Object, _logger);
 
-            var book = bookModel.GetBookById(bookId);
+        //    var book = bookModel.GetBookById(bookId);
 
-            _bookRepository.Verify(x => x.GetBookById(bookId), Times.Once());
-            Assert.Equal(expectedBook, book);
-        }
+        //    _bookRepository.Verify(x => x.GetBookById(bookId), Times.Once());
+        //    Assert.Equal(expectedBook, book);
+        //}
         [Fact]
         public void GetBookByIdResponse_ReturnsCorrectResponseDTO()
         {

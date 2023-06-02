@@ -230,8 +230,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             }
 
             _logger.LogInformation($"Get article by id for response: ArticleID {id}");
-
-            var copies = _context.Copies.Where(c => c.ItemID == result.Item.ItemID && c.IsAvailable).ToList();
+            var copies = _context.Copies.Count(c => c.ItemID == result.Item.Article.ItemID && c.IsAvailable);
 
             var articleDTO = new Domain.DTOs.Article
             {
@@ -245,8 +244,8 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 CopyInfo = new CopyInfo
                 {
                     CountOfCopies = GetNumberOfCopiesOfArticleById(id),
-                    CopiesAvailability = copies.Count
-        }
+                    CopiesAvailability = copies
+                }
             };
 
             return articleDTO;

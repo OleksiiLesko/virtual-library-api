@@ -151,15 +151,15 @@ namespace VirtualLibraryAPI.Repository.Repositories
             }
             _logger.LogInformation($"Get magazine by id for response:MagazineID {id}");
 
-            var copies = _context.Copies.Where(c => c.ItemID == result.Item.ItemID && c.IsAvailable).ToList();
+            var copies = _context.Copies.Count(c => c.ItemID == result.Item.Magazine.ItemID && c.IsAvailable);
 
             var magazineDTO = new Domain.DTOs.Magazine
             {
                 CopyInfo = new CopyInfo
                 {
                     CountOfCopies = GetNumberOfCopiesOfMagazineById(id),
-                    CopiesAvailability = copies.Count
-        },
+                    CopiesAvailability = copies
+                },
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
