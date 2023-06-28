@@ -11,69 +11,70 @@ namespace VirtualLibraryAPI.Models
     /// <summary>
     /// Model for copy
     /// </summary>
-    public class Copy : ICopy
+    public class CopyModel : ICopyModel
     {
         /// <summary>
         /// Using book repository
         /// </summary>
-        private readonly ICopy _copyRepository;
+        private readonly ICopyRepository _repository;
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<Copy> _logger;
+        private readonly ILogger<CopyModel> _logger;
 
         /// <summary>
         /// Constructor with book Repository and logger
         /// </summary>
         /// <param name="bookRepository"></param>
         /// <param name="logger"></param>
-        public Copy(ICopy copyRepository, ILogger<Copy> logger)
+        public CopyModel(ILogger<CopyModel> logger, ICopyRepository repository)
         {
-            _copyRepository = copyRepository;
             _logger = logger;
-        }
-        public Domain.Entities.Copy AddCopy(Domain.DTOs.Copy book)
-        {
-            throw new NotImplementedException();
+            _repository = repository;
         }
 
-        public Domain.Entities.Copy DeleteCopy(int id)
+        public Domain.DTOs.Copy DeleteCopy(int id)
         {
             _logger.LogInformation($"Deleting copy from Copy model: CopyID {id}");
-            return _copyRepository.DeleteCopy(id);
-        }
-
-        public IEnumerable<Domain.DTOs.Copy> GetAllBooksResponse()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Domain.Entities.Copy> GetAllCopies()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Domain.DTOs.Copy> GetAllCopiesResponse()
-        {
-            throw new NotImplementedException();
+            var result = _repository.DeleteCopy(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
 
         public Domain.DTOs.Copy GetCopyByIdResponse(int id)
         {
             _logger.LogInformation($"Getting copy by id for response from Copy model: CopyID {id}");
-            return _copyRepository.GetCopyByIdResponse(id);
+            var result = _repository.GetCopyByIdResponse(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
 
-        public Domain.Entities.Copy GetCopyById(int id)
+        public Domain.DTOs.Copy GetCopyById(int id)
         {
             _logger.LogInformation($"Getting copy by id from Copy model: CopyID {id}");
-            return _copyRepository.GetCopyById(id);
+            var result = _repository.GetCopyById(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
 
-        public Domain.Entities.Copy UpdateCopy(int id, Domain.DTOs.Copy copy)
+        public Domain.DTOs.Copy UpdateCopy(int id, Domain.DTOs.Copy copy)
         {
             _logger.LogInformation($"Updating copy by id from Copy model: CopyID {id}");
-            return _copyRepository.UpdateCopy(id, copy);
+            var result = _repository.UpdateCopy(id, copy);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
     }
 }

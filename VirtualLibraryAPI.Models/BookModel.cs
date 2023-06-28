@@ -8,36 +8,41 @@ namespace VirtualLibraryAPI.Models
     /// <summary>
     /// Model for book
     /// </summary>
-    public class Book : IBook
+    public class BookModel : IBookModel
     {
         /// <summary>
         /// Using book repository
         /// </summary>
-        private readonly IBook _bookRepository;
+        private readonly IBookRepository _repository;
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<Book> _logger;
+        private readonly ILogger<BookModel> _logger;
 
         /// <summary>
         /// Constructor with book Repository and logger
         /// </summary>
-        /// <param name="bookRepository"></param>
+        /// <param name="book"></param>
         /// <param name="logger"></param>
-        public Book(IBook bookRepository, ILogger<Book> logger)
+        public BookModel( ILogger<BookModel> logger, IBookRepository repository )
         {
-            _bookRepository = bookRepository;
             _logger = logger;
+            _repository = repository;
         }
         /// <summary>
         /// Adding book from Book model
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.Entities.Book AddBook(Domain.DTOs.Book book)
+        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book)
         {
             _logger.LogInformation($"Adding book from Book model {book}");
-            return _bookRepository.AddBook(book);
+            var result = _repository.AddBook(book);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Updating book from Book model
@@ -46,10 +51,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
 
-        public Domain.Entities.Book UpdateBook(int id, Domain.DTOs.Book book)
+        public Domain.DTOs.Book UpdateBook(int id, Domain.DTOs.Book book)
         {
             _logger.LogInformation($"Updating book from Book model: BookID {id}");
-            return _bookRepository.UpdateBook(id, book);
+            var result = _repository.UpdateBook(id, book);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Deleting book from Book model
@@ -57,19 +67,24 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
 
-        public Domain.Entities.Book DeleteBook(int id)
+        public Domain.DTOs.Book DeleteBook(int id)
         {
             _logger.LogInformation($"Deleting book from Book model: BookID {id}");
-            return _bookRepository.DeleteBook(id);
+            var result = _repository.DeleteBook(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Getting all books from Book model
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Domain.Entities.Book> GetAllBooks()
+        public IEnumerable<Domain.DTOs.Book> GetAllBooks()
         {
             _logger.LogInformation($"Getting all books from Book model ");
-            var books = _bookRepository.GetAllBooks();
+            var books = _repository.GetAllBooks();
             if (books.Any())
             {
                 return books;
@@ -85,10 +100,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
 
-        public Domain.Entities.Book GetBookById(int id)
+        public Domain.DTOs.Book GetBookById(int id)
         {
             _logger.LogInformation($"Getting book by id from Book model: BookID {id} ") ; 
-            return _bookRepository.GetBookById(id);
+            var result = _repository.GetBookById(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Get book by id for response DTO
@@ -98,7 +118,12 @@ namespace VirtualLibraryAPI.Models
         public Domain.DTOs.Book GetBookByIdResponse(int id)
         {
             _logger.LogInformation($"Get book by id for response DTO from Book model: BookID {id}");
-            return _bookRepository.GetBookByIdResponse(id);
+            var result = _repository.GetBookByIdResponse(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Get all books for response DTO
@@ -107,7 +132,12 @@ namespace VirtualLibraryAPI.Models
         public IEnumerable<Domain.DTOs.Book> GetAllBooksResponse()
         {
             _logger.LogInformation("Get all books for response DTO from Book model  ");
-            return _bookRepository.GetAllBooksResponse();
+            var result = _repository.GetAllBooksResponse();
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Add copy of a book by id  from Book model
@@ -115,10 +145,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="numberOfCopies"></param>
         /// <returns></returns>
-        public Domain.Entities.Copy AddCopyOfBookById(int id, bool isAvailable)
+        public Domain.DTOs.Copy AddCopyOfBookById(int id, bool isAvailable)
         {
             _logger.LogInformation($"Add copy of a book by id  from Book model: CopyID {id}  ");
-            return _bookRepository.AddCopyOfBookById(id, isAvailable);
+            var result = _repository.AddCopyOfBookById(id, isAvailable);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Add copy of a book by id for response
@@ -128,7 +163,12 @@ namespace VirtualLibraryAPI.Models
         public Domain.DTOs.Book AddCopyOfBookByIdResponse(int id)
         {
             _logger.LogInformation($"Add copy of a book by id for response  from Book model: CopyID {id}  ");
-            return _bookRepository.AddCopyOfBookByIdResponse(id);
+            var result = _repository.AddCopyOfBookByIdResponse(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
     }
 }

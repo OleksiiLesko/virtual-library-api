@@ -5,32 +5,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtualLibraryAPI.Repository;
+using VirtualLibraryAPI.Repository.Repositories;
 
 namespace VirtualLibraryAPI.Models
 {
     /// <summary>
     /// Model for article
     /// </summary>
-    public class Article : IArticle
+    public class ArticleModel : IArticleModel
     {
         /// <summary>
-        /// Using article repository
+        /// Using article interface
         /// </summary>
-        private readonly IArticle _articleRepository;
+        private readonly IArticleRepository _repository;
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<Article> _logger;
+        private readonly ILogger<ArticleModel> _logger;
 
         /// <summary>
         /// Constructor with article Repository and logger
         /// </summary>
-        /// <param name="articleRepository"></param>
+        /// <param name="repository"></param>
         /// <param name="logger"></param>
-        public Article(IArticle articleRepository, ILogger<Article> logger)
+        public ArticleModel(ILogger<ArticleModel> logger, IArticleRepository repository)
         {
-            _articleRepository = articleRepository;
             _logger = logger;
+            _repository = repository;
         }
         /// <summary>
         /// Adding article from Article model
@@ -38,10 +39,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article AddArticle(Domain.DTOs.Article article)
+        public Domain.DTOs.Article AddArticle(Domain.DTOs.Article article)
         {
             _logger.LogInformation($"Adding article from Article model {article}");
-            return _articleRepository.AddArticle(article);
+            var result = _repository.AddArticle(article);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Add copy of a article by id  from Article model
@@ -49,10 +55,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Copy AddCopyOfArticleById(int id, bool isAvailable)
+        public Domain.DTOs.Copy AddCopyOfArticleById(int id, bool isAvailable)
         {
             _logger.LogInformation($"Add copy of a article by id  from Article model: CopyID {id}  ");
-            return _articleRepository.AddCopyOfArticleById(id, isAvailable);
+            var result = _repository.AddCopyOfArticleById(id, isAvailable);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// 
@@ -63,7 +74,12 @@ namespace VirtualLibraryAPI.Models
         public Domain.DTOs.Article AddCopyOfArticlesByIdResponse(int id)
         {
             _logger.LogInformation($"Add copy of a article by id for response  from Article model: CopyID {id}  ");
-            return _articleRepository.AddCopyOfArticlesByIdResponse(id);
+            var result = _repository.AddCopyOfArticlesByIdResponse(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Deleting article from Article model
@@ -71,20 +87,25 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article DeleteArticle(int id)
+        public Domain.DTOs.Article DeleteArticle(int id)
         {
             _logger.LogInformation($"Deleting article from Article model: ArticleID {id}");
-            return _articleRepository.DeleteArticle(id);
+            var result = _repository.DeleteArticle(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Getting all articles from Article model
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public IEnumerable<Domain.Entities.Article> GetAllArticles()
+        public IEnumerable<Domain.DTOs.Article> GetAllArticles()
         {
             _logger.LogInformation($"Getting all articles from Article model ");
-            var books = _articleRepository.GetAllArticles();
+            var books = _repository.GetAllArticles();
             if (books.Any())
             {
                 return books;
@@ -102,7 +123,12 @@ namespace VirtualLibraryAPI.Models
         public IEnumerable<Domain.DTOs.Article> GetAllArticlesResponse()
         {
             _logger.LogInformation("Get all articles for response DTO from Article model  ");
-            return _articleRepository.GetAllArticlesResponse();
+            var result = _repository.GetAllArticlesResponse();
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Getting article by id from Article model
@@ -110,10 +136,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article GetArticleById(int id)
+        public Domain.DTOs.Article GetArticleById(int id)
         {
             _logger.LogInformation($"Getting article by id from Article model: ArticleID {id} ");
-            return _articleRepository.GetArticleById(id);
+            var result = _repository.GetArticleById(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Get article by id for response DTO from Article model
@@ -124,7 +155,12 @@ namespace VirtualLibraryAPI.Models
         public Domain.DTOs.Article GetArticleByIdResponse(int id)
         {
             _logger.LogInformation($"Get article by id for response DTO from Article model: ArticleID {id}");
-            return _articleRepository.GetArticleByIdResponse(id);
+            var result =  _repository.GetArticleByIdResponse(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Updating article from Article model
@@ -133,10 +169,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article UpdateArticle(int id, Domain.DTOs.Article article)
+        public Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article)
         {
             _logger.LogInformation($"Updating article from Article model: ArticleID {id}");
-            return _articleRepository.UpdateArticle(id, article);
+            var result = _repository.UpdateArticle(id, article);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
     }
 }

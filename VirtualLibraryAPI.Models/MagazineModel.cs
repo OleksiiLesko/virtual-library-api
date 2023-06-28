@@ -11,25 +11,25 @@ namespace VirtualLibraryAPI.Models
     /// <summary>
     /// Model for magazine
     /// </summary>
-    public class Magazine : IMagazine
+    public class MagazineModel : IMagazineModel
     {
         /// <summary>
         /// Using magazine repository
         /// </summary>
-        private readonly IMagazine _magazineRepository;
+        private readonly IMagazineRepository _repository;
         /// <summary>
         /// Logger
         /// </summary>
-        private readonly ILogger<Magazine> _logger;
+        private readonly ILogger<MagazineModel> _logger;
         /// <summary>
         /// Constructor with magazine Repository and logger
         /// </summary>
         /// <param name="bookRepository"></param>
         /// <param name="logger"></param>
-        public Magazine(IMagazine magazineRepository, ILogger<Magazine> logger)
+        public MagazineModel( ILogger<MagazineModel> logger, IMagazineRepository repository )
         {
-            _magazineRepository = magazineRepository;
             _logger = logger;
+            _repository = repository;
         }
         /// <summary>
         /// Adding copy of magazine from Magazine model
@@ -37,10 +37,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Copy AddCopyOfMagazineById(int id, bool isAvailable)
+        public Domain.DTOs.Copy AddCopyOfMagazineById(int id, bool isAvailable)
         {
             _logger.LogInformation($"Add copy of a magazine by id  from magazine model: CopyID {id}  ");
-            return _magazineRepository.AddCopyOfMagazineById(id, isAvailable);
+            var result = _repository?.AddCopyOfMagazineById(id, isAvailable);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Adding copy of magazine for response
@@ -51,7 +56,12 @@ namespace VirtualLibraryAPI.Models
         public Domain.DTOs.Magazine AddCopyOfMagazineByIdResponse(int id)
         {
             _logger.LogInformation($"Add copy of a magazine by id for DTO : CopyID {id}  ");
-            return _magazineRepository.AddCopyOfMagazineByIdResponse(id);
+            var result = _repository.AddCopyOfMagazineByIdResponse(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Adding  magazine from Magazine model
@@ -59,10 +69,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
         {
             _logger.LogInformation($"Adding magazine from magazine model {magazine}");
-            return _magazineRepository.AddMagazine(magazine);
+            var result = _repository.AddMagazine(magazine);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Deleting magazine from Magazine model
@@ -70,20 +85,25 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Magazine DeleteMagazine(int id)
+        public Domain.DTOs.Magazine DeleteMagazine(int id)
         {
             _logger.LogInformation($"Deleting magazine from magazine model: MagazineID {id}");
-            return _magazineRepository.DeleteMagazine(id);
+            var result = _repository.DeleteMagazine(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Get all magazines from Magazine model
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public IEnumerable<Domain.Entities.Magazine> GetAllMagazines()
+        public IEnumerable<Domain.DTOs.Magazine> GetAllMagazines()
         {
             _logger.LogInformation($"Getting all magazines from magazine model ");
-           var magazines =  _magazineRepository.GetAllMagazines();
+           var magazines =  _repository.GetAllMagazines();
             if (magazines.Any())
             {
                 return magazines;
@@ -101,7 +121,12 @@ namespace VirtualLibraryAPI.Models
         public IEnumerable<Domain.DTOs.Magazine> GetAllMagazinesResponse()
         {
             _logger.LogInformation("Get all magazines for response DTO from magazine model  ");
-            return _magazineRepository.GetAllMagazinesResponse();
+            var result = _repository.GetAllMagazinesResponse();
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Get magazine by id from magazine model
@@ -109,10 +134,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Magazine GetMagazineById(int id)
+        public Domain.DTOs.Magazine GetMagazineById(int id)
         {
             _logger.LogInformation($"Getting magazine by id from magazine model: MagazineID {id} ");
-            return _magazineRepository.GetMagazineById(id);
+            var result = _repository.GetMagazineById(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Get magazine by id for response
@@ -123,7 +153,12 @@ namespace VirtualLibraryAPI.Models
         public Domain.DTOs.Magazine GetMagazineByIdResponse(int id)
         {
             _logger.LogInformation($"Get magazine by id for response DTO from magazine model: MagazineID {id}");
-            return _magazineRepository.GetMagazineByIdResponse(id);
+            var result = _repository.GetMagazineByIdResponse(id);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
         /// <summary>
         /// Update magazine from book model
@@ -132,10 +167,15 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine)
         {
             _logger.LogInformation($"Updating magazine from magazine model: MagazineID {id}");
-            return _magazineRepository.UpdateMagazine(id, magazine);
+            var result = _repository.UpdateMagazine(id, magazine);
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
         }
     }
 }
