@@ -11,28 +11,28 @@ namespace VirtualLibraryAPI.Tests
 {
     public class MagazineModelTest
     {
-        private readonly ILogger<Models.Magazine> _logger;
-        private readonly Mock<IMagazine> _magazineRepository;
+        private readonly ILogger<Models.MagazineModel> _logger;
+        private readonly Mock<IMagazineRepository> _magazineRepository;
 
         public MagazineModelTest()
         {
-            _magazineRepository = new Mock<IMagazine>();
-            _logger = new Mock<ILogger<Models.Magazine>>().Object;
+            _magazineRepository = new Mock<IMagazineRepository>();
+            _logger = new Mock<ILogger<Models.MagazineModel>>().Object;
         }
 
         [Fact]
         public void AddMagazine_ReturnsAddedMagazine()
         {
             var magazineDto = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
-            var addedMagazine = new Domain.Entities.Magazine { ItemID = 1, IssueNumber = "40/2023" };
+            var addedMagazine = new Domain.DTOs.Magazine { MagazineID = 1, IssueNumber = "40/2023" };
             _magazineRepository.Setup(x => x.AddMagazine(magazineDto)).Returns(addedMagazine);
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
             var result = magazineModel.AddMagazine(magazineDto);
 
             Assert.NotNull(result);
             Assert.Equal(magazineDto.IssueNumber, result.IssueNumber);
-            Assert.NotEqual(magazineDto.MagazineID, result.ItemID);
+            Assert.NotEqual(magazineDto.MagazineID, result.MagazineID);
             _magazineRepository.Verify(x => x.AddMagazine(magazineDto), Times.Once());
         }
         [Fact]
@@ -40,13 +40,13 @@ namespace VirtualLibraryAPI.Tests
         {
             var magazineID = 1;
             var magazineDto = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
-            var updatedMagazine = new Domain.Entities.Magazine { ItemID = 2, IssueNumber = "40/2023" };
+            var updatedMagazine = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
             _magazineRepository.Setup(x => x.UpdateMagazine(magazineID, magazineDto)).Returns(updatedMagazine);
-            var bookModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var bookModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
             var result = bookModel.UpdateMagazine(magazineID, magazineDto);
 
-            Assert.Equal(updatedMagazine.ItemID, result.ItemID);
+            Assert.Equal(updatedMagazine.MagazineID, result.MagazineID);
             Assert.Equal(updatedMagazine.IssueNumber, result.IssueNumber);
             _magazineRepository.Verify(x => x.UpdateMagazine(magazineID, magazineDto), Times.Once());
         }
@@ -54,9 +54,9 @@ namespace VirtualLibraryAPI.Tests
         public void DeleteMagazine_ReturnsDeletedMagazine()
         {
             int magazineIdToDelete = 1;
-            var expectedDeletedMagazine = new Domain.Entities.Magazine { ItemID = magazineIdToDelete,IssueNumber = "40/2023" };
+            var expectedDeletedMagazine = new Domain.DTOs.Magazine { MagazineID = magazineIdToDelete,IssueNumber = "40/2023" };
             _magazineRepository.Setup(x => x.DeleteMagazine(magazineIdToDelete)).Returns(expectedDeletedMagazine);
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
             var deletedMagazine = magazineModel.DeleteMagazine(magazineIdToDelete);
 
@@ -66,14 +66,14 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GetAllMagazines_ReturnsAllMagazines()
         {
-            var expectedMagazines = new List<Domain.Entities.Magazine>
+            var expectedMagazines = new List<Domain.DTOs.Magazine>
         {
-            new Domain.Entities.Magazine { ItemID = 1,  IssueNumber = "40/2023" },
-            new Domain.Entities.Magazine { ItemID = 2,  IssueNumber = "40/2023" },
-            new Domain.Entities.Magazine { ItemID = 3,  IssueNumber = "40/2023" }
+            new Domain.DTOs.Magazine { MagazineID = 1,  IssueNumber = "40/2023" },
+            new Domain.DTOs.Magazine { MagazineID = 2,  IssueNumber = "40/2023" },
+            new Domain.DTOs.Magazine { MagazineID = 3, IssueNumber = "40/2023" }
         };
             _magazineRepository.Setup(x => x.GetAllMagazines()).Returns(expectedMagazines);
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
             var allMagazines = magazineModel.GetAllMagazines();
 
@@ -84,9 +84,9 @@ namespace VirtualLibraryAPI.Tests
         public void GetMagazineById_ReturnsCorrectMagazine()
         {
             var magazineId = 1;
-            var expectedMagazine = new Domain.Entities.Magazine { ItemID = magazineId, IssueNumber = "40/2023" };
+            var expectedMagazine = new Domain.DTOs.Magazine { MagazineID = magazineId, IssueNumber = "40/2023" };
             _magazineRepository.Setup(x => x.GetMagazineById(magazineId)).Returns(expectedMagazine);
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
             var magazine = magazineModel.GetMagazineById(magazineId);
 
@@ -100,7 +100,7 @@ namespace VirtualLibraryAPI.Tests
             var magazineId = 1;
             var expectedMagazineDTO = new Domain.DTOs.Magazine { MagazineID = magazineId, IssueNumber = "40/2023" };
             _magazineRepository.Setup(x => x.GetMagazineByIdResponse(magazineId)).Returns(expectedMagazineDTO);
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
 
             var magazineDTO = magazineModel.GetMagazineByIdResponse(magazineId);
@@ -111,7 +111,7 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GetAllMagazinesResponse_ReturnsExpectedResult()
         {
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
             var expectedMagazines = new List<Domain.DTOs.Magazine>
             {
                 new Domain.DTOs.Magazine  { MagazineID = 1,  IssueNumber = "40/2023" },
@@ -130,11 +130,11 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddCopyOfMagazineById_ReturnsAddedCopy()
         {
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
             var magazineId = 1;
             var expectedCopyId = 2;
             var isAvailable = true;
-            var expectedCopy = new Domain.Entities.Copy { CopyID = expectedCopyId, ItemID = magazineId };
+            var expectedCopy = new Domain.DTOs.Copy { CopyID = expectedCopyId, ItemID = magazineId };
             _magazineRepository.Setup(x => x.AddCopyOfMagazineById(magazineId, isAvailable)).Returns(expectedCopy);
 
             var addedCopy = magazineModel.AddCopyOfMagazineById(magazineId, isAvailable);
@@ -147,7 +147,7 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddCopyOfMagazineByIdResponse_ReturnsAddedCopy()
         {
-            var magazineModel = new Models.Magazine(_magazineRepository.Object, _logger);
+            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
             var magazineId = 1;
             var copy = new Domain.DTOs.Magazine { MagazineID = 1, IssueNumber = "40/2023" };
             _magazineRepository.Setup(repo => repo.AddCopyOfMagazineByIdResponse(magazineId)).Returns(copy);

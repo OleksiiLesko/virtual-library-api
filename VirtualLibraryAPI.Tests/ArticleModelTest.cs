@@ -11,22 +11,22 @@ namespace VirtualLibraryAPI.Tests
 {
     public class ArticleModelTest
     {
-        private readonly ILogger<Models.Article> _logger;
-        private readonly Mock<IArticle> _articleRepository;
+        private readonly ILogger<Models.ArticleModel> _logger;
+        private readonly Mock<IArticleRepository> _articleRepository;
 
         public ArticleModelTest()
         {
-            _articleRepository = new Mock<IArticle>();
-            _logger = new Mock<ILogger<Models.Article>>().Object;
+            _articleRepository = new Mock<IArticleRepository>();
+            _logger = new Mock<ILogger<Models.ArticleModel>>().Object;
         }
 
         [Fact]
         public void AddArticle_ReturnsAddedArticle()
         {
             var articleDto = new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time",MagazinesIssueNumber = "40/2023" };
-            var addedArticle = new Domain.Entities.Article { ItemID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            var addedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
             _articleRepository.Setup(x => x.AddArticle(articleDto)).Returns(addedArticle);
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
             var result = articleModel.AddArticle(articleDto);
 
@@ -34,7 +34,7 @@ namespace VirtualLibraryAPI.Tests
             Assert.Equal(articleDto.Version, result.Version);
             Assert.Equal(articleDto.MagazineName, result.MagazineName);
             Assert.Equal(articleDto.MagazinesIssueNumber, result.MagazinesIssueNumber);
-            Assert.NotEqual(articleDto.ArticleID, result.ItemID);
+            Assert.NotEqual(articleDto.ArticleID, result.ArticleID);
             _articleRepository.Verify(x => x.AddArticle(articleDto), Times.Once());
         }
         [Fact]
@@ -42,26 +42,26 @@ namespace VirtualLibraryAPI.Tests
         {
             var asrticleID = 1;
             var articleDto = new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
-            var updatedArticle = new Domain.Entities.Article { ItemID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            var updatedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
             _articleRepository.Setup(x => x.UpdateArticle(asrticleID, articleDto)).Returns(updatedArticle);
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
             var result = articleModel.UpdateArticle(asrticleID, articleDto);
 
-            Assert.True(result.ItemID == 1);
+            Assert.True(result.ArticleID == 1);
             Assert.Equal(articleDto.Version, result.Version);
             Assert.Equal(articleDto.MagazineName, result.MagazineName);
             Assert.Equal(articleDto.MagazinesIssueNumber, result.MagazinesIssueNumber);
-            Assert.NotEqual(articleDto.ArticleID, result.ItemID);
+            Assert.NotEqual(articleDto.ArticleID, result.ArticleID);
             _articleRepository.Verify(x => x.UpdateArticle(asrticleID, articleDto), Times.Once());
         }
         [Fact]
         public void DeleteArticle_ReturnsDeletedArticle()
         {
             int articleIdToDelete = 1;
-            var expectedDeletedArticle = new Domain.Entities.Article { ItemID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            var expectedDeletedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
             _articleRepository.Setup(x => x.DeleteArticle(articleIdToDelete)).Returns(expectedDeletedArticle);
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
             var deletedArticle = articleModel.DeleteArticle(articleIdToDelete);
 
@@ -71,14 +71,14 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GetAllArticles_ReturnsAllArticles()
         {
-            var expectedArticles = new List<Domain.Entities.Article>
+            var expectedArticles = new List<Domain.DTOs.Article>
         {
-            new Domain.Entities.Article {ItemID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" },
-            new Domain.Entities.Article { ItemID = 2, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" },
-            new Domain.Entities.Article { ItemID = 3, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" }
+            new Domain.DTOs.Article {ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" },
+            new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" },
+            new Domain.DTOs.Article { ArticleID = 3, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" }
         };
             _articleRepository.Setup(x => x.GetAllArticles()).Returns(expectedArticles);
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
             var allArticles = articleModel.GetAllArticles();
 
@@ -89,9 +89,9 @@ namespace VirtualLibraryAPI.Tests
         public void GetArticleById_ReturnsCorrectArticle()
         {
             var articleId = 1;
-            var expectedArticle = new Domain.Entities.Article { ItemID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            var expectedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
             _articleRepository.Setup(x => x.GetArticleById(articleId)).Returns(expectedArticle);
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
             var article = articleModel.GetArticleById(articleId);
 
@@ -105,7 +105,7 @@ namespace VirtualLibraryAPI.Tests
             var articleId = 1;
             var expectedArticleDTO = new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
             _articleRepository.Setup(x => x.GetArticleByIdResponse(articleId)).Returns(expectedArticleDTO);
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
 
             var articleDTO = articleModel.GetArticleByIdResponse(articleId);
@@ -116,7 +116,7 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GetAllAreticlesResponse_ReturnsExpectedResult()
         {
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
             var expectedArticles = new List<Domain.DTOs.Article>
             {
                 new Domain.DTOs.Article  { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023"  },
@@ -135,11 +135,11 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddCopyOfArticleById_ReturnsAddedCopy()
         {
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
             var articleId = 1;
             var expectedCopyId = 2;
             var isAvailable = true;
-            var expectedCopy = new Domain.Entities.Copy { CopyID = expectedCopyId, ItemID = articleId };
+            var expectedCopy = new Domain.DTOs.Copy { CopyID = expectedCopyId, ItemID = articleId };
             _articleRepository.Setup(x => x.AddCopyOfArticleById(articleId, isAvailable)).Returns(expectedCopy);
 
             var addedCopy = articleModel.AddCopyOfArticleById(articleId,isAvailable);
@@ -152,7 +152,7 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddCopyOfArticleByIdResponse_ReturnsAddedCopy()
         {
-            var articleModel = new Models.Article(_articleRepository.Object, _logger);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
             var articleId = 1;
             var copy = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
             _articleRepository.Setup(repo => repo.AddCopyOfArticlesByIdResponse(articleId)).Returns(copy);

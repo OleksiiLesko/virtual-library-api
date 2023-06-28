@@ -14,17 +14,17 @@ namespace VirtualLibraryAPI.Tests
     public class ArticleControllerTest
     {
         private readonly Mock<ILogger<ArticleController>> _loggerMock;
-        private readonly Mock<ILogger<Models.Article>> _loggerArticle;
-        private readonly Mock<IArticle> _articleRepository;
-        private readonly Models.Article _articleModelMock;
+        private readonly Mock<ILogger<Models.ArticleModel>> _loggerArticle;
+        private readonly Mock<IArticleRepository> _articleRepository;
+        private readonly Models.ArticleModel _articleModelMock;
         private readonly ArticleController _articleController;
 
         public ArticleControllerTest()
         {
             _loggerMock = new Mock<ILogger<ArticleController>>();
-            _loggerArticle = new Mock<ILogger<Models.Article>>();
-            _articleRepository = new Mock<IArticle>();
-            _articleModelMock = new Models.Article(_articleRepository.Object, _loggerArticle.Object);
+            _loggerArticle = new Mock<ILogger<Models.ArticleModel>>();
+            _articleRepository = new Mock<IArticleRepository>();
+            _articleModelMock = new Models.ArticleModel(_loggerArticle.Object, _articleRepository.Object);
             _articleController = new ArticleController(_loggerMock.Object, _articleModelMock);
         }
 
@@ -32,11 +32,11 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GettAllArticles_ReturnOK()
         {
-            var articles = new List<Domain.Entities.Article>
+            var articles = new List<Domain.DTOs.Article>
         {
-            new Domain.Entities.Article { ItemID = 1, Author = "Article 1" },
-            new Domain.Entities.Article { ItemID = 2, Author = "Article 2" },
-            new Domain.Entities.Article { ItemID = 3, Author = "Article 3" }
+            new Domain.DTOs.Article { ArticleID = 1, Author = "Article 1" },
+            new Domain.DTOs.Article { ArticleID = 2, Author = "Article 2" },
+            new Domain.DTOs.Article { ArticleID = 3, Author = "Article 3" }
         };
             _articleRepository.Setup(model => model.GetAllArticles()).Returns(articles);
 
@@ -48,7 +48,7 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GettAllArticles_ReturnNotFound()
         {
-            _articleRepository.Setup(model => model.GetAllArticles()).Returns(new List<Domain.Entities.Article>());
+            _articleRepository.Setup(model => model.GetAllArticles()).Returns(new List<Domain.DTOs.Article>());
 
             var result = _articleController.GetAllArticles();
 
@@ -75,9 +75,9 @@ namespace VirtualLibraryAPI.Tests
                 Publisher = "Publisher"
             };
 
-            var addedArticle = new Domain.Entities.Article
+            var addedArticle = new Domain.DTOs.Article
             {
-                ItemID = 1,
+                ArticleID = 1,
                 MagazinesIssueNumber = "23324",
                 Author = "Arnold"
             };
@@ -100,7 +100,7 @@ namespace VirtualLibraryAPI.Tests
                 Publisher = "Publisher"
             };
 
-            _articleRepository.Setup(model => model.AddArticle(request)).Returns((Domain.Entities.Article)null);
+            _articleRepository.Setup(model => model.AddArticle(request)).Returns((Domain.DTOs.Article)null);
 
             var result = _articleController.AddArticle(request);
 
@@ -127,7 +127,7 @@ namespace VirtualLibraryAPI.Tests
         {
             var articleId = 1;
             var isAvailable = true;
-            var addedBook = new Domain.Entities.Copy
+            var addedBook = new Domain.DTOs.Copy
             {
                 ItemID = 2,
                 CopyID = articleId
@@ -144,7 +144,7 @@ namespace VirtualLibraryAPI.Tests
         {
             var articleId = 1;
             var isAvailable = true;
-            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId, isAvailable)).Returns((Domain.Entities.Copy)null);
+            _articleRepository.Setup(model => model.AddCopyOfArticleById(articleId, isAvailable)).Returns((Domain.DTOs.Copy)null);
 
             var result = _articleController.AddCopyOfArticleById(articleId);
 
@@ -169,9 +169,9 @@ namespace VirtualLibraryAPI.Tests
         {
 
             var articleId = 1;
-            var expectedBook = new Domain.Entities.Article
+            var expectedBook = new Domain.DTOs.Article
             {
-                ItemID = articleId,
+                ArticleID = articleId,
                 Author = "Author",
                 MagazinesIssueNumber = "30/234"
             };
@@ -187,7 +187,7 @@ namespace VirtualLibraryAPI.Tests
         public void GetArticleById_ReturnNotFound()
         {
             var articleId = 1;
-            _articleRepository.Setup(model => model.GetArticleById(articleId)).Returns(null as Domain.Entities.Article);
+            _articleRepository.Setup(model => model.GetArticleById(articleId)).Returns(null as Domain.DTOs.Article);
 
             var result = _articleController.GetArticleById(articleId);
 
@@ -213,9 +213,9 @@ namespace VirtualLibraryAPI.Tests
                 PublishingDate = DateTime.Now,
                 Publisher = "Updated Publisher"
             };
-            var updatedArticle = new Domain.Entities.Article
+            var updatedArticle = new Domain.DTOs.Article
             {
-                ItemID = articleId,
+                ArticleID = articleId,
                 Author = "Author",
                 MagazineName = "ISBN"
             };
@@ -239,7 +239,7 @@ namespace VirtualLibraryAPI.Tests
                 Publisher = "Updated Publisher"
             };
 
-            _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Returns((Domain.Entities.Article)null);
+            _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Returns((Domain.DTOs.Article)null);
 
             var result = _articleController.UpdateArticle(articleId, request);
 
@@ -266,7 +266,7 @@ namespace VirtualLibraryAPI.Tests
         public void DeleteArticle_ReturnNoContent()
         {
             var articleId = 1;
-            _articleRepository.Setup(model => model.GetArticleById(articleId)).Returns(new Domain.Entities.Article());
+            _articleRepository.Setup(model => model.GetArticleById(articleId)).Returns(new Domain.DTOs.Article());
 
             var result = _articleController.DeleteArticle(articleId);
 
@@ -276,7 +276,7 @@ namespace VirtualLibraryAPI.Tests
         public void DeleteArticle_ReturnNotFound()
         {
             var articleId = 1;
-            _articleRepository.Setup(model => model.GetArticleById(articleId)).Returns((Domain.Entities.Article)null);
+            _articleRepository.Setup(model => model.GetArticleById(articleId)).Returns((Domain.DTOs.Article)null);
 
             var result = _articleController.DeleteArticle(articleId);
 

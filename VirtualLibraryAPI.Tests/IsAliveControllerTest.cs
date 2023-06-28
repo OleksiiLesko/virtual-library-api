@@ -22,9 +22,9 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GetResult_ReturnsOk()
         {
-            var yourController = new IsAliveController(_logger);
+            var controller = new IsAliveController(_logger);
 
-            var result = yourController.GetResult();
+            var result = controller.GetResult();
 
             Assert.NotNull(result);
             Assert.IsType<OkObjectResult>(result);
