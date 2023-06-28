@@ -5,7 +5,7 @@ using VirtualLibraryAPI.Models;
 namespace VirtualLibraryAPI.Library.Controllers
 {
     /// <summary>
-    /// Controller for add,get,update and delete book
+    ///  Book controller
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -18,13 +18,13 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Book model
         /// </summary>
-        private readonly Book _model;
+        private readonly IBookModel _model;
 
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public BookController(ILogger<BookController> logger, Book model)
+        public BookController(ILogger<BookController> logger, IBookModel model)
         {
             _logger = logger;
             _model = model;
@@ -67,17 +67,17 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Adding book:{BookID}", addedBook.ItemID);
+                _logger.LogInformation("Adding book:{BookID}", addedBook.BookID);
 
                 _logger.LogInformation("Book added");
                 return Ok(new Domain.DTOs.Book
                 {
-                    BookID = addedBook.ItemID,
+                    BookID = addedBook.BookID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
                     ISBN = addedBook.ISBN,
-                    Author = addedBook.Author,
+                    Author = addedBook.Author
                 });
             }
             catch (Exception ex)
@@ -101,6 +101,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return NotFound();
                 }
+
                 _logger.LogInformation("Adding copy:{CopyID}", id);
 
                 _logger.LogInformation("Copy added");
@@ -129,7 +130,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                     return NotFound();
                 }
 
-                _logger.LogInformation("Getting book by ID:{BookID}", book.ItemID);
+                _logger.LogInformation("Getting book by ID:{BookID}", book.BookID);
                 _logger.LogInformation("Book received ");
                 return Ok(_model.GetBookByIdResponse(id));
             }
@@ -155,12 +156,12 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Updating book by ID:{BookID}", updatedBook.ItemID);
+                _logger.LogInformation("Updating book by ID:{BookID}", updatedBook.BookID);
                 _logger.LogInformation("Book updated ");
 
                 return Ok(new Domain.DTOs.Book
                 {
-                    BookID = updatedBook.ItemID,
+                    BookID = updatedBook.BookID,
                     Name = request.Name,
                     Author = updatedBook.Author,
                     ISBN = updatedBook.ISBN,
@@ -192,7 +193,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 }
 
                 _model.DeleteBook(id);
-                _logger.LogInformation("Deleting book by ID:{BookID}", book.ItemID);
+                _logger.LogInformation("Deleting book by ID:{BookID}", book.BookID);
                 _logger.LogInformation("Book deleted ");
 
                 return NoContent();

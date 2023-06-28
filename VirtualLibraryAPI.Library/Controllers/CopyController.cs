@@ -5,7 +5,7 @@ using VirtualLibraryAPI.Models;
 namespace VirtualLibraryAPI.Library.Controllers
 {
     /// <summary>
-    /// Add copy controlller 
+    /// Copy controlller 
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -18,12 +18,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Book model
         /// </summary>
-        private readonly Models.Copy _model;
+        private readonly ICopyModel _model;
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public CopyController(ILogger<CopyController> logger, Models.Copy model)
+        public CopyController(ILogger<CopyController> logger, ICopyModel model)
         {
             _logger = logger;
             _model = model;

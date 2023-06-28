@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Models;
 
 namespace VirtualLibraryAPI.Library.Controllers
 {
     /// <summary>
-    /// Controller for add,get,update and delete magazine
+    /// Magazine controller
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -17,13 +18,13 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Magazine model
         /// </summary>
-        private readonly Magazine _model;
+        private readonly IMagazineModel _model;
 
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public MagazineController(ILogger<MagazineController> logger, Magazine model)
+        public MagazineController(ILogger<MagazineController> logger, IMagazineModel model)
         {
             _logger = logger;
             _model = model;
@@ -66,12 +67,12 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Adding magazine:{MagazineID}", addedMagazine.ItemID);
+                _logger.LogInformation("Adding magazine:{MagazineID}", addedMagazine.MagazineID);
 
                 _logger.LogInformation("Magazine added");
                 return Ok(new Domain.DTOs.Magazine
                 {
-                    MagazineID = addedMagazine.ItemID,
+                    MagazineID = addedMagazine.MagazineID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -126,7 +127,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                     return NotFound();
                 }
 
-                _logger.LogInformation("Getting magazine by ID:{MagazineID}", magazine.ItemID);
+                _logger.LogInformation("Getting magazine by ID:{MagazineID}", magazine.MagazineID);
                 _logger.LogInformation("Magazine received ");
                 return Ok(_model.GetMagazineByIdResponse(id));
             }
@@ -152,12 +153,12 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Updating magazine by ID:{MagazineID}", updatedMagazine.ItemID);
+                _logger.LogInformation("Updating magazine by ID:{MagazineID}", updatedMagazine.MagazineID);
                 _logger.LogInformation("Magazine updated ");
 
                 return Ok(new Domain.DTOs.Magazine
                 {
-                    MagazineID = updatedMagazine.ItemID,
+                    MagazineID = updatedMagazine.MagazineID,
                     Name = request.Name,
                     Publisher = request.Publisher,
                     PublishingDate = request.PublishingDate,
@@ -188,7 +189,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 }
 
                 _model.DeleteMagazine(id);
-                _logger.LogInformation("Deleting magazine by ID:{MagazineID}", magazine.ItemID);
+                _logger.LogInformation("Deleting magazine by ID:{MagazineID}", magazine.MagazineID);
                 _logger.LogInformation("Magazine deleted ");
 
                 return NoContent();

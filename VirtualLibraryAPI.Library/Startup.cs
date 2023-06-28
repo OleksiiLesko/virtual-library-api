@@ -56,14 +56,18 @@ namespace VirtualLibraryAPI.Library
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IMagazine, Repository.Repositories.Magazine>();
-            services.AddScoped<Models.Magazine>();
-            services.AddScoped<IArticle, Repository.Repositories.Article>();
-            services.AddScoped<Models.Article>();                                         
-            services.AddScoped<IBook, Repository.Repositories.Book>();
-            services.AddScoped<Models.Book>();
-            services.AddScoped<ICopy, Repository.Repositories.Copy>();
-            services.AddScoped<Models.Copy>();
+            //ToDo AddScoped read ...
+            services.AddScoped<IValidationModel, ValidationModel>();
+            services.AddScoped<IArticleModel, ArticleModel>();
+            services.AddScoped<IArticleRepository, Repository.Repositories.Article>();
+            services.AddScoped<IManagementModel, ManagementModel>();
+            services.AddScoped<IManagementRepository, Repository.Repositories.Management>();
+            services.AddScoped<IMagazineModel, MagazineModel>();
+            services.AddScoped<IMagazineRepository, Repository.Repositories.Magazine>();
+            services.AddScoped<IBookModel, BookModel>();
+            services.AddScoped<IBookRepository, Repository.Repositories.Book>();
+            services.AddScoped<ICopyModel, CopyModel>();
+            services.AddScoped<ICopyRepository, Repository.Repositories.Copy>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

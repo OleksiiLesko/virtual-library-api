@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Models;
 
 namespace VirtualLibraryAPI.Library.Controllers
 {
     /// <summary>
-    /// Controller for add,get,update and delete article
+    ///  Article controller
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -17,13 +18,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Article model
         /// </summary>
-        private readonly Article _model;
-
+        private readonly IArticleModel _model;
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public ArticleController(ILogger<ArticleController> logger, Article model)
+        public ArticleController(ILogger<ArticleController> logger, IArticleModel model)
         {
             _logger = logger;
             _model = model;
@@ -66,12 +66,12 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Adding article:{ArticleID}", addedArticle.ItemID);
+                _logger.LogInformation("Adding article:{ArticleID}", addedArticle.ArticleID);
 
                 _logger.LogInformation("Article added");
                 return Ok(new Domain.DTOs.Article
                 {
-                    ArticleID = addedArticle.ItemID,
+                    ArticleID = addedArticle.ArticleID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -130,7 +130,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                     return NotFound();
                 }
 
-                _logger.LogInformation("Getting article by ID:{ArticleID}", article.ItemID);
+                _logger.LogInformation("Getting article by ID:{ArticleID}", article.ArticleID);
                 _logger.LogInformation("Article received ");
                 return Ok(_model.GetArticleByIdResponse(id));
             }
@@ -156,12 +156,12 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return NotFound();
                 }
-                _logger.LogInformation("Updating article by ID:{ArticleID}", updatedArticle.ItemID);
+                _logger.LogInformation("Updating article by ID:{ArticleID}", updatedArticle.ArticleID);
                 _logger.LogInformation("Article updated ");
 
                 return Ok(new Domain.DTOs.Article
                 {
-                    ArticleID = updatedArticle.ItemID,
+                    ArticleID = updatedArticle.ArticleID,
                     Name = request.Name,
                     Author = request.Author,
                     Version = updatedArticle.Version,
@@ -195,7 +195,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 }
 
                 _model.DeleteArticle(id);
-                _logger.LogInformation("Deleting article by ID:{ArticleID}", article.ItemID);
+                _logger.LogInformation("Deleting article by ID:{ArticleID}", article.ArticleID);
                 _logger.LogInformation("Article deleted ");
 
                 return NoContent();
