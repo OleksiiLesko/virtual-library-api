@@ -15,7 +15,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
     /// <summary>
     /// Magazine repository 
     /// </summary>
-    public class Magazine : IMagazine
+    public class Magazine : IMagazineRepository
     {
         /// <summary>
         /// Application context
@@ -39,7 +39,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.Entities.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
         {
             var newMagazine = new Domain.Entities.Magazine()
             {
@@ -56,54 +56,113 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _context.Items.Add(item);
             _context.SaveChanges();
             _logger.LogInformation("Adding magazine to the database: {MagazineID}", newMagazine.ItemID);
-            return newMagazine;
+
+            var addedMagazine = new Domain.DTOs.Magazine
+            {
+                MagazineID = newMagazine.ItemID,
+                CopyID = null,
+                Name = magazine.Name,
+                PublishingDate = magazine.PublishingDate,
+                Publisher = magazine.Publisher,
+                IssueNumber = magazine.IssueNumber,
+                CopyInfo = null
+            };
+
+            return addedMagazine;
         }
         /// <summary>
         /// Delete magazine from the database
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public Domain.Entities.Magazine DeleteMagazine(int magazineId)
+        public Domain.DTOs.Magazine DeleteMagazine(int magazineId)
         {
-            var magazine = _context.Magazines.Find(magazineId);
-            if (magazine == null)
-            {
-                return null;
-            }
-            _context.Magazines.Remove(magazine);
+            var magazineEntity = _context.Magazines.Find(magazineId);
+            _context.Magazines.Remove(magazineEntity);
 
-            var item = _context.Items.FirstOrDefault(i => i.ItemID == magazineId);
-            if (item != null)
+            var copies = _context.Copies.Where(c => c.ItemID == magazineId).ToList();
+            foreach (var copyEntity in copies)
             {
-                _context.Items.Remove(item);
+                _context.Copies.Remove(copyEntity);
+            }
+
+            var itemEntity = _context.Items.FirstOrDefault(i => i.ItemID == magazineId);
+
+            var deletedMagazineDto = new Domain.DTOs.Magazine
+            {
+                Name = itemEntity.Name,
+                PublishingDate = itemEntity.PublishingDate,
+                Publisher = itemEntity.Publisher,
+                IssueNumber = magazineEntity.IssueNumber,
+                CopyInfo = magazineEntity.CopyInfo
+            };
+
+            _context.Magazines.Remove(magazineEntity);
+
+            if (itemEntity != null)
+            {
+                _context.Items.Remove(itemEntity);
             }
 
             _context.SaveChanges();
+            _logger.LogInformation("Deleting magazine from database: {MagazineID}", magazineEntity.ItemID);
 
-            _logger.LogInformation("Deleting magazine from database: {MagazineID}", magazine.ItemID);
 
-            return magazine;
+            return deletedMagazineDto;
         }
         /// <summary>
         /// Return all magazines from the database
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Domain.Entities.Magazine> GetAllMagazines()
+        public IEnumerable<Domain.DTOs.Magazine> GetAllMagazines()
         {
-            var magazines = _context.Magazines.ToList();
+            var magazineEntities = _context.Magazines.ToList();
             _logger.LogInformation("Returning all magazines from the database");
 
-            return magazines;
+            var magazineDtos = new List<Domain.DTOs.Magazine>();
+
+            foreach (var magazineEntity in magazineEntities)
+            {
+                var magazineDto = new Domain.DTOs.Magazine();
+
+                magazineDtos.Add(magazineDto);
+            }
+
+            return magazineDtos;
         }
         /// <summary>
         /// Get magazine by id from the database
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Domain.Entities.Magazine GetMagazineById(int id)
+        public Domain.DTOs.Magazine GetMagazineById(int id)
         {
             _logger.LogInformation($"Getting magazine with copies by id: MagazineID {id}");
-            return _context.Magazines.FirstOrDefault(b => b.ItemID == id);
+            var magazineEntity = _context.Magazines.FirstOrDefault(b => b.ItemID == id);
+            if (magazineEntity == null)
+            {
+                return null;
+            }
+
+            var itemEntity = _context.Items.FirstOrDefault(i => i.ItemID == magazineEntity.ItemID);
+
+            if ( itemEntity == null)
+            {
+                return null;
+            }
+
+            var magazineDto = new Domain.DTOs.Magazine
+            {
+                MagazineID = magazineEntity.ItemID,
+                CopyID = null,
+                Name = itemEntity.Name,
+                PublishingDate = itemEntity.PublishingDate,
+                Publisher = itemEntity.Publisher,
+                IssueNumber = magazineEntity.IssueNumber,
+                CopyInfo = magazineEntity.CopyInfo
+            };
+
+            return magazineDto;
         }
         /// <summary>
         /// Update magazine by id in the database
@@ -111,19 +170,11 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="bookId"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.Entities.Magazine UpdateMagazine(int bookId, Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine UpdateMagazine(int bookId, Domain.DTOs.Magazine magazine)
         {
             var existingMagazine = _context.Magazines.Find(bookId);
-            if (existingMagazine == null)
-            {
-                return null;
-            }
             existingMagazine.IssueNumber = magazine.IssueNumber;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
-            if (item == null)
-            {
-                return null;
-            }
 
             item.Name = magazine.Name;
             item.PublishingDate = (DateTime)magazine.PublishingDate;
@@ -131,7 +182,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             _context.SaveChanges();
             _logger.LogInformation("Update magazine by id in the database: {MagazineID}", existingMagazine.ItemID);
-            return existingMagazine;
+            return magazine;
         }
         /// <summary>
         /// Get magazine by id for response
@@ -145,16 +196,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                     .Where(x => x.Item.Type == Type.Magazine)
                                   .FirstOrDefault(x => x.Magazine.ItemID == id);
 
-            if (result == null)
-            {
-                return null;
-            }
             _logger.LogInformation($"Get magazine by id for response:MagazineID {id}");
 
             var copies = _context.Copies.Count(c => c.ItemID == result.Item.Magazine.ItemID && c.IsAvailable);
 
             var magazineDTO = new Domain.DTOs.Magazine
             {
+                CopyID = null,
                 CopyInfo = new CopyInfo
                 {
                     CountOfCopies = GetNumberOfCopiesOfMagazineById(id),
@@ -215,7 +263,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <param name="numberOfCopies"></param>
         /// <returns></returns>
-        public Domain.Entities.Copy AddCopyOfMagazineById(int id, bool isAvailable)
+        public Domain.DTOs.Copy AddCopyOfMagazineById(int id, bool isAvailable)
         {
             var existingMagazine = _context.Magazines.Find(id);
             if (existingMagazine == null)
@@ -223,16 +271,23 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 return null;
             }
 
-            var newCopy = new Domain.Entities.Copy
+            var newCopyEntity = new Domain.Entities.Copy
             {
                 ItemID = id,
                 IsAvailable = isAvailable
             };
-            _context.Copies.Add(newCopy);
+
+            _context.Copies.Add(newCopyEntity);
             _context.SaveChanges();
 
+            var newCopyDto = new Domain.DTOs.Copy
+            {
+                CopyID = newCopyEntity.CopyID,
+                ItemID = newCopyEntity.ItemID,
+                IsAvailable = newCopyEntity.IsAvailable
+            };
             _logger.LogInformation("Adding a copy of a magazine to the database: {CopyId}", id);
-            return newCopy;
+            return newCopyDto;
         }
         /// <summary>
         /// Add copy of a magazine for response
@@ -248,11 +303,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                   .Where(x => x.Copy.ItemID == id)
                                   .OrderByDescending(x => x.Copy.CopyID)
                                   .FirstOrDefault();
-
-            if (result == null)
-            {
-                return null;
-            }
 
             _logger.LogInformation($"Add copy of a magazine for response: CopyID {result.Copy.CopyID}");
 

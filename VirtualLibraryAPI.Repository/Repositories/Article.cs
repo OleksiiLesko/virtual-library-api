@@ -1,14 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System.Net;
 using VirtualLibraryAPI.Domain;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
-using static System.Reflection.Metadata.BlobBuilder;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
 
 namespace VirtualLibraryAPI.Repository.Repositories
@@ -16,7 +10,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
     /// <summary>
     /// Article repository 
     /// </summary>
-    public class Article : IArticle
+    public class Article : IArticleRepository
     {
         /// <summary>
         /// Application context
@@ -41,7 +35,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article AddArticle(Domain.DTOs.Article article)
+        public Domain.DTOs.Article AddArticle(Domain.DTOs.Article article)
         {
             var newArticle = new Domain.Entities.Article()
             {
@@ -50,7 +44,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 MagazineName = article.MagazineName,
                 MagazinesIssueNumber = article.MagazinesIssueNumber
             };
-            var item = new Item()
+            var item = new Domain.Entities.Item()
             {
                 Type = Type.Article,
                 Name = article.Name,
@@ -61,7 +55,22 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _context.Items.Add(item);
             _context.SaveChanges();
             _logger.LogInformation("Adding article to the database: {ArticleID}", newArticle.ItemID);
-            return newArticle;
+
+            var addedArticle = new Domain.DTOs.Article
+            {
+                ArticleID = newArticle.ItemID,
+                CopyID = null,
+                Name = article.Name,
+                PublishingDate = article.PublishingDate,
+                Publisher = article.Publisher,
+                Author = article.Author,
+                Version = article.Version,
+                MagazineName = article.MagazineName,
+                MagazinesIssueNumber = article.MagazinesIssueNumber,
+                CopyInfo = null
+            };
+
+            return addedArticle;
         }
         /// <summary>
         /// Adding a copy of a article to the database
@@ -69,7 +78,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Copy AddCopyOfArticleById(int id, bool isAvailable)
+        public Domain.DTOs.Copy AddCopyOfArticleById(int id, bool isAvailable)
         {
             var existingArticle = _context.Articles.Find(id);
             if (existingArticle == null)
@@ -77,16 +86,22 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 return null;
             }
 
-            var newCopy = new Domain.Entities.Copy
+            var newCopyEntity = new Domain.Entities.Copy
             {
                 ItemID = id,
                 IsAvailable = isAvailable
             };
-            _context.Copies.Add(newCopy);
+            _context.Copies.Add(newCopyEntity);
             _context.SaveChanges();
 
+            var newCopyDto = new Domain.DTOs.Copy
+            {
+                CopyID = newCopyEntity.CopyID,
+                ItemID = newCopyEntity.ItemID,
+                IsAvailable = newCopyEntity.IsAvailable
+            };
             _logger.LogInformation("Adding a copy of a article to the database: {ArticleId}", id);
-            return newCopy;
+            return newCopyDto;
         }
         /// <summary>
         ///  Add copy of a article for response
@@ -103,11 +118,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                  .Where(x => x.Copy.ItemID == id)
                                  .OrderByDescending(x => x.Copy.CopyID)
                                  .FirstOrDefault();
-
-            if (result == null)
-            {
-                return null;
-            }
 
             _logger.LogInformation($"Add copy of a article for response: CopyID {result.Copy.CopyID}");
 
@@ -129,38 +139,63 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article DeleteArticle(int id)
+        public Domain.DTOs.Article DeleteArticle(int id)
         {
             var article = _context.Articles.Find(id);
-            if (article == null)
-            {
-                return null;
-            }
             _context.Articles.Remove(article);
 
-            var item = _context.Items.FirstOrDefault(i => i.ItemID == id);
-            if (item != null)
+            var copies = _context.Copies.Where(c => c.ItemID == id).ToList();
+            foreach (var copyEntity in copies)
             {
-                _context.Items.Remove(item);
+                _context.Copies.Remove(copyEntity);
+            }
+
+            var itemEntity = _context.Items.FirstOrDefault(i => i.ItemID == id);
+
+            var deletedArticleDto = new Domain.DTOs.Article
+            {
+                Name = itemEntity.Name,
+                PublishingDate = itemEntity.PublishingDate,
+                Publisher = itemEntity.Publisher,
+                Author = article.Author,
+                MagazineName = article.MagazineName,
+                MagazinesIssueNumber= article.MagazinesIssueNumber,
+                Version = article.Version,
+                CopyInfo = article.CopyInfo
+            };
+
+            _context.Articles.Remove(article);
+
+            if (itemEntity != null)
+            {
+                _context.Items.Remove(itemEntity);
             }
 
             _context.SaveChanges();
-
             _logger.LogInformation("Deleting article from database: {ArticleID}", article.ItemID);
 
-            return article;
+            return deletedArticleDto;
         }
         /// <summary>
         /// Returning all articles from the database
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public IEnumerable<Domain.Entities.Article> GetAllArticles()
+        public IEnumerable<Domain.DTOs.Article> GetAllArticles()
         {
-            var articles = _context.Articles.ToList();
+            var articleEntities = _context.Articles.ToList();
+            var articleDtos = new List<Domain.DTOs.Article>();
+
+            foreach (var articleEntity in articleEntities)
+            {
+                var articleDto = new Domain.DTOs.Article();
+
+                articleDtos.Add(articleDto);
+            }
             _logger.LogInformation("Returning all articles from the database");
 
-            return articles;
+
+            return articleDtos;
         }
         /// <summary>
         /// Get all articles for response DTO
@@ -206,10 +241,36 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article GetArticleById(int id)
+        public Domain.DTOs.Article GetArticleById(int id)
         {
-            _logger.LogInformation($"Getting article with copies by id: ArticleID {id}");
-            return _context.Articles.FirstOrDefault(b => b.ItemID == id);
+            _logger.LogInformation($"Getting article id: ArticleID {id}");
+
+            var articleEntity = _context.Articles.FirstOrDefault(b => b.ItemID == id);
+            if (articleEntity == null)
+            {
+                return null;
+            }
+
+            var itemEntity = _context.Items.FirstOrDefault(i => i.ItemID == id);
+
+            if (itemEntity == null)
+            {
+                return null; 
+            }
+            var articleDto = new Domain.DTOs.Article
+            {
+                ArticleID = articleEntity.ItemID,
+                CopyID = null,
+                Name = itemEntity.Name,
+                PublishingDate = itemEntity.PublishingDate,
+                Publisher = itemEntity.Publisher,
+                Author = articleEntity.Author,
+                MagazineName = articleEntity.MagazineName,
+                MagazinesIssueNumber = articleEntity.MagazinesIssueNumber,
+                CopyInfo = articleEntity.CopyInfo
+            };
+
+            return articleDto;
         }
         /// <summary>
         /// Get article by id for response
@@ -224,23 +285,19 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 .Where(x => x.Item.Type == Type.Article)
                 .FirstOrDefault(x => x.Article.ItemID == id);
 
-            if (result == null)
-            {
-                return null;
-            }
-
             _logger.LogInformation($"Get article by id for response: ArticleID {id}");
-            var copies = _context.Copies.Count(c => c.ItemID == result.Item.Article.ItemID && c.IsAvailable);
+            var copies = _context.Copies.Count(c => c.ItemID == id && c.IsAvailable);
 
             var articleDTO = new Domain.DTOs.Article
             {
-                Name = result.Item.Name,
-                PublishingDate = result.Item.PublishingDate,
-                Publisher = result.Item.Publisher,
-                Author = result.Article.Author,
-                Version = result.Article.Version,
-                MagazinesIssueNumber = result.Article.MagazinesIssueNumber,
-                MagazineName = result.Article.MagazineName,
+                Name = result?.Item.Name,
+                CopyID = null,
+                PublishingDate = (DateTime)(result?.Item.PublishingDate),
+                Publisher = result?.Item.Publisher,
+                Author = result?.Article.Author,
+                Version = result?.Article.Version,
+                MagazinesIssueNumber = result?.Article.MagazinesIssueNumber,
+                MagazineName = result?.Article.MagazineName,
                 CopyInfo = new CopyInfo
                 {
                     CountOfCopies = GetNumberOfCopiesOfArticleById(id),
@@ -257,30 +314,23 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.Entities.Article UpdateArticle(int id, Domain.DTOs.Article article)
+        public Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article)
         {
             var existingArticle = _context.Articles.Find(id);
-            if (existingArticle == null)
-            {
-                return null;
-            }
+
             existingArticle.Author = article.Author;
             existingArticle.MagazinesIssueNumber = article.MagazinesIssueNumber;
             existingArticle.MagazineName = article.MagazineName;
             existingArticle.Version = article.Version;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == id);
-            if (item == null)
-            {
-                return null;
-            }
+
 
             item.Name = article.Name;
             item.PublishingDate = (DateTime)article.PublishingDate;
             item.Publisher = article.Publisher;
-
             _context.SaveChanges();
             _logger.LogInformation("Update article by id in the database: {ArticleID}", existingArticle.ItemID);
-            return existingArticle;
+            return article;
         }
         /// <summary>
         /// Get number of articles copies

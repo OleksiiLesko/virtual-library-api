@@ -18,7 +18,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
     /// <summary>
     /// Book repository 
     /// </summary>
-    public class Book : IBook
+    public class Book : IBookRepository
     {
         /// <summary>
         /// Application context
@@ -42,14 +42,14 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.Entities.Book AddBook(Domain.DTOs.Book book)
+        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book)
         {
             var newBook = new Domain.Entities.Book()
             {
                 Author = book.Author,
                 ISBN = book.ISBN
             };
-            var item = new Item()
+            var item = new Domain.Entities.Item()
             {
                 Type = Type.Book,
                 Name = book.Name,
@@ -60,54 +60,114 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _context.Items.Add(item);
             _context.SaveChanges();
             _logger.LogInformation("Adding book to the database: {BookID}", newBook.ItemID);
-            return newBook;
+            var addedBook = new Domain.DTOs.Book
+            {
+                BookID = newBook.ItemID,
+                CopyID = null, 
+                Name = book.Name,
+                PublishingDate = book.PublishingDate,
+                Publisher = book.Publisher,
+                Author = book.Author,
+                ISBN = book.ISBN,
+                CopyInfo = null 
+            };
+
+            return addedBook;
         }
         /// <summary>
         /// Delete book from the database
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public Domain.Entities.Book DeleteBook(int bookId)
+        public Domain.DTOs.Book DeleteBook(int bookId)
         {
-            var book = _context.Books.Find(bookId);
-            if (book == null)
-            {
-                return null;
-            }
-            _context.Books.Remove(book);
+            var bookEntity = _context.Books.Find(bookId);
 
-            var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
-            if (item != null)
+            var copies = _context.Copies.Where(c => c.ItemID == bookId).ToList();
+            foreach (var copyEntity in copies)
             {
-                _context.Items.Remove(item);
+                _context.Copies.Remove(copyEntity);
+            }
+
+            var itemEntity = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
+
+            var deletedBookDto = new Domain.DTOs.Book
+            {
+                Name = itemEntity.Name,
+                PublishingDate = itemEntity.PublishingDate,
+                Publisher = itemEntity.Publisher,
+                Author = bookEntity.Author,
+                ISBN = bookEntity.ISBN,
+                CopyInfo = bookEntity.CopyInfo
+            };
+
+            _context.Books.Remove(bookEntity);
+
+            if (itemEntity != null)
+            {
+                _context.Items.Remove(itemEntity);
             }
 
             _context.SaveChanges();
 
-            _logger.LogInformation("Deleting book from database: {BookID}", book.ItemID);
+            _logger.LogInformation("Deleting book from database: {BookID}", bookEntity.ItemID);
 
-            return book;
+            return deletedBookDto;
         }
         /// <summary>
         /// Return all books from the database
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Domain.Entities.Book> GetAllBooks()
+        public IEnumerable<Domain.DTOs.Book> GetAllBooks()
         {
-            var books = _context.Books.ToList();
+            var bookEntities = _context.Books.ToList();
             _logger.LogInformation("Returning all books from the database");
 
-            return books;
+            var bookDtos = new List<Domain.DTOs.Book>();
+
+            foreach (var bookEntity in bookEntities)
+            {
+                var bookDto = new Domain.DTOs.Book();
+
+                bookDtos.Add(bookDto);
+            }
+
+            return bookDtos;
         }
         /// <summary>
         /// Get book by id from the database
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Domain.Entities.Book GetBookById(int id)
+        public Domain.DTOs.Book GetBookById(int id)
         {
             _logger.LogInformation($"Getting book with copies by id: BookID {id}");
-            return _context.Books.FirstOrDefault(b => b.ItemID == id);
+            var bookEntity = _context.Books.FirstOrDefault(b => b.ItemID == id);
+            if (bookEntity == null)
+            {
+                return null;
+            }
+
+            var itemEntity = _context.Items.FirstOrDefault(i => i.ItemID == id);
+
+            if (itemEntity == null)
+            {
+                return null;
+            }
+
+            var bookDto = new Domain.DTOs.Book
+            {
+                BookID = id,
+                CopyID = null,
+                Name = itemEntity.Name,
+                PublishingDate = itemEntity.PublishingDate,
+                Publisher = itemEntity.Publisher,
+                Author = bookEntity.Author,
+                ISBN = bookEntity.ISBN,
+                CopyInfo = bookEntity.CopyInfo
+            };
+
+            return bookDto;
         }
         /// <summary>
         /// Update book by id in the database
@@ -115,20 +175,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="bookId"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.Entities.Book UpdateBook(int bookId, Domain.DTOs.Book book)
+        public Domain.DTOs.Book UpdateBook(int bookId, Domain.DTOs.Book book)
         {
             var existingBook = _context.Books.Find(bookId);
-            if (existingBook == null)
-            {
-                return null;
-            }
+
             existingBook.Author = book.Author;
             existingBook.ISBN = book.ISBN;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
-            if (item == null)
-            {
-                return null;
-            }
 
             item.Name = book.Name;
             item.PublishingDate = (DateTime)book.PublishingDate;
@@ -136,7 +189,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             _context.SaveChanges();
             _logger.LogInformation("Update book by id in the database: {BookID}", existingBook.ItemID);
-            return existingBook;
+            return book;
         }
         /// <summary>
         /// Get book by id for response
@@ -150,15 +203,10 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 .Where(x => x.Item.Type == Type.Book && x.Book.ItemID == id)
                 .FirstOrDefault();
 
-            if (result == null)
-            {
-                return null;
-            }
-
             var bookDto = new Domain.DTOs.Book
             {
-                BookID = result.Item.ItemID,
-                CopyID = result.Book.ItemID,
+                BookID = id,
+                CopyID = null,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
@@ -225,7 +273,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="id"></param>
         /// <param name="numberOfCopies"></param>
         /// <returns></returns>
-        public Domain.Entities.Copy AddCopyOfBookById(int id, bool isAvailable)
+        public Domain.DTOs.Copy AddCopyOfBookById(int id, bool isAvailable)
         {
             var existingBook = _context.Books.Find(id);
             if (existingBook == null)
@@ -233,18 +281,27 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 return null;
             }
 
-            var newCopy = new Domain.Entities.Copy
+            var newCopyEntity = new Domain.Entities.Copy
             {
                 ItemID = id,
                 IsAvailable = isAvailable
-
             };
-            _context.Copies.Add(newCopy);
+
+            _context.Copies.Add(newCopyEntity);
             _context.SaveChanges();
 
+            var newCopyDto = new Domain.DTOs.Copy
+            {
+                CopyID = newCopyEntity.CopyID,
+                ItemID = newCopyEntity.ItemID,
+                IsAvailable = newCopyEntity.IsAvailable
+            };
+
             _logger.LogInformation("Adding a copy of a book to the database: {CopyId}", id);
-            return newCopy;
+
+            return newCopyDto;
         }
+
         /// <summary>
         /// Add copy of a book for response
         /// </summary>
@@ -259,11 +316,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                   .Where(x => x.Copy.ItemID == id)
                                   .OrderByDescending(x => x.Copy.CopyID)
                                   .FirstOrDefault();
-
-            if (result == null)
-            {
-                return null;
-            }
 
             _logger.LogInformation($"Add copy of a book for response: CopyID {result.Copy.CopyID}");
 

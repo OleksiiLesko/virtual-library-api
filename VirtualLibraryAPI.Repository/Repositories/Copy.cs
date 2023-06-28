@@ -11,7 +11,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
     /// <summary>
     /// Copy repository 
     /// </summary>
-    public class Copy : ICopy
+    public class Copy : ICopyRepository
     {
         /// <summary>
         /// Application context
@@ -31,15 +31,12 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _logger = logger;
         }
 
-        public Domain.Entities.Copy DeleteCopy(int id)
+        public Domain.DTOs.Copy DeleteCopy(int id)
         {
             var copy = _context.Copies.Find(id);
-            if (copy == null)
-            {
-                return null;
-            }
             _context.Copies.Remove(copy);
 
+            var deletedCopyDto = new Domain.DTOs.Copy();
             //var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
             //if (item != null)
             //{
@@ -50,7 +47,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             _logger.LogInformation("Deleting copy from database: {CopyID}", copy.ItemID);
 
-            return copy;
+            return deletedCopyDto;
         }
         public Domain.DTOs.Copy GetCopyByIdResponse(int id)
         {
@@ -58,14 +55,9 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                  .Join(_context.Books, item => item.ItemID, book => book.ItemID, (item, book) => new { Item = item, Book = book })
                                  .FirstOrDefault(x => x.Book.ItemID == id);
 
-            if (result == null)
-            {
-                return null;
-            }
             _logger.LogInformation($"Get copy by id for response:BookID {id}");
             return new Domain.DTOs.Copy
             {
-                ItemID = (int)result.Item.ItemID,
                 CopyID = id,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
@@ -75,64 +67,54 @@ namespace VirtualLibraryAPI.Repository.Repositories
             };
         }
 
-        public Domain.Entities.Copy GetCopyById(int id)
+        public Domain.DTOs.Copy GetCopyById(int id)
         {
             _logger.LogInformation($"Get book by id from the database: BookID {id}");
-            return _context.Copies.FirstOrDefault(b => b.ItemID == id);
-        }
-
-        public Domain.Entities.Copy UpdateCopy(int copyId, Domain.DTOs.Copy copy)
-        {
-            var existingCopy = _context.Copies.Find(copyId);
-            if (existingCopy == null)
+            var copyEntity = _context.Copies.FirstOrDefault(b => b.CopyID == id);
+            if (copyEntity == null)
             {
                 return null;
             }
+
+            var itemEntity = _context.Items.FirstOrDefault(b => b.ItemID == id);
+            if (itemEntity == null)
+            {
+                return null;
+            }
+
+            var copyDtos = new Domain.DTOs.Copy
+            {
+                CopyID = copyEntity.CopyID,
+                ItemID = copyEntity.ItemID,
+                IsAvailable = copyEntity.IsAvailable,
+                ExpirationDate = copyEntity.ExpirationDate,
+                Type = (Domain.DTOs.Type)itemEntity.Type
+            };
+            return copyDtos;
+        }
+
+        public Domain.DTOs.Copy UpdateCopy(int copyId, Domain.DTOs.Copy copy)
+        {
+            var existingCopy = _context.Copies.Find(copyId);
 
             existingCopy.ItemID = copy.ItemID;
             existingCopy.CopyID = copy.CopyID;
 
             var item = _context.Items.FirstOrDefault(i => i.ItemID == existingCopy.ItemID);
-            if (item == null)
-            {
-                return null;
-            }
 
             item.Name = copy.Name;
             item.PublishingDate = (DateTime)copy.PublishingDate;
             item.Publisher = copy.Publisher;
 
             var book = _context.Books.FirstOrDefault(b => b.ItemID == existingCopy.ItemID);
-            if (book == null)
-            {
-                return null;
-            }
+
 
             book.ISBN = copy.ISBN;
             book.Author = copy.Author;
-
+            var copyDTO = new Domain.DTOs.Copy();
             _context.SaveChanges();
             _logger.LogInformation("Update copy by id in the database: {BookID}", existingCopy.ItemID);
-            return existingCopy;
-        }
-        /// <summary>
-        /// Get all books for response DTO
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Domain.DTOs.Book> GetAllBooksResponse()
-        {
-            _logger.LogInformation(" Get all books for response DTO:");
-            return _context.Items
-                           .Join(_context.Books, item => item.ItemID, book => book.ItemID, (item, book) => new { Item = item, Book = book })
-                           .Select(x => new Domain.DTOs.Book
-                           {
-                               BookID = x.Item.ItemID,
-                               Name = x.Item.Name,
-                               PublishingDate = x.Item.PublishingDate,
-                               Publisher = x.Item.Publisher,
-                               ISBN = x.Book.ISBN,
-                               Author = x.Book.Author
-                           });
+            return copyDTO;
         }
     }
 }

@@ -6,60 +6,63 @@ using System.Threading.Tasks;
 
 namespace VirtualLibraryAPI.Repository
 {
-    public interface IMagazine
+    /// <summary>
+    /// Article repository interface 
+    /// </summary>
+    public interface IArticleRepository
     {
         /// <summary>
-        /// Method for get all magazines
+        /// Method for get all articles
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Domain.Entities.Magazine> GetAllMagazines();
+        IEnumerable<Domain.DTOs.Article> GetAllArticles();
         /// <summary>
-        /// Method for get magazine by id
+        /// Method for get article by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Domain.Entities.Magazine GetMagazineById(int id);
+        Domain.DTOs.Article GetArticleById(int id);
         /// <summary>
-        /// Method for add magazine
+        /// Method for add article
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.Entities.Magazine AddMagazine(Domain.DTOs.Magazine magazine);
+        Domain.DTOs.Article AddArticle(Domain.DTOs.Article article);
         /// <summary>
-        /// Method for add copy of a magazine
+        /// Method for add copy of a article
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.Entities.Copy AddCopyOfMagazineById(int id, bool isAvailable);
+        Domain.DTOs.Copy AddCopyOfArticleById(int id, bool isAvailable);
         /// <summary>
-        /// Method for update magazine
+        /// Method for update article
         /// </summary>
         /// <param name="id"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.Entities.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine);
+        Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article);
         /// <summary>
-        /// Method for delete magazine
+        /// Method for delete article
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Domain.Entities.Magazine DeleteMagazine(int id);
+        Domain.DTOs.Article DeleteArticle(int id);
         /// <summary>
-        /// Get  magazine by id for response DTO
+        /// Get  article by id for response DTO
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Domain.DTOs.Magazine GetMagazineByIdResponse(int id);
+        Domain.DTOs.Article GetArticleByIdResponse(int id);
         /// <summary>
-        /// Get all magazines for response DTO
+        /// Get all articles for response DTO
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Domain.DTOs.Magazine> GetAllMagazinesResponse();
+        IEnumerable<Domain.DTOs.Article> GetAllArticlesResponse();
         /// <summary>
-        /// Add copy to magazine for response
+        /// Add copy to article for response
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Domain.DTOs.Magazine AddCopyOfMagazineByIdResponse(int id);
+        Domain.DTOs.Article AddCopyOfArticlesByIdResponse(int id);
     }
 }
