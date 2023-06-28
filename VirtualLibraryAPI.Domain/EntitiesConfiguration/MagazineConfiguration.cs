@@ -23,6 +23,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                     .IsRequired();
 
             builder.Ignore(e => e.Type);
+            builder.Ignore(e => e.CopyInfo);
 
             builder.HasOne(e => e.Item)
            .WithOne(e => e.Magazine)

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
@@ -16,7 +17,6 @@ namespace VirtualLibraryAPI.Domain.DTOs
         public int ItemID { get; set; }
         /// <summary>
         /// ID of copy
-        /// </summary>
         public int CopyID { get; set; }
         /// <summary>
         /// Name of copy
@@ -38,5 +38,14 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// ISBN of copy
         /// </summary>
         public string? ISBN { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsAvailable { get; set; }
+        /// <summary>
+        /// Expiration date of copy
+        /// </summary> 
+        public DateTime ExpirationDate { get; set; }
+        public Type Type { get; set; }
     }
 }

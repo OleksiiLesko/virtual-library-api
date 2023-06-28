@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Domain.DTOs;
 
 namespace VirtualLibraryAPI.Domain.Entities
 {
@@ -35,6 +36,10 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// ISBN of book
         /// </summary>
         public string ISBN { get; set; } = string.Empty;
+        /// <summary>
+        /// Information about copy of book
+        /// </summary>
+        public CopyInfo? CopyInfo { get; set; }
     }
 }
 

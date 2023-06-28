@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using VirtualLibraryAPI.Domain.DTOs;
 
 namespace VirtualLibraryAPI.Domain.Entities
 {
@@ -42,5 +43,9 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Magazine name of article 
         /// </summary>
         public string MagazineName { get; set; } = string.Empty;
+        /// <summary>
+        /// Information about copy of article
+        /// </summary>
+        public CopyInfo? CopyInfo { get; set; }
     }
 }

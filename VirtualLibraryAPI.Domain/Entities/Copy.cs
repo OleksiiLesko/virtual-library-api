@@ -34,5 +34,13 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Status of copy
         /// </summary>
         public bool IsAvailable { get; set; }
+        /// <summary>
+        /// Period of copy booked
+        /// </summary>
+        public int BookingPeriod { get; set; }
+        /// <summary>
+        /// Expiration date of copy
+        /// </summary> 
+        public DateTime ExpirationDate { get; set; }
     }
 }

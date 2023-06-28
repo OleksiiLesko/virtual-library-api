@@ -27,7 +27,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Name of article
         /// </summary>
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } 
         /// <summary>
         /// Publishing date of article
         /// </summary>
@@ -37,12 +37,12 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Author of article 
         /// </summary>
         [Required]
-        public string Author { get; set; }
+        public string Author { get; set; } 
         /// <summary>
         /// Publisher of article
         /// </summary>
         [Required]
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } 
         /// <summary>
         /// Author of article
         /// </summary>
@@ -52,12 +52,12 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Magazines issue number of article 
         /// </summary>
         [Required]
-        public string MagazinesIssueNumber { get; set; }
+        public string MagazinesIssueNumber { get; set; }                        
         /// <summary>
         /// Magazine name of article 
         /// </summary>
         [Required]
-        public string MagazineName { get; set; }
+        public string MagazineName { get; set; } 
         /// <summary>
         /// Copy information
         /// </summary>

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtualLibraryAPI.Domain.Entities
+﻿namespace VirtualLibraryAPI.Domain.Entities
 {
     /// <summary>
     /// Enum for types
@@ -18,4 +10,5 @@ namespace VirtualLibraryAPI.Domain.Entities
         Magazine = 3,
         Copy = 4
     }
+
 }

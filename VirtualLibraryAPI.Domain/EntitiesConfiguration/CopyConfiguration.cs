@@ -25,6 +25,12 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
             builder.Property(e => e.IsAvailable)
               .IsRequired();
 
+            builder.Property(e => e.ExpirationDate)
+                  .HasMaxLength(50)
+                  .IsRequired();
+
+            builder.Ignore(e => e.BookingPeriod);
+
             builder.Ignore(e => e.Type);
 
             builder.HasOne(e => e.Item)
@@ -33,7 +39,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("FK_Copy_Item");
 
-            builder.HasIndex(e => e.ItemID).IsUnique(false);
+            builder.HasIndex(e => e.ItemID).IsUnique(false); 
         }
     }
 }

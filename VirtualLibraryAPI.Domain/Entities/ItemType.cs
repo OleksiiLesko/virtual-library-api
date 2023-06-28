@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VirtualLibraryAPI.Domain.Entities
+﻿namespace VirtualLibraryAPI.Domain.Entities
 {
 
     // <summary>
@@ -26,5 +18,6 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Connect with Item
         /// </summary>
         public virtual ICollection<Item> Item { get; set; }
+       
     }
 }

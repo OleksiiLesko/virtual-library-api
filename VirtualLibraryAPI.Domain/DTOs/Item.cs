@@ -1,8 +1,11 @@
-﻿namespace VirtualLibraryAPI.Domain.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace VirtualLibraryAPI.Domain.DTOs
 {
-    /// <summary>
-    /// Table of items
-    /// </summary>
     public class Item
     {
         /// <summary>
@@ -16,7 +19,7 @@
         /// <summary>
         /// Type of item (book, magazine, article, copy)
         /// </summary>
-        public  Type Type { get; set; } 
+        public Type Type { get; set; }
         /// <summary>
         /// Publishing date of item
         /// </summary>
@@ -25,13 +28,5 @@
         /// Publisher of item
         /// </summary>
         public string Publisher { get; set; } = string.Empty;
-
-        public virtual Book Book { get; set; }
-        public virtual Article Article { get; set; }
-        public virtual Magazine Magazine { get; set; }
-        public virtual Copy Copy { get; set; }
-        public virtual ItemType ItemType { get; set; }
-
     }
 }
-
