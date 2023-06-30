@@ -6,7 +6,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository;
+using VirtualLibraryAPI.Repository.Repositories;
 
 namespace VirtualLibraryAPI.Tests
 {
@@ -14,11 +16,13 @@ namespace VirtualLibraryAPI.Tests
     {
         private readonly ILogger<Models.ManagementModel> _logger;
         private readonly Mock<IManagementRepository> _managementRepository;
+        private readonly Mock<ManagementModel> _model;
 
         public ManagementModelTest()
         {
             _managementRepository = new Mock<IManagementRepository>();
             _logger = new Mock<ILogger<Models.ManagementModel>>().Object;
+            _model = new Mock<ManagementModel>();
         }
         [Fact]
         public void ReserveCopyById_Should_Change_Status_And_ExpirationDate()
@@ -106,6 +110,40 @@ namespace VirtualLibraryAPI.Tests
             Assert.Equal(expectedCopy.CopyID, result.CopyID);
             Assert.True(result.IsAvailable);
             Assert.Equal(DateTime.MinValue, result.ExpirationDate);
+        }
+        [Fact]
+        public void GetAllExpiredItems_ReturnsItems()
+        {
+            var expectedItems = new List<Domain.DTOs.Item> { new Domain.DTOs.Item(), new Domain.DTOs.Item() };
+            _managementRepository.Setup(repo => repo.GetAllExpiredItems()).Returns(expectedItems);
+            var managementModel = new Models.ManagementModel(_logger, _managementRepository.Object);
+
+            var actualItems = managementModel.GetAllExpiredItems();
+
+            Assert.Equal(expectedItems, actualItems);
+        }
+
+        [Fact]
+        public void GetAllExpiredItemsResponse_ReturnsResult()
+        {
+            var expectedItems = new List<Domain.DTOs.Copy> { new Domain.DTOs.Copy(), new Domain.DTOs.Copy() };
+            _managementRepository.Setup(repo => repo.GetAllExpiredItemsResponse()).Returns(expectedItems);
+
+            var managementModel = new Models.ManagementModel(_logger, _managementRepository.Object);
+            var actualItems = managementModel.GetAllExpiredItemsResponse();
+
+            Assert.Equal(expectedItems, actualItems);
+        }
+
+        [Fact]
+        public void GetAllExpiredItemsResponse_ReturnsNull()
+        {
+            _managementRepository.Setup(repo => repo.GetAllExpiredItemsResponse()).Returns((IEnumerable<Domain.DTOs.Copy>)null);
+            var managementModel = new Models.ManagementModel(_logger, _managementRepository.Object);
+
+            var result = managementModel.GetAllExpiredItemsResponse();
+
+            Assert.Null(result);
         }
     }
 }

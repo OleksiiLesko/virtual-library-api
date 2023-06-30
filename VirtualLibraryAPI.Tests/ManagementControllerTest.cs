@@ -100,5 +100,36 @@ namespace VirtualLibraryAPI.Tests
 
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
         }
+        [Fact]
+        public void GetAllExpiredItems_ReturnsOkResult()
+        {
+            var expectedItems = new List<Item> { new Item(), new Item() };
+            _managementModelMock.Setup(repo => repo.GetAllExpiredItems()).Returns(expectedItems);
+
+            IActionResult result = _managementController.GetAllExpiredItems();
+
+            Assert.IsType<OkObjectResult>(result);
+        }
+
+        [Fact]
+        public void GetAllExpiredItems_ReturnsNotFound()
+        {
+            _managementModelMock.Setup(repo => repo.GetAllExpiredItems()).Returns((IEnumerable<Item>)null);
+
+
+            IActionResult result = _managementController.GetAllExpiredItems();
+
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public void GetAllExpiredItems_ThrowsException_ReturnsBadRequest()
+        {
+            _managementModelMock.Setup(m => m.GetAllExpiredItems()).Throws(new Exception("Some error"));
+
+            IActionResult result = _managementController.GetAllExpiredItems();
+
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
     }
 }
