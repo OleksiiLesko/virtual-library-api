@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Repository;
 
 namespace VirtualLibraryAPI.Models
@@ -32,6 +34,38 @@ namespace VirtualLibraryAPI.Models
             _repository = repository;
         }
         /// <summary>
+        /// Return all items with expired booking
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Item> GetAllExpiredItems()
+        {
+            _logger.LogInformation("Return all items with expired booking");
+            var items = _repository.GetAllExpiredItems();
+            if (items.Any())
+            {
+                return items;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        /// <summary>
+        /// Return all items with expired booking for response
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Copy> GetAllExpiredItemsResponse()
+        {
+            _logger.LogInformation("Get all expired items for response DTO from Management model  ");
+            var result = _repository.GetAllExpiredItemsResponse();
+            if (result == null)
+            {
+                return result;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Reserve copy by id 
         /// </summary>
         /// <param name="copyId"></param>
@@ -39,7 +73,7 @@ namespace VirtualLibraryAPI.Models
         /// <returns></returns>
         public Domain.DTOs.Copy ReserveCopyById(int copyId, int bookingPeriod)
         {
-            _logger.LogInformation($"Reserve copy by id by id for response  from Management  model: CopyID {copyId}");
+            _logger.LogInformation($"Reserve copy  by id for response  from Management  model: CopyID {copyId}");
             var result = _repository.ReserveCopyById(copyId, bookingPeriod);
             if (result == null)
             {
