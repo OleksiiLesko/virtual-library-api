@@ -25,5 +25,15 @@ namespace VirtualLibraryAPI.Repository
         /// <param name="bookedPeriod"></param>
         /// <returns></returns>
         Domain.DTOs.Copy ReturnCopyById(int copyId);
+        /// <summary>
+        /// Return items whose not expired
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Domain.DTOs.Item> GetAllExpiredItems();
+        /// <summary>
+        /// Get all expired items for response
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Domain.DTOs.Copy> GetAllExpiredItemsResponse();
     }
 }
