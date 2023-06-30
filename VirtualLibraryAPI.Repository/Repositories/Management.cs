@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtualLibraryAPI.Domain;
+using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
 
 namespace VirtualLibraryAPI.Repository.Repositories
@@ -69,6 +70,52 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var copyDTO = new Domain.DTOs.Copy();
             return copyDTO;
+        }
+        /// <summary>
+        /// Return items whose expiration date has passed
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Domain.DTOs.Item> GetAllExpiredItems()
+        {
+            var expiredCopies = _context.Copies.Where(c => c.ExpirationDate < DateTime.Now).ToList();
+            var expiredItems = new List<Domain.DTOs.Item>();
+
+            foreach (var copy in expiredCopies)
+            {
+                var item = _context.Items.FirstOrDefault(i => i.ItemID == copy.ItemID);
+
+                var expiredItem = new Domain.DTOs.Item();
+
+                expiredItems.Add(expiredItem);
+            }
+
+            _logger.LogInformation("Returning all expired items from the database");
+
+            return expiredItems;
+        }
+        /// <summary>
+        /// Get all items with expired booking for response DTO
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Domain.DTOs.Copy> GetAllExpiredItemsResponse()
+        {
+            _logger.LogInformation(" Returning all expired items for response DTO:");
+            var items = _context.Items
+                           .Join(_context.Copies, item => item.ItemID, copy => copy.ItemID, (item, copy) => new { Item = item, Copy = copy })
+                           .Select(x => new Domain.DTOs.Copy
+                           {
+                               ItemID = x.Item.ItemID,
+                               CopyID = x.Copy.CopyID,
+                               Name = x.Item.Name,
+                               Types = ItemTypeConverter.GetItemType((Domain.DTOs.Type)x.Item.Type),
+                               ExpirationDate = x.Copy.ExpirationDate,
+                               Publisher = null,
+                               Author = null,
+                               ISBN = null
+                              
+                           }).ToList();
+
+            return items;
         }
     }
 }
