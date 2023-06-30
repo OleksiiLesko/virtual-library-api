@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
+    /// <summary>
+    /// Item DTO
+    /// </summary>
     public class Item
     {
         /// <summary>
         /// ID of item
         /// </summary>
         public int ItemID { get; set; }
+        /// <summary>
+        /// CopyID of item
+        /// </summary>
+        public int CopyID { get; set; }
         /// <summary>
         /// Name of item
         /// </summary>

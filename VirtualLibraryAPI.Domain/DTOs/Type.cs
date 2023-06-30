@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
+    /// <summary>
+    /// Type DTO
+    /// </summary>
     public enum Type
     {
         Book = 1,

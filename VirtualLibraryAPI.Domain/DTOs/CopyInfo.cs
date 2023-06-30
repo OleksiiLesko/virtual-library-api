@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
+    /// <summary>
+    /// CopyInfo DTO
+    /// </summary>
     public class CopyInfo
     {
         /// <summary>

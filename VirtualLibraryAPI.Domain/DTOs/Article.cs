@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace VirtualLibraryAPI.Domain.DTOs
 {
     /// <summary>
-    /// Magazine DTO
+    /// Article DTO
     /// </summary>
     public class Article
     {

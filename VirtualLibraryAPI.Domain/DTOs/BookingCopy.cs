@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
+    /// <summary>
+    /// BookingCopy DTO
+    /// </summary>
     public class BookingCopy
     {
         /// <summary>
