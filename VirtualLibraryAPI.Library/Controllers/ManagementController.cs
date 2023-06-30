@@ -127,5 +127,24 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return BadRequest($"Failed");
             }
         }
+        [HttpGet("Items/BookingExpired")]
+        public IActionResult GetAllExpiredItems()
+        {
+            try
+            {
+                var item = _managementModel.GetAllExpiredItems();
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                _logger.LogInformation("Return all items with expired booking ");
+                return Ok(_managementModel.GetAllExpiredItemsResponse());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error occurred while processing the request: {Error}", ex.Message);
+                return BadRequest($"Failed");
+            }
+        }
     }
 }
