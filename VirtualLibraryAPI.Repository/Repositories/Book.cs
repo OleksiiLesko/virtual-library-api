@@ -284,7 +284,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var newCopyEntity = new Domain.Entities.Copy
             {
                 ItemID = id,
-                IsAvailable = isAvailable
+                IsAvailable = isAvailable,
             };
 
             _context.Copies.Add(newCopyEntity);
@@ -294,7 +294,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 CopyID = newCopyEntity.CopyID,
                 ItemID = newCopyEntity.ItemID,
-                IsAvailable = newCopyEntity.IsAvailable
+                IsAvailable = newCopyEntity.IsAvailable,
             };
 
             _logger.LogInformation("Adding a copy of a book to the database: {CopyId}", id);
