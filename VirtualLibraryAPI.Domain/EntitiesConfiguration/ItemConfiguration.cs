@@ -10,8 +10,15 @@ using VirtualLibraryAPI.Domain.Entities;
 
 namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 {
+    /// <summary>
+    /// Configuration of item
+    /// </summary>
     public class ItemConfiguration : IEntityTypeConfiguration<Item>
     {
+        /// <summary>
+        /// Builder configuration for Item
+        /// </summary>
+        /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<Item> builder)
         {
             builder.HasKey(e => e.ItemID);

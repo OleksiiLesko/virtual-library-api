@@ -19,6 +19,11 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         public int ItemID { get; set; }
         /// <summary>
+        ///  ID of user
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? UserID { get; set; }
+        /// <summary>
         /// ID of copy
         public int CopyID { get; set; }
         /// <summary>

@@ -16,6 +16,10 @@ namespace VirtualLibraryAPI.Domain
     public class ApplicationContext : DbContext
     {
         /// <summary>
+        ///  Users entity type  used to interact with a corresponding table in the database.
+        /// </summary>
+        public DbSet<User> Users { get; set; }
+        /// <summary>
         ///  Items entity type  used to interact with a corresponding table in the database.
         /// </summary>
         public DbSet<Item> Items { get; set; }
@@ -38,7 +42,7 @@ namespace VirtualLibraryAPI.Domain
         /// <summary>
         ///  ItemType entity type  used to interact with a corresponding table in the database.
         /// </summary>
-        public DbSet<ItemType> ItemTypes { get; set; }
+        public DbSet<ItemType> ItemType { get; set; }
 
         /// <summary>
         /// Application context that has options 
@@ -53,6 +57,9 @@ namespace VirtualLibraryAPI.Domain
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+               .ToTable("Users");
+
             modelBuilder.Entity<Item>()
                .ToTable("Items");
 
@@ -68,6 +75,7 @@ namespace VirtualLibraryAPI.Domain
             modelBuilder.Entity<Copy>()
                 .ToTable("Copies");
 
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
             modelBuilder.ApplyConfiguration(new BookConfiguration());

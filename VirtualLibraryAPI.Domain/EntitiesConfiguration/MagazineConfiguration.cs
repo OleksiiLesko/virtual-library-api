@@ -9,8 +9,15 @@ using VirtualLibraryAPI.Domain.Entities;
 
 namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 {
+    /// <summary>
+    /// Configuration of magazine
+    /// </summary>
     public class MagazineConfiguration : IEntityTypeConfiguration<Magazine>
     {
+        /// <summary>
+        /// Builder configuration for magazine
+        /// </summary>
+        /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<Magazine> builder)
         {
             builder.HasKey(e => e.ItemID);

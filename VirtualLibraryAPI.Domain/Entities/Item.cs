@@ -25,7 +25,6 @@
         /// Publisher of item
         /// </summary>
         public string Publisher { get; set; } = string.Empty;
-
         public virtual Book Book { get; set; }
         public virtual Article Article { get; set; }
         public virtual Magazine Magazine { get; set; }

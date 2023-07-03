@@ -19,9 +19,18 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// </summary>
         public int ItemID { get; set; }
         /// <summary>
+        ///  ID of user
+        /// </summary>
+        public int UserID { get; set; }
+        /// <summary>
         /// Connect with Item
         /// </summary>
         public virtual Item Item { get; set; }
+        /// <summary>
+        /// Connect with User
+        /// </summary>
+        public virtual User User{ get; set; }
+
         /// <summary>
         /// ID of copy
         /// </summary>

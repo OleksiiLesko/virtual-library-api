@@ -9,8 +9,15 @@ using VirtualLibraryAPI.Domain.Entities;
 
 namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 {
+    /// <summary>
+    /// Configuration of copy
+    /// </summary>
     public class CopyConfiguration : IEntityTypeConfiguration<Copy>
     {
+        /// <summary>
+        /// Builder configuration for copy
+        /// </summary>
+        /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<Copy> builder)
         {
             builder.HasKey(e => e.CopyID);
@@ -21,6 +28,9 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
             builder.Property(e => e.ItemID)
                 .HasMaxLength(50)
                 .IsRequired();
+
+            builder.Property(e => e.UserID)
+            .ValueGeneratedNever();
 
             builder.Property(e => e.IsAvailable)
               .IsRequired();
@@ -39,7 +49,10 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasConstraintName("FK_Copy_Item");
 
-            builder.HasIndex(e => e.ItemID).IsUnique(false); 
+            builder.HasIndex(e => e.ItemID).IsUnique(false);
+
+            builder.HasIndex(e => e.UserID).IsUnique(false);
+
         }
     }
 }

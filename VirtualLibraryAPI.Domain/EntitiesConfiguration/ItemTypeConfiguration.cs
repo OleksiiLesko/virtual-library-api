@@ -29,7 +29,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 
             builder.Property(e => e.ItemTypeName)
                 .IsRequired()
-                .HasMaxLength(50)
+                .HasMaxLength(60)
                 .IsUnicode(false);
 
             builder.HasData(Enum.GetValues(typeof(Type))
