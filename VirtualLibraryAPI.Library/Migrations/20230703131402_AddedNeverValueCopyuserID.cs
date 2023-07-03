@@ -5,7 +5,7 @@
 namespace VirtualLibraryAPI.Library.Migrations
 {
     /// <inheritdoc />
-    public partial class DeleteNullubleReservetionExpiryDate : Migration
+    public partial class AddedNeverValueCopyuserID : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

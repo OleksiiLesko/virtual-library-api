@@ -12,8 +12,8 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230612122034_AddedExpirationDatePropertyToCopy")]
-    partial class AddedExpirationDatePropertyToCopy
+    [Migration("20230703130729_AddedFKUsersCopies")]
+    partial class AddedFKUsersCopies
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,9 +94,14 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("int");
 
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
                     b.HasKey("CopyID");
 
                     b.HasIndex("ItemID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("Copies", (string)null);
                 });
@@ -141,13 +146,13 @@ namespace VirtualLibraryAPI.Library.Migrations
 
                     b.Property<string>("ItemTypeName")
                         .IsRequired()
-                        .HasMaxLength(50)
+                        .HasMaxLength(60)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(60)");
 
                     b.HasKey("ItemTypeId");
 
-                    b.ToTable("ItemTypes");
+                    b.ToTable("ItemType");
 
                     b.HasData(
                         new
@@ -187,6 +192,31 @@ namespace VirtualLibraryAPI.Library.Migrations
                     b.ToTable("Magazines", (string)null);
                 });
 
+            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
+                {
+                    b.Property<int>("UserID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("UserID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Users", (string)null);
+                });
+
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Article", b =>
                 {
                     b.HasOne("VirtualLibraryAPI.Domain.Entities.Item", "Item")
@@ -220,7 +250,16 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Copy_Item");
 
+                    b.HasOne("VirtualLibraryAPI.Domain.Entities.User", "User")
+                        .WithMany("Copies")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_User_Copies");
+
                     b.Navigation("Item");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
@@ -265,6 +304,11 @@ namespace VirtualLibraryAPI.Library.Migrations
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.ItemType", b =>
                 {
                     b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Copies");
                 });
 #pragma warning restore 612, 618
         }
