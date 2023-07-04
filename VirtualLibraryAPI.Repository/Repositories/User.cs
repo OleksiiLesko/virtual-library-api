@@ -42,12 +42,15 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 FirstName = user.FirstName,
                 LastName = user.LastName,
             };
+
             _context.Users.Add(newUser);
             _context.SaveChanges();
-            _logger.LogInformation("Adding user to the database: {ArticleID}", newUser.UserID);
+
+            _logger.LogInformation("Adding user to the database: {UserID}", newUser.UserID);
 
             var addedUser = new Domain.DTOs.User
             {
+                UserID = newUser.UserID,
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
             };
@@ -67,6 +70,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _context.SaveChanges();
             var deletedUserDto = new Domain.DTOs.User
             {
+                UserID = user.UserID,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
             };
@@ -110,20 +114,72 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 return null;
             }
-            var userDto = new Domain.DTOs.Article
+            var userDto = new Domain.DTOs.User
             {
-                ArticleID = userEntity.ItemID,
-                CopyID = null,
-                Name = itemEntity.Name,
-                PublishingDate = itemEntity.PublishingDate,
-                Publisher = itemEntity.Publisher,
-                Author = userEntity.Author,
-                MagazineName = userEntity.MagazineName,
-                MagazinesIssueNumber = userEntity.MagazinesIssueNumber,
-                CopyInfo = userEntity.CopyInfo
+                UserID = userEntity.UserID,
+                FirstName = userEntity.FirstName,
+                LastName = userEntity.LastName,
             };
 
             return userDto;
+        }
+        /// <summary>
+        /// Get all users for response
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Domain.DTOs.User> GetAllUsersResponse()
+        {
+            _logger.LogInformation("Get all users for response DTO:");
+
+            var users = _context.Users
+                .Select(x => new Domain.DTOs.User
+                {
+                    UserID = x.UserID,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                }).ToList();
+            return users;
+        }
+        /// <summary>
+        /// Get user by id for response
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+
+        public Domain.DTOs.User GetUserByIdResponse(int id)
+        {
+            var result = _context.Users
+             .FirstOrDefault(x => x.UserID == id);
+
+            _logger.LogInformation($"Get user by id for response: UserID {id}");
+
+            var userDTO = new Domain.DTOs.User
+            {
+                UserID = result.UserID,
+                FirstName = result.FirstName,
+                LastName = result.LastName,
+            };
+            return userDTO;
+        }
+        /// <summary>
+        /// Update user data 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user)
+        {
+            var existingUser = _context.Users.Find(id);
+
+            existingUser.FirstName = user.FirstName;
+            existingUser.LastName = user.LastName;
+
+            _context.SaveChanges();
+            _logger.LogInformation("Update user by id in the database: {UserID}", existingUser.UserID);
+
+            return user;
         }
     }
 }
