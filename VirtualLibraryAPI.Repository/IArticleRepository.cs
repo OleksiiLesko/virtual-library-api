@@ -38,7 +38,7 @@ namespace VirtualLibraryAPI.Repository
         /// Method for update article
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="book"></param>
+        /// <param name="article"></param>
         /// <returns></returns>
         Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article);
         /// <summary>
