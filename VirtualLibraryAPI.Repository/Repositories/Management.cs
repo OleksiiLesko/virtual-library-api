@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
@@ -40,17 +41,24 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="copyId"></param>
         /// <param name="bookingPeriod"></param>
         /// <returns></returns>
-        public Domain.DTOs.Copy ReserveCopyById(int copyId, int bookingPeriod)
+        public Domain.DTOs.Copy ReserveCopyById(int userId,int copyId, int bookingPeriod)
         {
+            //ToDo validation for user
+            var user = _context.Users.FirstOrDefault(u => u.UserID == userId);
             var copy = _context.Copies.FirstOrDefault(c => c.CopyID == copyId);
 
+            copy.IsAvailable = false;
+            copy.ExpirationDate = DateTime.Now.AddDays(bookingPeriod);
+            copy.UserID = userId;
             _context.SaveChanges();
 
             _logger.LogInformation("Copy booked: {CopyID}", copy.CopyID);
             var copyDTO = new Domain.DTOs.Copy
             {
-                CopyID = copyId,
-                ExpirationDate = DateTime.Now.AddDays(bookingPeriod)
+                UserID = user.UserID,
+                CopyID = copy.CopyID,
+                IsAvailable = copy.IsAvailable,
+                ExpirationDate = copy.ExpirationDate
             };
             return copyDTO;
         }
@@ -64,6 +72,9 @@ namespace VirtualLibraryAPI.Repository.Repositories
         public Domain.DTOs.Copy ReturnCopyById(int copyId)
         {
             var copy = _context.Copies.FirstOrDefault(c => c.CopyID == copyId);
+            copy.UserID = null;
+            copy.IsAvailable = true;
+            copy.ExpirationDate = null;
             _context.SaveChanges();
 
             _logger.LogInformation("Copy returned: {CopyID}", copy.CopyID);
@@ -107,7 +118,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                ItemID = x.Item.ItemID,
                                CopyID = x.Copy.CopyID,
                                Name = x.Item.Name,
-                               Types = ItemTypeConverter.GetItemType((Domain.DTOs.Type)x.Item.Type),
+                               Types = x.Item.Type.ToString(),
                                ExpirationDate = x.Copy.ExpirationDate,
                                Publisher = null,
                                Author = null,
