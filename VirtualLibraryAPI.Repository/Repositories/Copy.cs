@@ -69,20 +69,20 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
         public Domain.DTOs.Copy GetCopyById(int id)
         {
-            _logger.LogInformation($"Get book by id from the database: BookID {id}");
-            var copyEntity = _context.Copies.FirstOrDefault(b => b.CopyID == id);
+            _logger.LogInformation($"Get copy by id from the database: CopyID {id}");
+            var copyEntity = _context.Copies.FirstOrDefault(c => c.CopyID == id);
             if (copyEntity == null)
             {
                 return null;
             }
 
-            var itemEntity = _context.Items.FirstOrDefault(b => b.ItemID == id);
+            var itemEntity = _context.Items.FirstOrDefault(i => i.ItemID == copyEntity.ItemID);
             if (itemEntity == null)
             {
                 return null;
             }
 
-            var copyDtos = new Domain.DTOs.Copy
+            var copyDto = new Domain.DTOs.Copy
             {
                 CopyID = copyEntity.CopyID,
                 ItemID = copyEntity.ItemID,
@@ -90,7 +90,8 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 ExpirationDate = copyEntity.ExpirationDate,
                 Type = (Domain.DTOs.Type)itemEntity.Type
             };
-            return copyDtos;
+
+            return copyDto;
         }
 
         public Domain.DTOs.Copy UpdateCopy(int copyId, Domain.DTOs.Copy copy)
