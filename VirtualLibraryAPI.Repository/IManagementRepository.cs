@@ -17,7 +17,7 @@ namespace VirtualLibraryAPI.Repository
         /// <param name="copyId"></param>
         /// <param name="bookedPeriod"></param>
         /// <returns></returns>
-        Domain.DTOs.Copy ReserveCopyById(int copyId,int bookingPeriod);
+        Domain.DTOs.Copy ReserveCopyById(int userId,int copyId,int bookingPeriod);
         /// <summary>
         /// Return copy by Id
         /// </summary>
