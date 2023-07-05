@@ -43,7 +43,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="bookingPeriod"></param>
         /// <returns></returns>
         [HttpPost("Copy/{copyId}/Booking")]
-        public IActionResult ReserveCopyById(int copyId, int bookingPeriod)
+        public IActionResult ReserveCopyById(int copyId, int userId, int bookingPeriod)
         {
             try
             {
@@ -51,13 +51,14 @@ namespace VirtualLibraryAPI.Library.Controllers
 
                 if (validationResult == ValidationStatus.Valid)
                 {
-                    var copy = _managementModel.ReserveCopyById(copyId, bookingPeriod);
+                    var copy = _managementModel.ReserveCopyById(userId, copyId, bookingPeriod);
                     _logger.LogInformation("Booking copy by ID: {CopyID}", copy.CopyID);
                     _logger.LogInformation("Copy booked.");
                     var expirationDate = copy.ExpirationDate;
 
                     return Ok(new Domain.DTOs.BookingCopy
                     {
+                        UserID = userId,
                         CopyID = copyId,
                         ExpirationDate = expirationDate,
                     });
@@ -116,7 +117,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 if (copy == null)
                 {
                     return NotFound();
-                }
+                }             
                 _logger.LogInformation("Return copy by ID:{CopyID}", copy.CopyID);
                 _logger.LogInformation("Copy  returned ");
                 return Ok("Copy returned");
