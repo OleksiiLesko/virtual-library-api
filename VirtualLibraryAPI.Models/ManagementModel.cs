@@ -71,16 +71,14 @@ namespace VirtualLibraryAPI.Models
         /// <param name="copyId"></param>
         /// <param name="bookingPeriod"></param>
         /// <returns></returns>
-        public Domain.DTOs.Copy ReserveCopyById(int copyId, int bookingPeriod)
+        public Domain.DTOs.Copy ReserveCopyById(int userId, int copyId, int bookingPeriod)
         {
             _logger.LogInformation($"Reserve copy  by id for response  from Management  model: CopyID {copyId}");
-            var result = _repository.ReserveCopyById(copyId, bookingPeriod);
+            var result = _repository.ReserveCopyById(userId,copyId, bookingPeriod);
             if (result == null)
             {
                 return result;
             }
-            result.IsAvailable = false;
-            result.ExpirationDate = DateTime.Now.AddDays(bookingPeriod);
             return result;
         }
         /// <summary>
@@ -96,9 +94,6 @@ namespace VirtualLibraryAPI.Models
             {
                 return result;
             }
-            result.IsAvailable = true;
-            result.ExpirationDate = DateTime.MinValue;
- 
             return result;
         }
     }
