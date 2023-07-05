@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualLibraryAPI.Domain;
 
@@ -11,9 +12,11 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230704150257_NullableUserIDCopy")]
+    partial class NullableUserIDCopy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +83,7 @@ namespace VirtualLibraryAPI.Library.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CopyID"));
 
-                    b.Property<DateTime?>("ExpirationDate")
+                    b.Property<DateTime>("ExpirationDate")
                         .HasMaxLength(50)
                         .HasColumnType("datetime2");
 
@@ -92,6 +95,7 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("UserID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("CopyID");
@@ -249,6 +253,7 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .WithMany("Copies")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
                         .HasConstraintName("FK_User_Copies");
 
                     b.Navigation("Item");
