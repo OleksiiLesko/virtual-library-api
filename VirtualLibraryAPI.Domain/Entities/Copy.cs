@@ -21,7 +21,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         ///  ID of user
         /// </summary>
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
         /// <summary>
         /// Connect with Item
         /// </summary>
@@ -29,7 +29,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// Connect with User
         /// </summary>
-        public virtual User User{ get; set; }
+        public virtual User User { get; set; }
 
         /// <summary>
         /// ID of copy
@@ -50,6 +50,6 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// Expiration date of copy
         /// </summary> 
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
     }
 }

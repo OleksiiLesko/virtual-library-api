@@ -30,14 +30,15 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                 .IsRequired();
 
             builder.Property(e => e.UserID)
-            .ValueGeneratedNever();
+            .ValueGeneratedNever()
+            .IsRequired(false);
 
             builder.Property(e => e.IsAvailable)
               .IsRequired();
 
             builder.Property(e => e.ExpirationDate)
                   .HasMaxLength(50)
-                  .IsRequired();
+                  .IsRequired(false);
 
             builder.Ignore(e => e.BookingPeriod);
 

@@ -12,12 +12,16 @@ namespace VirtualLibraryAPI.Domain.DTOs
     public class BookingCopy
     {
         /// <summary>
+        /// Id of user
+        /// </summary>
+        public int UserID { get; set; }
+        /// <summary>
         /// Id of copy
         /// </summary>
         public int CopyID { get; set; }
         /// <summary>
         /// Expiration date of copy
         /// </summary>
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
     }
 }

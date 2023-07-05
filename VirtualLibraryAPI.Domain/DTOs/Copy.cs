@@ -61,7 +61,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Expiration date of copy
         /// </summary> 
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
         /// <summary>
         /// Type of item
         /// </summary>
