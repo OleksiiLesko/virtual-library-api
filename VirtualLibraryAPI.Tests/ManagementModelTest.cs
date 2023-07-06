@@ -29,16 +29,17 @@ namespace VirtualLibraryAPI.Tests
         {
             var copyId = 1;
             var bookingPeriod = 7;
+            var userId = 1;
             var copy = new Domain.DTOs.Copy { CopyID = copyId };
-            _managementRepository.Setup(x => x.ReserveCopyById(copyId, bookingPeriod)).Returns(copy);
+            _managementRepository.Setup(x => x.ReserveCopyById(userId,copyId, bookingPeriod)).Returns(copy);
             var copyModel = new Models.ManagementModel(_logger, _managementRepository.Object);
             var expectedExpirationDate = DateTime.Now.Date.AddDays(bookingPeriod);
 
-            var result = copyModel.ReserveCopyById(copyId, bookingPeriod);
+            var result = copyModel.ReserveCopyById(userId,copyId, bookingPeriod);
 
             Assert.Equal(copy.CopyID, result.CopyID);
             Assert.False(result.IsAvailable);
-            _managementRepository.Verify(x => x.ReserveCopyById(copyId, bookingPeriod), Times.Once());
+            _managementRepository.Verify(x => x.ReserveCopyById(userId,copyId, bookingPeriod), Times.Once());
         }
         [Fact]
         public void ReturnCopyById_Should_Change_Status_And_ExpirationDate()
@@ -53,7 +54,7 @@ namespace VirtualLibraryAPI.Tests
 
             Assert.Equal(returnCopy.CopyID, result.CopyID);
             Assert.True(result.IsAvailable = true);
-            Assert.Equal(DateTime.MinValue, result.ExpirationDate);
+            Assert.Equal(null, result.ExpirationDate);
             _managementRepository.Verify(x => x.ReturnCopyById(copyId), Times.Once());
         }
         [Fact]
@@ -61,20 +62,21 @@ namespace VirtualLibraryAPI.Tests
         {
             int copyId = 1;
             int bookingPeriod = 7;
+            var userId = 1;
             var expectedCopy = new Domain.DTOs.Copy
             {
                 CopyID = copyId,
                 IsAvailable = false,
                 ExpirationDate = DateTime.Now.AddDays(bookingPeriod)
             };
-            _managementRepository.Setup(m => m.ReserveCopyById(copyId, bookingPeriod)).Returns(expectedCopy);
+            _managementRepository.Setup(m => m.ReserveCopyById(userId,copyId, bookingPeriod)).Returns(expectedCopy);
             var managementModel = new Models.ManagementModel(_logger, _managementRepository.Object);
 
-            var result = managementModel.ReserveCopyById(copyId, bookingPeriod);
+            var result = managementModel.ReserveCopyById(userId,copyId, bookingPeriod);
 
             Assert.Equal(expectedCopy, result);
             Assert.False(result.IsAvailable);
-            Assert.Equal(expectedCopy.ExpirationDate.Date, result.ExpirationDate.Date);
+            Assert.Equal(expectedCopy.ExpirationDate.Value, result.ExpirationDate.Value);
         }
 
         [Fact]
@@ -82,10 +84,11 @@ namespace VirtualLibraryAPI.Tests
         {
             int copyId = 1;
             int bookingPeriod = 7;
-            _managementRepository.Setup(m => m.ReserveCopyById(copyId, bookingPeriod)).Returns((Domain.DTOs.Copy)null);
+            var userId = 1;
+            _managementRepository.Setup(m => m.ReserveCopyById(userId,copyId, bookingPeriod)).Returns((Domain.DTOs.Copy)null);
             var managementModel = new Models.ManagementModel(_logger, _managementRepository.Object);
 
-            var result = managementModel.ReserveCopyById(copyId, bookingPeriod);
+            var result = managementModel.ReserveCopyById(userId,copyId, bookingPeriod);
 
             Assert.Null(result);
         }
