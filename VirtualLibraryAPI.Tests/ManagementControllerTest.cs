@@ -67,24 +67,27 @@ namespace VirtualLibraryAPI.Tests
         {
             var copyId = 1;
             var bookingPeriod = 7;
+            var userID = 1;
 
             _validationModelMock.Setup(v => v.IsCopyValidForBooking(copyId, bookingPeriod))
                 .Returns(ValidationStatus.Valid);
 
             var reservedCopy = new Domain.DTOs.Copy
             {
+                UserID = userID,
                 CopyID = copyId,
                 ExpirationDate = DateTime.Now.AddDays(bookingPeriod)
             };
-            _managementModelMock.Setup(m => m.ReserveCopyById(copyId, bookingPeriod))
+            _managementModelMock.Setup(m => m.ReserveCopyById(userID,copyId, bookingPeriod))
                 .Returns(reservedCopy);
 
-            var result = _managementController.ReserveCopyById(copyId, bookingPeriod);
+            var result = _managementController.ReserveCopyById(userID,copyId, bookingPeriod);
 
             var okResult = Assert.IsType<OkObjectResult>(result);
             var bookingCopy = Assert.IsType<BookingCopy>(okResult.Value);
 
             Assert.Equal(copyId, bookingCopy.CopyID);
+            Assert.Equal(userID, bookingCopy.UserID);
             Assert.Equal(reservedCopy.ExpirationDate, bookingCopy.ExpirationDate);
         }
         [Fact]
@@ -92,11 +95,12 @@ namespace VirtualLibraryAPI.Tests
         {
             var copyId = 1;
             var bookingPeriod = 7;
+            var userID = 1;
 
             _validationModelMock.Setup(v => v.IsCopyValidForBooking(copyId, bookingPeriod))
                 .Returns(ValidationStatus.InvalidBookingPeriod);
 
-            var result = _managementController.ReserveCopyById(copyId, bookingPeriod);
+            var result = _managementController.ReserveCopyById(userID,copyId, bookingPeriod);
 
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
         }
