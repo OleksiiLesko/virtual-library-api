@@ -52,5 +52,17 @@ namespace VirtualLibraryAPI.Repository
         /// <param name="article"></param>
         /// <returns></returns>
         Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user);
+        /// <summary>
+        /// Count user copies
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int CountUserCopies(int userId);
+        /// <summary>
+        /// Check if user have expired copies
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool HasExpiredCopy(int userId);
     }
 }
