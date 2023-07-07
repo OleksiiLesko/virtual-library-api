@@ -58,7 +58,8 @@ namespace VirtualLibraryAPI.Library
         {
             services.AddScoped<IUserModel, UserModel>();
             services.AddScoped<IUserRepository, Repository.Repositories.User>();
-            services.AddScoped<IValidationModel, ValidationModel>();
+            services.AddScoped<IValidationCopyModel, ValidationCopyModel>();
+            services.AddScoped<IValidationUserModel, ValidationUserModel>();
             services.AddScoped<IArticleModel, ArticleModel>();
             services.AddScoped<IArticleRepository, Repository.Repositories.Article>();
             services.AddScoped<IManagementModel, ManagementModel>();
