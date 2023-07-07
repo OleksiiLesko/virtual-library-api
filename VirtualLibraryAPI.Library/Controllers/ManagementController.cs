@@ -13,7 +13,6 @@ namespace VirtualLibraryAPI.Library.Controllers
     [Route("api/[controller]")]
     public class ManagementController : ControllerBase
     {
-
         /// <summary>
         /// Logger
         /// </summary>
@@ -23,18 +22,23 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         private readonly IManagementModel _managementModel;
         /// <summary>
-        /// Validation model
+        /// Validation copy model
         /// </summary>
-        private readonly IValidationModel _validationModel;
+        private readonly IValidationCopyModel _validationCopyModel;
+        /// <summary>
+        /// Validation user model
+        /// </summary>
+        private readonly IValidationUserModel _validationUserModel;
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public ManagementController(ILogger<ManagementController> logger, IManagementModel model, IValidationModel validationModel)
+        public ManagementController(ILogger<ManagementController> logger, IManagementModel model, IValidationCopyModel validationCopyModel, IValidationUserModel validationUserModel)
         {
             _logger = logger;
             _managementModel = model;
-            _validationModel = validationModel;
+            _validationCopyModel = validationCopyModel;
+            _validationUserModel = validationUserModel;
         }
         /// <summary>
         /// Reserve copy by id
@@ -47,25 +51,33 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var validationResult = _validationModel.IsCopyValidForBooking(copyId, bookingPeriod);
+                var validationUserResult = _validationUserModel.CanUserReserveCopy(userId);
 
-                if (validationResult == ValidationStatus.Valid)
+                if (validationUserResult == ValidationUserStatus.Valid)
                 {
-                    var copy = _managementModel.ReserveCopyById(userId, copyId, bookingPeriod);
-                    _logger.LogInformation("Booking copy by ID: {CopyID}", copy.CopyID);
-                    _logger.LogInformation("Copy booked.");
-                    var expirationDate = copy.ExpirationDate;
-
-                    return Ok(new Domain.DTOs.BookingCopy
+                    var validationCopyResult = _validationCopyModel.IsCopyValidForBooking(copyId, bookingPeriod);
+                    if (validationCopyResult == ValidationCopyStatus.Valid)
                     {
-                        UserID = userId,
-                        CopyID = copyId,
-                        ExpirationDate = expirationDate,
-                    });
+                        var copy = _managementModel.ReserveCopyById(userId, copyId, bookingPeriod);
+                        _logger.LogInformation("Booking copy by ID: {CopyID}", copy.CopyID);
+                        _logger.LogInformation("Copy booked.");
+                        var expirationDate = copy.ExpirationDate;
+
+                        return Ok(new Domain.DTOs.BookingCopy
+                        {
+                            UserID = userId,
+                            CopyID = copyId,
+                            ExpirationDate = expirationDate,
+                        });
+                    }
+                    else
+                    {
+                        return HandleCopyNotValidResult(validationCopyResult, copyId);
+                    }
                 }
                 else
                 {
-                    return HandleNotValidResult(validationResult, copyId);
+                    return HandleUserNotValidResult(validationUserResult, copyId);
                 }
             }
             catch (Exception ex)
@@ -80,27 +92,55 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <param name="validationResult"></param>
         /// <returns></returns>
-        private IActionResult HandleNotValidResult(ValidationStatus validationResult,int copyId)
+        private IActionResult HandleCopyNotValidResult(ValidationCopyStatus validationResult,int copyId)
         {
             switch (validationResult)
             {
-                case ValidationStatus.NotFound:
+                case ValidationCopyStatus.NotFound:
                     return NotFound($"CopyID: {copyId}  not found");
 
-                case ValidationStatus.DbError:
+                case ValidationCopyStatus.DbError:
                     return StatusCode(500, "Database error");
 
-                case ValidationStatus.InternalServerError:
+                case ValidationCopyStatus.InternalServerError:
                     return StatusCode(500, "Internal server error");
 
-                case ValidationStatus.InvalidBookingPeriod:
+                case ValidationCopyStatus.InvalidBookingPeriod:
                     return BadRequest($"Invalid booking period in CopyID {copyId}");
 
-                case ValidationStatus.NotAvailable:
+                case ValidationCopyStatus.NotAvailable:
                     return Conflict($"CopyID {copyId} not available for booking");
 
                 default:
                     return BadRequest($"Invalid validation status of CopyID {copyId}");
+            }
+        }
+        /// <summary>
+        /// Return validation status of user
+        /// </summary>
+        /// <param name="validationResult"></param>
+        /// <returns></returns>
+        private IActionResult HandleUserNotValidResult(ValidationUserStatus validationResult, int userId)
+        {
+            switch (validationResult)
+            {
+                case ValidationUserStatus.UserNotFound:
+                    return NotFound($"UserID: {userId}  not found");
+
+                case ValidationUserStatus.DbError:
+                    return StatusCode(500, "Database error");
+
+                case ValidationUserStatus.InternalServerError:
+                    return StatusCode(500, "Internal server error");
+
+                case ValidationUserStatus.MaxCopiesExceeded:
+                    return BadRequest($"Max count of copies exceeded UserID {userId}");
+
+                case ValidationUserStatus.ExpiredCopy:
+                    return BadRequest($"You have a copies that has expired UserID {userId}");
+
+                default:
+                    return BadRequest($"Invalid validation status of UserID {userId}");
             }
         }
         /// <summary>
