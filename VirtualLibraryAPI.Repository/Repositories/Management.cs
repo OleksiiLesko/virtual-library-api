@@ -43,7 +43,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <returns></returns>
         public Domain.DTOs.Copy ReserveCopyById(int userId,int copyId, int bookingPeriod)
         {
-            //ToDo validation for user
             var user = _context.Users.FirstOrDefault(u => u.UserID == userId);
             var copy = _context.Copies.FirstOrDefault(c => c.CopyID == copyId);
 
@@ -118,7 +117,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                ItemID = x.Item.ItemID,
                                CopyID = x.Copy.CopyID,
                                Name = x.Item.Name,
-                               Types = x.Item.Type.ToString(),
+                               Type = (Domain.DTOs.Type)x.Item.Type,
                                ExpirationDate = x.Copy.ExpirationDate,
                                Publisher = null,
                                Author = null,
