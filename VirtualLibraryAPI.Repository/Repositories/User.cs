@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -181,5 +182,52 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             return user;
         }
+        /// <summary>
+        /// Count user copies
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int CountUserCopies(int userId)
+        {
+            var user = _context.Users
+                .Include(u => u.Copies)
+                .FirstOrDefault(u => u.UserID == userId);
+
+            if (user == null)
+            {
+                _logger.LogInformation($"UserID: {userId} not found");
+                return 0;
+            }
+
+            return user.Copies.Count;
+        }
+        /// <summary>
+        /// Check if user have expired copies
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool HasExpiredCopy(int userId)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserID == userId);
+            if (user == null)
+            {
+                _logger.LogInformation($"UserID: {userId} not found");
+                return false;
+            }
+            if(user.Copies == null)
+            {
+                return false;
+            }
+            foreach (var copy in user.Copies)
+            {
+                if (copy.ExpirationDate <= DateTime.Now)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     }
 }
