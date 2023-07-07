@@ -15,15 +15,17 @@ namespace VirtualLibraryAPI.Tests
     {
         private readonly Mock<ILogger<ManagementController>> _loggerMock;
         private readonly Mock<IManagementModel> _managementModelMock;
-        private readonly Mock<IValidationModel> _validationModelMock;
+        private readonly Mock<IValidationCopyModel> _validationCopyModel;
+        private readonly Mock<IValidationUserModel> _validationUserModel;
         private readonly ManagementController _managementController;
 
         public ManagementControllerTest()
         {
             _loggerMock = new Mock<ILogger<ManagementController>>();
             _managementModelMock = new Mock<IManagementModel>();
-            _validationModelMock = new Mock<IValidationModel>();
-            _managementController = new ManagementController(_loggerMock.Object, _managementModelMock.Object, _validationModelMock.Object);
+            _validationUserModel = new Mock<IValidationUserModel>();
+            _validationCopyModel = new Mock<IValidationCopyModel>();
+            _managementController = new ManagementController(_loggerMock.Object, _managementModelMock.Object, _validationCopyModel.Object, _validationUserModel.Object);
         }
 
         [Fact]
@@ -63,14 +65,15 @@ namespace VirtualLibraryAPI.Tests
         }
 
         [Fact]
-        public void ReserveCopyById_ValidCopy_ReturnsOkResult()
+        public void ReserveCopyById_ValidCopyAndUser_ReturnsOkResult()
         {
             var copyId = 1;
             var bookingPeriod = 7;
             var userID = 1;
 
-            _validationModelMock.Setup(v => v.IsCopyValidForBooking(copyId, bookingPeriod))
-                .Returns(ValidationStatus.Valid);
+            _validationUserModel.Setup(c => c.CanUserReserveCopy(userID)).Returns(ValidationUserStatus.Valid);
+            _validationCopyModel.Setup(v => v.IsCopyValidForBooking(copyId, bookingPeriod))
+                .Returns(ValidationCopyStatus.Valid);
 
             var reservedCopy = new Domain.DTOs.Copy
             {
@@ -91,14 +94,14 @@ namespace VirtualLibraryAPI.Tests
             Assert.Equal(reservedCopy.ExpirationDate, bookingCopy.ExpirationDate);
         }
         [Fact]
-        public void ReserveCopyById_InvalidCopy_ReturnsBadRequest()
+        public void ReserveCopyById_InvalidBookingPeriod_ReturnsBadRequest()
         {
             var copyId = 1;
             var bookingPeriod = 7;
             var userID = 1;
 
-            _validationModelMock.Setup(v => v.IsCopyValidForBooking(copyId, bookingPeriod))
-                .Returns(ValidationStatus.InvalidBookingPeriod);
+            _validationCopyModel.Setup(v => v.IsCopyValidForBooking(copyId, bookingPeriod))
+                .Returns(ValidationCopyStatus.InvalidBookingPeriod);
 
             var result = _managementController.ReserveCopyById(userID,copyId, bookingPeriod);
 
