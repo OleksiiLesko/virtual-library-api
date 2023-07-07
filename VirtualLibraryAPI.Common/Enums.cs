@@ -1,9 +1,9 @@
 ﻿namespace VirtualLibraryAPI.Common
 {
     /// <summary>
-    /// Enum status of vaidation
+    /// Enum status of copy vaidation
     /// </summary>
-    public enum ValidationStatus
+    public enum ValidationCopyStatus
     {
         Valid,
         NotFound,
@@ -11,5 +11,17 @@
         InternalServerError,
         InvalidBookingPeriod,
         NotAvailable
+    }
+    /// <summary>
+    /// Enum status of user vaidation
+    /// </summary>
+    public enum ValidationUserStatus
+    {
+        Valid,
+        UserNotFound,
+        MaxCopiesExceeded,
+        ExpiredCopy,
+        DbError,
+        InternalServerError
     }
 }
