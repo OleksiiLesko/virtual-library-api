@@ -74,7 +74,7 @@ namespace VirtualLibraryAPI.Models
         public Domain.DTOs.Copy ReserveCopyById(int userId, int copyId, int bookingPeriod)
         {
             _logger.LogInformation($"Reserve copy  by id for response  from Management  model: CopyID {copyId}");
-            var result = _repository.ReserveCopyById(userId,copyId, bookingPeriod);
+            var result = _repository.ReserveCopyById(userId, copyId, bookingPeriod);
             if (result == null)
             {
                 return result;
