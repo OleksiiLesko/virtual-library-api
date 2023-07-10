@@ -1,4 +1,5 @@
-﻿namespace VirtualLibraryAPI.Domain.Entities
+﻿
+namespace VirtualLibraryAPI.Domain.Entities
 {
     /// <summary>
     /// Table of items

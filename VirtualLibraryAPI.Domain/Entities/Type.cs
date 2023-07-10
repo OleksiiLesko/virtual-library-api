@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json.Converters;
-using System.Text.Json.Serialization;
+﻿
 
 namespace VirtualLibraryAPI.Domain.Entities
 {
     /// <summary>
     /// Enum for types
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum Type : short
+    public enum Type
     {
         Book = 1,
         Article = 2,
