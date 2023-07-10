@@ -6,6 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonConverter = Newtonsoft.Json.JsonConverter;
+using JsonConverterAttribute = Newtonsoft.Json.JsonConverterAttribute;
+using Newtonsoft.Json.Converters;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
@@ -70,6 +75,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Types of item
         /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string? Types { get; set; } = string.Empty;
 
     }
