@@ -103,6 +103,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             return expiredItems;
         }
+
         /// <summary>
         /// Get all items with expired booking for response DTO
         /// </summary>
@@ -112,12 +113,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _logger.LogInformation(" Returning all expired items for response DTO:");
             var items = _context.Items
                            .Join(_context.Copies, item => item.ItemID, copy => copy.ItemID, (item, copy) => new { Item = item, Copy = copy })
+                           .Where(copy => copy.Copy.ExpirationDate < DateTime.Now)
                            .Select(x => new Domain.DTOs.Copy
                            {
                                ItemID = x.Item.ItemID,
                                CopyID = x.Copy.CopyID,
                                Name = x.Item.Name,
-                               Type = (Domain.DTOs.Type)x.Item.Type,
+                               Types = ((Domain.DTOs.Type)x.Item.Type).ToString(),
                                ExpirationDate = x.Copy.ExpirationDate,
                                Publisher = null,
                                Author = null,
