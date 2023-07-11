@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 
 namespace VirtualLibraryAPI.Models
 {
@@ -27,7 +28,7 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.User AddUser(Domain.DTOs.User user);
+        Domain.DTOs.User AddUser(Domain.DTOs.User user, UserType userType);
         /// <summary>
         /// Method for delete user
         /// </summary>
