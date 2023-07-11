@@ -88,7 +88,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 ItemID = copyEntity.ItemID,
                 IsAvailable = copyEntity.IsAvailable,
                 ExpirationDate = copyEntity.ExpirationDate,
-                Type = (Domain.DTOs.Type)itemEntity.Type
+                Type = (Common.Type)itemEntity.Type
             };
 
             return copyDto;
