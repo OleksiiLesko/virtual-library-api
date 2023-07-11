@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualLibraryAPI.Domain;
 
@@ -11,9 +12,11 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230711111352_AddedToUserUserType")]
+    partial class AddedToUserUserType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,43 +210,13 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<short>("UserTypes")
+                    b.Property<int>("UserType")
                         .HasMaxLength(25)
-                        .HasColumnType("smallint");
+                        .HasColumnType("int");
 
                     b.HasKey("UserID");
 
-                    b.HasIndex("UserTypes");
-
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.UserType", b =>
-                {
-                    b.Property<short>("UserTypeId")
-                        .HasColumnType("smallint");
-
-                    b.Property<string>("UserTypeName")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(60)");
-
-                    b.HasKey("UserTypeId");
-
-                    b.ToTable("UserType");
-
-                    b.HasData(
-                        new
-                        {
-                            UserTypeId = (short)0,
-                            UserTypeName = "Administrator"
-                        },
-                        new
-                        {
-                            UserTypeId = (short)1,
-                            UserTypeName = "Client"
-                        });
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Article", b =>
@@ -314,18 +287,6 @@ namespace VirtualLibraryAPI.Library.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
-                {
-                    b.HasOne("VirtualLibraryAPI.Domain.Entities.UserType", "UserType")
-                        .WithMany("User")
-                        .HasForeignKey("UserTypes")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_User_UserType");
-
-                    b.Navigation("UserType");
-                });
-
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
                 {
                     b.Navigation("Article")
@@ -349,11 +310,6 @@ namespace VirtualLibraryAPI.Library.Migrations
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
                 {
                     b.Navigation("Copies");
-                });
-
-            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.UserType", b =>
-                {
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

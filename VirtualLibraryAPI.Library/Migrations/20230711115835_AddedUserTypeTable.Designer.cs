@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualLibraryAPI.Domain;
 
@@ -11,9 +12,11 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230711115835_AddedUserTypeTable")]
+    partial class AddedUserTypeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,13 +210,16 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<short>("UserTypes")
+                    b.Property<int>("UserType")
                         .HasMaxLength(25)
+                        .HasColumnType("int");
+
+                    b.Property<short?>("UserTypeId")
                         .HasColumnType("smallint");
 
                     b.HasKey("UserID");
 
-                    b.HasIndex("UserTypes");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("Users", (string)null);
                 });
@@ -316,14 +322,9 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
                 {
-                    b.HasOne("VirtualLibraryAPI.Domain.Entities.UserType", "UserType")
+                    b.HasOne("VirtualLibraryAPI.Domain.Entities.UserType", null)
                         .WithMany("User")
-                        .HasForeignKey("UserTypes")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_User_UserType");
-
-                    b.Navigation("UserType");
+                        .HasForeignKey("UserTypeId");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
