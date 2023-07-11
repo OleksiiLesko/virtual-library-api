@@ -1,7 +1,7 @@
 ﻿namespace VirtualLibraryAPI.Domain.Entities
 {
 
-    // <summary>
+    /// <summary>
     /// Description for enum type
     /// </summary>
     public class ItemType
