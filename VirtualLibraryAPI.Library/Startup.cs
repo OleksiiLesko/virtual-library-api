@@ -9,6 +9,7 @@ using VirtualLibraryAPI.Repository;
 using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository.Repositories;
 using Serilog;
+using System.Text.Json.Serialization;
 
 namespace VirtualLibraryAPI.Library
 {
@@ -73,6 +74,8 @@ namespace VirtualLibraryAPI.Library
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.AddControllersWithViews()
+                    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             string connectionString = CreateConnectionString(Configuration);
             services.AddDbContextPool<ApplicationContext>(options =>
              options.UseSqlServer(connectionString ,b => b.MigrationsAssembly("VirtualLibraryAPI.Library")));
