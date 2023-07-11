@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 
 namespace VirtualLibraryAPI.Domain.Entities
 {
@@ -18,12 +19,17 @@ namespace VirtualLibraryAPI.Domain.Entities
         public int UserID { get; set; }
         /// <summary>
         /// First name of user
-        /// </summary>
+        /// </summary> 
         public string FirstName { get; set; } = string.Empty;
         /// <summary>
         /// Last name of user
         /// </summary>
         public string LastName { get; set; } = string.Empty;
+        /// <summary>
+        /// Type of user (Administrator or Client)
+        /// </summary>
+        public UserTypes UserTypes { get; set; }
         public virtual ICollection<Copy> Copies { get; set;}
+        public virtual UserType UserType { get; set; }
     }
 }
