@@ -57,7 +57,11 @@ namespace VirtualLibraryAPI.Models
                     _logger.LogInformation($"UserID: {userId} not found");
                     return ValidationUserStatus.UserNotFound;
                 }
-
+                if (user.UserType == UserType.Client)
+                {
+                    _logger.LogInformation($"UserID: {userId} not an administrator");
+                    return ValidationUserStatus.UserNotAdministrator;
+                }
                 var userCopiesCount = _userRepository.CountUserCopies(userId);
 
                 var maxCopies = GetMaxCountCopies();
