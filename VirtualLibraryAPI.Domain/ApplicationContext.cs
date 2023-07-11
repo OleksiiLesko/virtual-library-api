@@ -43,6 +43,10 @@ namespace VirtualLibraryAPI.Domain
         ///  ItemType entity type  used to interact with a corresponding table in the database.
         /// </summary>
         public DbSet<ItemType> ItemType { get; set; }
+        /// <summary>
+        ///  UserType entity type  used to interact with a corresponding table in the database.
+        /// </summary>
+        public DbSet<UserType> UserType { get; set; }
 
         /// <summary>
         /// Application context that has options 
@@ -77,6 +81,7 @@ namespace VirtualLibraryAPI.Domain
 
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
             modelBuilder.ApplyConfiguration(new BookConfiguration());
             modelBuilder.ApplyConfiguration(new ArticleConfiguration());
