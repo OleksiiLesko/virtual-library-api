@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Repository;
 
@@ -38,10 +39,10 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public User AddUser(User user)
+        public User AddUser(User user, UserType userType)
         {
             _logger.LogInformation($"Adding user from User model {user}");
-            var result = _repository.AddUser(user);
+            var result = _repository.AddUser(user, userType);
             if (result == null)
             {
                 return result;
