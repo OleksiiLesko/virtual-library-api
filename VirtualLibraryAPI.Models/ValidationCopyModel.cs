@@ -36,7 +36,7 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="bookRepository"></param>
         /// <param name="logger"></param>
-        public ValidationCopyModel(ILogger<ValidationCopyModel> logger,IConfiguration configuration, ICopyRepository repository)
+        public ValidationCopyModel(ILogger<ValidationCopyModel> logger, IConfiguration configuration, ICopyRepository repository)
         {
             _logger = logger;
             _configuration = configuration;
@@ -47,7 +47,7 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="copyId"></param>
         /// <returns></returns>
-        public ValidationCopyStatus IsCopyValidForBooking(int copyId,int requestedBookingPeriod)
+        public ValidationCopyStatus IsCopyValidForBooking(int copyId, int requestedBookingPeriod)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace VirtualLibraryAPI.Models
             }
             catch (DbException ex)
             {
-                _logger.LogError("An error occurred due to problems with database: {Error}", ex.Message );
+                _logger.LogError("An error occurred due to problems with database: {Error}", ex.Message);
                 return ValidationCopyStatus.DbError;
             }
             catch (Exception ex)
@@ -87,30 +87,30 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="itemType"></param>
         /// <returns></returns>
-        private int GetMaxDaysByItemType(Domain.DTOs.Type itemType)
+        private int GetMaxDaysByItemType(Common.Type itemType)
         {
-            _logger.LogInformation($" Check max days for item type from ValidationCopy  model:  {itemType}");
+            _logger.LogInformation($"Check max days for item type from ValidationCopy model: {itemType}");
             int maxDays;
             switch (itemType)
             {
-                case Domain.DTOs.Type.Book:
+                case Common.Type.Book:
                     if (!int.TryParse(_configuration["MaxDays:Book"], out maxDays))
                     {
-                        _logger.LogInformation($"Book not converted from config to int ");
+                        _logger.LogInformation($"Book not converted from config to int");
                         return 0;
                     }
                     break;
-                case Domain.DTOs.Type.Magazine:
+                case Common.Type.Magazine:
                     if (!int.TryParse(_configuration["MaxDays:Magazine"], out maxDays))
                     {
-                        _logger.LogInformation($"Magazine not converted from config to int ");
+                        _logger.LogInformation($"Magazine not converted from config to int");
                         return 0;
                     }
                     break;
-                case Domain.DTOs.Type.Article:
+                case Common.Type.Article:
                     if (!int.TryParse(_configuration["MaxDays:Article"], out maxDays))
                     {
-                        _logger.LogInformation($"Article not converted from config to int ");
+                        _logger.LogInformation($"Article not converted from config to int");
                         return 0;
                     }
                     break;
