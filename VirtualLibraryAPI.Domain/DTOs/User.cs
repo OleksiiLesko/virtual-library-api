@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
+using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
@@ -24,6 +27,11 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Last name of user
         /// </summary>
-        public string LastName { get; set; } 
+        public string LastName { get; set; }
+        /// <summary>
+        /// Type of user (Administrator or Client)
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public UserType UserType { get; set; }
     }
 }
