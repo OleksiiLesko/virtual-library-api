@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtualLibraryAPI.Common;
+using Type = VirtualLibraryAPI.Common.Type;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
@@ -23,7 +24,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Name of item
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } 
         /// <summary>
         /// Type of item (book, magazine, article, copy)
         /// </summary>
@@ -35,6 +36,6 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Publisher of item
         /// </summary>
-        public string Publisher { get; set; } = string.Empty;
+        public string Publisher { get; set; } 
     }
 }

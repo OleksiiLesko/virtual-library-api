@@ -47,12 +47,12 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Author of article
         /// </summary>
         [Required]
-        public string Version { get; set; }
+        public string Version { get; set; } 
         /// <summary>
         /// Magazines issue number of article 
         /// </summary>
         [Required]
-        public string MagazinesIssueNumber { get; set; }                        
+        public string MagazinesIssueNumber { get; set; } 
         /// <summary>
         /// Magazine name of article 
         /// </summary>

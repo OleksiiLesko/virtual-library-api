@@ -29,7 +29,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Name of book
         /// </summary>
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } 
         /// <summary>
         /// Publishing date of book
         /// </summary>
@@ -39,17 +39,17 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Publisher of book
         /// </summary>
         [Required]
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } 
         /// <summary>
         /// Author of book
         /// </summary>
         [Required]
-        public string Author { get; set; }
+        public string Author { get; set; } 
         /// <summary>
         /// ISBN of book
         /// </summary> 
         [Required]
-        public string ISBN { get; set; }
+        public string ISBN { get; set; } 
         /// <summary>
         /// Copy information
         /// </summary>

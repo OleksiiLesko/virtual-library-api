@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using VirtualLibraryAPI.Common;
 using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverter;
-using JsonConverterAttribute = Newtonsoft.Json.JsonConverterAttribute;
-using Newtonsoft.Json.Converters;
+using Type = VirtualLibraryAPI.Common.Type;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
@@ -34,7 +26,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Name of copy
         /// </summary>
-        public string? Name { get; set; } = string.Empty;
+        public string? Name { get; set; } 
         /// <summary>
         /// Publishing date of copy
         /// </summary>
@@ -45,19 +37,19 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public string? Publisher { get; set; } = string.Empty;
+        public string? Publisher { get; set; } 
         /// <summary>
         /// Author of copy
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 
-        public string? Author { get; set; } = string.Empty;
+        public string? Author { get; set; } 
         /// <summary>
         /// ISBN of copy
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull )]
 
-        public string? ISBN { get; set; } = string.Empty;
+        public string? ISBN { get; set; } 
         /// <summary>
         /// Status of copy availability
         /// </summary>
@@ -70,13 +62,13 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Type of item
         /// </summary>
-        [JsonIgnore]
+        //[JsonIgnore]
         public Type Type { get; set; }
         /// <summary>
         /// Types of item
         /// </summary>
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string? Types { get; set; } = string.Empty;
+        //[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        //public string? Types { get; set; } = string.Empty;
 
     }
 }

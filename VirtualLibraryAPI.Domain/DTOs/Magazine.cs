@@ -36,12 +36,12 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// Publisher of magazine
         /// </summary>
         [Required]
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } 
         /// <summary>
         /// Issue number of magazine 
         /// </summary>
         [Required]
-        public string IssueNumber { get; set; }
+        public string IssueNumber { get; set; } 
         /// <summary>
         /// Copy information
         /// </summary>
