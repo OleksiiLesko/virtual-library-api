@@ -3,6 +3,7 @@ using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.Entities;
 using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository;
+using UserType = VirtualLibraryAPI.Common.UserType;
 
 namespace VirtualLibraryAPI.Library.Controllers
 {
@@ -47,11 +48,14 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="bookingPeriod"></param>
         /// <returns></returns>
         [HttpPost("Copy/{copyId}/Booking")]
-        public IActionResult ReserveCopyById(int copyId, int userId, int bookingPeriod)
+        public IActionResult ReserveCopyById( [FromHeader] int userId, int copyId, int bookingPeriod)
         {
+            ///1.Booking period
+            ///2.Delete types
+            ///3.Add JsonProperty to type
             try
             {
-                var validationUserResult = _validationUserModel.CanUserReserveCopy(userId);
+               var validationUserResult = _validationUserModel.CanUserReserveCopy(userId);
 
                 if (validationUserResult == ValidationUserStatus.Valid)
                 {
@@ -79,6 +83,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     return HandleUserNotValidResult(validationUserResult, copyId);
                 }
+                
             }
             catch (Exception ex)
             {
@@ -153,14 +158,15 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var copy = _managementModel.ReturnCopyById(copyId);
-                if (copy == null)
-                {
-                    return NotFound();
-                }             
-                _logger.LogInformation("Return copy by ID:{CopyID}", copy.CopyID);
-                _logger.LogInformation("Copy  returned ");
-                return Ok("Copy returned");
+                    var copy = _managementModel.ReturnCopyById(copyId);
+                    if (copy == null)
+                    {
+                        return NotFound();
+                    }
+                    _logger.LogInformation("Return copy by ID:{CopyID}", copy.CopyID);
+                    _logger.LogInformation("Copy  returned ");
+                    return Ok("Copy returned");
+
             }
             catch (Exception ex)
             {
