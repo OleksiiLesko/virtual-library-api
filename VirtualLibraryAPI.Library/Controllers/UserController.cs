@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Models;
 
 namespace VirtualLibraryAPI.Library.Controllers
@@ -56,11 +57,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddUser([FromBody] Domain.DTOs.User request)
+        public IActionResult AddUser([FromBody] Domain.DTOs.User request, UserType userType)
         {
             try
             {
-                var addedArticle = _model.AddUser(request);
+                var addedArticle = _model.AddUser(request, userType);
                 if (addedArticle == null)
                 {
                     return NotFound();
@@ -73,6 +74,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                    UserID = addedArticle.UserID,
                    FirstName = addedArticle.FirstName,
                    LastName = addedArticle.LastName,
+                   UserType = userType
                 });
             }
             catch (Exception ex)
