@@ -59,6 +59,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 ///5. In CanUserReserveCopy check if its admin
                 ///6.Tests for AddUser
                 ///7.JsonProperty Type in Copy and UserType in User Dto
+                ///8.merge main with feature-user-type
                 var validationUserResult = _validationUserModel.CanUserReserveCopy(userId);
 
                 if (validationUserResult == ValidationUserStatus.Valid)
