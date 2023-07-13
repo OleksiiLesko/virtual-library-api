@@ -29,7 +29,7 @@ namespace VirtualLibraryAPI.Tests
             var mockLogger = new Mock<ILogger<ValidationCopyModel>>();
             var validationModel = new ValidationCopyModel(mockLogger.Object, mockConfiguration.Object, mockRepository.Object);
 
-            var copy = new Domain.DTOs.Copy { CopyID = copyId, IsAvailable = true, Type = Domain.DTOs.Type.Book };
+            var copy = new Domain.DTOs.Copy { CopyID = copyId, IsAvailable = true, Type = Common.Type.Book };
             mockRepository.Setup(r => r.GetCopyById(copyId)).Returns(copy);
             mockConfiguration.Setup(c => c["MaxDays:Book"]).Returns("30");
 
@@ -66,7 +66,7 @@ namespace VirtualLibraryAPI.Tests
             var mockLogger = new Mock<ILogger<ValidationCopyModel>>();
             var validationModel = new ValidationCopyModel(mockLogger.Object, mockConfiguration.Object, mockRepository.Object);
 
-            mockRepository.Setup(r => r.GetCopyById(copyId)).Returns(new Domain.DTOs.Copy { CopyID = copyId, IsAvailable = false, Type = Domain.DTOs.Type.Book });
+            mockRepository.Setup(r => r.GetCopyById(copyId)).Returns(new Domain.DTOs.Copy { CopyID = copyId, IsAvailable = false, Type = Common.Type.Book });
 
             var result = validationModel.IsCopyValidForBooking(copyId, requestedBookingPeriod);
 
@@ -83,7 +83,7 @@ namespace VirtualLibraryAPI.Tests
             var mockLogger = new Mock<ILogger<ValidationCopyModel>>();
             var validationModel = new ValidationCopyModel(mockLogger.Object, mockConfiguration.Object, mockRepository.Object);
 
-            mockRepository.Setup(r => r.GetCopyById(copyId)).Returns(new Domain.DTOs.Copy { CopyID = copyId, IsAvailable = true, Type = Domain.DTOs.Type.Book });
+            mockRepository.Setup(r => r.GetCopyById(copyId)).Returns(new Domain.DTOs.Copy { CopyID = copyId, IsAvailable = true, Type = Common.Type.Book });
 
             var result = validationModel.IsCopyValidForBooking(copyId, requestedBookingPeriod);
 
