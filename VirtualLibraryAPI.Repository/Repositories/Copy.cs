@@ -30,18 +30,17 @@ namespace VirtualLibraryAPI.Repository.Repositories
             _context = context;
             _logger = logger;
         }
-
+        /// <summary>
+        /// Delete copy
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Domain.DTOs.Copy DeleteCopy(int id)
         {
             var copy = _context.Copies.Find(id);
             _context.Copies.Remove(copy);
 
             var deletedCopyDto = new Domain.DTOs.Copy();
-            //var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
-            //if (item != null)
-            //{
-            //    _context.Items.Remove(item);
-            //}
 
             _context.SaveChanges();
 
@@ -49,6 +48,11 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             return deletedCopyDto;
         }
+        /// <summary>
+        /// Get copy by id response
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Domain.DTOs.Copy GetCopyByIdResponse(int id)
         {
             var result = _context.Items
@@ -66,7 +70,11 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Author = result.Book.Author
             };
         }
-
+        /// <summary>
+        /// Get copy by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Domain.DTOs.Copy GetCopyById(int id)
         {
             _logger.LogInformation($"Get copy by id from the database: CopyID {id}");
@@ -93,7 +101,12 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             return copyDto;
         }
-
+        /// <summary>
+        /// Update copy
+        /// </summary>
+        /// <param name="copyId"></param>
+        /// <param name="copy"></param>
+        /// <returns></returns>
         public Domain.DTOs.Copy UpdateCopy(int copyId, Domain.DTOs.Copy copy)
         {
             var existingCopy = _context.Copies.Find(copyId);
