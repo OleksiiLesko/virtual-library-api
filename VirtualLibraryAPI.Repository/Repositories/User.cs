@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain;
 
 namespace VirtualLibraryAPI.Repository.Repositories
@@ -36,12 +37,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public Domain.DTOs.User AddUser(Domain.DTOs.User user)
+        public Domain.DTOs.User AddUser(Domain.DTOs.User user,UserType userType)
         {
             var newUser = new Domain.Entities.User()
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                UserTypes = (Domain.Entities.UserTypes)userType
             };
 
             _context.Users.Add(newUser);
@@ -54,6 +56,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 UserID = newUser.UserID,
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
+                UserType = userType
             };
 
             return addedUser;
@@ -120,6 +123,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 UserID = userEntity.UserID,
                 FirstName = userEntity.FirstName,
                 LastName = userEntity.LastName,
+                UserType = (UserType)userEntity.UserTypes
             };
 
             return userDto;
@@ -138,6 +142,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                     UserID = x.UserID,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
+                    UserType =(UserType)x.UserTypes
                 }).ToList();
             return users;
         }
@@ -160,6 +165,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 UserID = result.UserID,
                 FirstName = result.FirstName,
                 LastName = result.LastName,
+                UserType = (UserType)result.UserTypes
             };
             return userDTO;
         }
