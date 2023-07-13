@@ -50,12 +50,16 @@ namespace VirtualLibraryAPI.Library.Controllers
         [HttpPost("Copy/{copyId}/Booking")]
         public IActionResult ReserveCopyById( [FromHeader] int userId, int copyId, int bookingPeriod)
         {
-            ///1.Booking period
-            ///2.Delete types
-            ///3.Add JsonProperty to type
             try
             {
-               var validationUserResult = _validationUserModel.CanUserReserveCopy(userId);
+                ///1.StringEnumConverter
+                ///2.userid from header
+                ///3.Info table user
+                ///4.In AddUser UserType
+                ///5. In CanUserReserveCopy check if its admin
+                ///6.Tests for AddUser
+                ///7.JsonProperty Type in Copy and UserType in User Dto
+                var validationUserResult = _validationUserModel.CanUserReserveCopy(userId);
 
                 if (validationUserResult == ValidationUserStatus.Valid)
                 {
