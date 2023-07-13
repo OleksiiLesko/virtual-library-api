@@ -119,7 +119,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                                ItemID = x.Item.ItemID,
                                CopyID = x.Copy.CopyID,
                                Name = x.Item.Name,
-                               Types = ((Domain.DTOs.Type)x.Item.Type).ToString(),
+                               Type = ((Common.Type)x.Item.Type),
                                ExpirationDate = x.Copy.ExpirationDate,
                                Publisher = null,
                                Author = null,
