@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Repository;
 
 namespace VirtualLibraryAPI.Tests
@@ -18,18 +19,19 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddUser_ReturnsAddedUser()
         {
-            var userDto = new Domain.DTOs.User { UserID = 2, FirstName = "40" ,LastName = "32"};
+            var type = UserType.Client;
+            var userDto = new Domain.DTOs.User { UserID = 2, FirstName = "40", LastName = "32" };
             var addedUser = new Domain.DTOs.User { UserID = 1, FirstName = "40", LastName = "32" };
-            _repository.Setup(x => x.AddUser(userDto)).Returns(addedUser);
+            _repository.Setup(x => x.AddUser(userDto, type)).Returns(addedUser);
             var userModel = new Models.UserModel(_logger, _repository.Object);
 
-            var result = userModel.AddUser(userDto);
+            var result = userModel.AddUser(userDto, type);
 
             Assert.NotNull(result);
             Assert.Equal(userDto.LastName, result.LastName);
             Assert.Equal(userDto.FirstName, result.FirstName);
             Assert.NotEqual(userDto.UserID, result.UserID);
-            _repository.Verify(x => x.AddUser(userDto), Times.Once());
+            _repository.Verify(x => x.AddUser(userDto, type), Times.Once());
         }
         [Fact]
         public void UpdateUser_Should_Return_Updated_User()

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Library.Controllers;
 using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository;
@@ -61,11 +62,12 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddUser_ReturnsOk()
         {
-            var userRequest = new Domain.DTOs.User(); 
+            var type = UserType.Client;
+            var userRequest = new Domain.DTOs.User();
             var addedUser = new Domain.DTOs.User();
-            _model.Setup(m => m.AddUser(userRequest)).Returns(addedUser);
+            _model.Setup(m => m.AddUser(userRequest, type)).Returns(addedUser);
 
-            var result = _controller.AddUser(userRequest);
+            var result = _controller.AddUser(userRequest, type);
 
             Assert.IsType<OkObjectResult>(result);
             var okObjectResult = Assert.IsType<OkObjectResult>(result);
@@ -78,11 +80,12 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddUser_ReturnsNotFound()
         {
-            var userRequest = new Domain.DTOs.User(); 
+            var type = UserType.Client;
+            var userRequest = new Domain.DTOs.User();
             Domain.DTOs.User addedUser = null;
-            _model.Setup(m => m.AddUser(userRequest)).Returns(addedUser);
+            _model.Setup(m => m.AddUser(userRequest,type)).Returns(addedUser);
 
-            var result = _controller.AddUser(userRequest);
+            var result = _controller.AddUser(userRequest, type);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -90,10 +93,11 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddUser_ReturnsBadRequest()
         {
+            var type = UserType.Client;
             var userRequest = new Domain.DTOs.User();
-            _model.Setup(m => m.AddUser(userRequest)).Throws(new Exception("Failed to add user"));
+            _model.Setup(m => m.AddUser(userRequest, type)).Throws(new Exception("Failed to add user"));
 
-            var result = _controller.AddUser(userRequest);
+            var result = _controller.AddUser(userRequest, type);
 
             Assert.IsType<BadRequestObjectResult>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
