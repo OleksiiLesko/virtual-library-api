@@ -62,13 +62,8 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Type of item
         /// </summary>
-        //[JsonIgnore]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Type Type { get; set; }
-        /// <summary>
-        /// Types of item
-        /// </summary>
-        //[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        //public string? Types { get; set; } = string.Empty;
 
     }
 }
