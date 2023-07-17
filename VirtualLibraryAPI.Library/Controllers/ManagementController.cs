@@ -48,33 +48,28 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="bookingPeriod"></param>
         /// <returns></returns>
         [HttpPost("Copy/{copyId}/Booking")]
-        public IActionResult ReserveCopyById( [FromHeader] int userId, int copyId, int bookingPeriod)
+        public IActionResult ReserveCopyById( [FromHeader] int adminId,int clientId, int copyId, int bookingPeriod)
         {
             try
             {
-                ///1.StringEnumConverter
-                ///2.userid from header
-                ///3.Info table user
-                ///4.In AddUser UserType
-                ///5. In CanUserReserveCopy check if its admin
-                ///6.Tests for AddUser
-                ///7.JsonProperty Type in Copy and UserType in User Dto
                 ///8.merge main with feature-user-type
-                var validationUserResult = _validationUserModel.CanUserReserveCopy(userId);
+                ///9.Admin checked in middleware 
+                ///10.manager add  with database 
+                var validationUserResult = _validationUserModel.CanUserReserveCopy(clientId);
 
                 if (validationUserResult == ValidationUserStatus.Valid)
                 {
                     var validationCopyResult = _validationCopyModel.IsCopyValidForBooking(copyId, bookingPeriod);
                     if (validationCopyResult == ValidationCopyStatus.Valid)
                     {
-                        var copy = _managementModel.ReserveCopyById(userId, copyId, bookingPeriod);
+                        var copy = _managementModel.ReserveCopyById(clientId, copyId, bookingPeriod);
                         _logger.LogInformation("Booking copy by ID: {CopyID}", copy.CopyID);
                         _logger.LogInformation("Copy booked.");
                         var expirationDate = copy.ExpirationDate;
 
                         return Ok(new Domain.DTOs.BookingCopy
                         {
-                            UserID = userId,
+                            UserID = clientId,
                             CopyID = copyId,
                             ExpirationDate = expirationDate,
                         });
@@ -86,7 +81,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 }
                 else
                 {
-                    return HandleUserNotValidResult(validationUserResult, copyId);
+                    return HandleUserNotValidResult(validationUserResult, clientId);
                 }
                 
             }
@@ -130,12 +125,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <param name="validationResult"></param>
         /// <returns></returns>
-        private IActionResult HandleUserNotValidResult(ValidationUserStatus validationResult, int userId)
+        private IActionResult HandleUserNotValidResult(ValidationUserStatus validationResult, int clientId)
         {
             switch (validationResult)
             {
                 case ValidationUserStatus.UserNotFound:
-                    return NotFound($"UserID: {userId}  not found");
+                    return NotFound($"UserID: {clientId}  not found");
 
                 case ValidationUserStatus.DbError:
                     return StatusCode(500, "Database error");
@@ -144,13 +139,13 @@ namespace VirtualLibraryAPI.Library.Controllers
                     return StatusCode(500, "Internal server error");
 
                 case ValidationUserStatus.MaxCopiesExceeded:
-                    return BadRequest($"Max count of copies exceeded UserID {userId}");
+                    return BadRequest($"Max count of copies exceeded UserID {clientId}");
 
                 case ValidationUserStatus.ExpiredCopy:
-                    return BadRequest($"You have a copies that has expired UserID {userId}");
+                    return BadRequest($"You have a copies that has expired UserID {clientId}");
 
                 default:
-                    return BadRequest($"Invalid validation status of UserID {userId}");
+                    return BadRequest($"Invalid validation status of UserID {clientId}");
             }
         }
         /// <summary>
