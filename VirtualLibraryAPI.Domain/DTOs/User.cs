@@ -29,7 +29,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         public string LastName { get; set; }
         /// <summary>
-        /// Type of user (Administrator or Client)
+        /// Type of user 
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public UserType UserType { get; set; }
