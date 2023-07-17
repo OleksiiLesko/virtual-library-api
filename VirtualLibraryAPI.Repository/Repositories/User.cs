@@ -234,6 +234,19 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             return false;
         }
-
+        /// <summary>
+        /// Get user type by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public UserType GetUserTypeById(int id)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserID == id);
+            if (user != null)
+            {
+                return (UserType)user.UserTypes;
+            }
+            return UserType.Client;
+        }
     }
 }

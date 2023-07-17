@@ -65,5 +65,11 @@ namespace VirtualLibraryAPI.Repository
         /// <param name="userId"></param>
         /// <returns></returns>
         public bool HasExpiredCopy(int userId);
+        /// <summary>
+        /// Get user type by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public UserType GetUserTypeById(int id);
     }
 }
