@@ -11,6 +11,7 @@ using Microsoft.Data.SqlClient;
 using VirtualLibraryAPI.Library.Services;
 using Microsoft.AspNetCore;
 using VirtualLibraryAPI.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace VirtualLibraryAPI.Library
 {
