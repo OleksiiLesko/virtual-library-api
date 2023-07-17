@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace VirtualLibraryAPI.Common
 {
@@ -9,7 +10,8 @@ namespace VirtualLibraryAPI.Common
     public enum UserType
     {
         Administrator,
-        Client
+        Client,
+        Manager
     }
     /// <summary>
     /// Type DTO
@@ -40,7 +42,6 @@ namespace VirtualLibraryAPI.Common
     {
         Valid,
         UserNotFound,
-        UserNotAdministrator,
         MaxCopiesExceeded,
         ExpiredCopy,
         DbError,
