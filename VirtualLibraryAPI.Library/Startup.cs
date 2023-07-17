@@ -91,7 +91,8 @@ namespace VirtualLibraryAPI.Library
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseMiddleware<Middleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<AdminAuthenticationMiddleware>();
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
