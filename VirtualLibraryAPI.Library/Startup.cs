@@ -10,6 +10,7 @@ using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository.Repositories;
 using Serilog;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace VirtualLibraryAPI.Library
 {
@@ -92,7 +93,6 @@ namespace VirtualLibraryAPI.Library
                 app.UseSwaggerUI();
             }
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<AdminAuthenticationMiddleware>();
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
