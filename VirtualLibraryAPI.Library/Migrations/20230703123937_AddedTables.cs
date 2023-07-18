@@ -153,11 +153,6 @@ namespace VirtualLibraryAPI.Library.Migrations
                     { (short)4, "Copy" }
                 });
 
-            migrationBuilder.InsertData(
-             table: "Users",
-             columns: new[] { "UserID", "FirstName", "LastName", "UserTypes" },
-             values: new object[] { 10, "John", "Doe", 2 });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Copies_ItemID",
                 table: "Copies",
