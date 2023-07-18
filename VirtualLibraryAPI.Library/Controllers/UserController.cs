@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VirtualLibraryAPI.Common;
+using VirtualLibraryAPI.Library.Middleware;
 using VirtualLibraryAPI.Models;
 
 namespace VirtualLibraryAPI.Library.Controllers
@@ -57,7 +58,8 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddUser([FromBody] Domain.DTOs.User request, UserType userType)
+        [MiddlewareFilter(typeof(UserAuthorizationMiddleware))]
+        public IActionResult AddUser([FromHeader] int userid, [FromBody] Domain.DTOs.User request, UserType userType)
         {
             try
             {
