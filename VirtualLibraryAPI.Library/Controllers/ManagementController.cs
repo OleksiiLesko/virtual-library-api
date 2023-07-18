@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.Entities;
 using VirtualLibraryAPI.Models;
@@ -48,12 +49,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="bookingPeriod"></param>
         /// <returns></returns>
         [HttpPost("Copy/{copyId}/Booking")]
+        [MiddlewareFilter(typeof(AdminAuthenticationMiddleware))]
         public IActionResult ReserveCopyById( [FromHeader] int adminId,int clientId, int copyId, int bookingPeriod)
         {
             try
             {
                 ///8.merge main with feature-user-type
-                ///9.Admin checked in middleware 
                 ///10.manager add  with database 
                 var validationUserResult = _validationUserModel.CanUserReserveCopy(clientId);
 
