@@ -26,7 +26,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// </summary>
         public string LastName { get; set; } = string.Empty;
         /// <summary>
-        /// Type of user (Administrator or Client)
+        /// Type of user 
         /// </summary>
         public UserTypes UserTypes { get; set; }
         public virtual ICollection<Copy> Copies { get; set;}
