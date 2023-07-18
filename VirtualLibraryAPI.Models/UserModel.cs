@@ -42,28 +42,12 @@ namespace VirtualLibraryAPI.Models
         public User AddUser(User user, UserType userType)
         {
             _logger.LogInformation($"Adding user from User model {user}");
-            if (userType == UserType.Manager)
+            var result = _repository.AddUser(user, userType);
+            if (result == null)
             {
-                var result = _repository.AddUser(user, UserType.Administrator);
-                if (result == null)
-                {
-                    return result;
-                }
                 return result;
             }
-            else if (userType == UserType.Administrator)
-            {
-                var result = _repository.AddUser(user, UserType.Client);
-                if (result == null)
-                {
-                    return result;
-                }
-                return result;
-            }
-            else
-            {
-                throw new Exception($"User of type {userType} cannot add user of type {user.UserType}");
-            }
+            return result;
         }
         /// <summary>
         /// Delete user from model
