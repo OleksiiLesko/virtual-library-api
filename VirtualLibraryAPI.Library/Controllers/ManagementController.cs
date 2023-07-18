@@ -55,7 +55,6 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                ///8.merge main with feature-user-type
                 var validationUserResult = _validationUserModel.CanUserReserveCopy(clientId);
 
                 if (validationUserResult == ValidationUserStatus.Valid)
