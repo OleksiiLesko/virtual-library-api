@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Configuration;
 using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain;
@@ -9,16 +10,19 @@ using UserType = VirtualLibraryAPI.Common.UserType;
 
 namespace VirtualLibraryAPI.Library
 {
-
     public class AdminAuthenticationMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<AdminAuthenticationMiddleware> _logger;
 
-        public AdminAuthenticationMiddleware(RequestDelegate next, ILogger<AdminAuthenticationMiddleware> logger)
+        public AdminAuthenticationMiddleware(RequestDelegate next,ILogger<AdminAuthenticationMiddleware> logger)
         {
             _next = next;
             _logger = logger;
+        }
+        public AdminAuthenticationMiddleware()
+        {
+            
         }
 
         public async Task Invoke(HttpContext context, IUserRepository repository)
@@ -36,6 +40,10 @@ namespace VirtualLibraryAPI.Library
             }
             context.Response.StatusCode = 401;
             await context.Response.WriteAsync("Authentication failed");
+        }
+        public void Configure(IApplicationBuilder app)
+        {
+            app.UseMiddleware<AdminAuthenticationMiddleware>();
         }
     }
 }
