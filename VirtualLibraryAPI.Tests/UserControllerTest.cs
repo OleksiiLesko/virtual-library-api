@@ -62,12 +62,13 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddUser_ReturnsOk()
         {
+            var userId = 1;
             var type = UserType.Client;
             var userRequest = new Domain.DTOs.User();
             var addedUser = new Domain.DTOs.User();
             _model.Setup(m => m.AddUser(userRequest, type)).Returns(addedUser);
 
-            var result = _controller.AddUser(userRequest, type);
+            var result = _controller.AddUser(userId,userRequest, type);
 
             Assert.IsType<OkObjectResult>(result);
             var okObjectResult = Assert.IsType<OkObjectResult>(result);
@@ -80,12 +81,13 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddUser_ReturnsNotFound()
         {
+            var userId = 1;
             var type = UserType.Client;
             var userRequest = new Domain.DTOs.User();
             Domain.DTOs.User addedUser = null;
             _model.Setup(m => m.AddUser(userRequest,type)).Returns(addedUser);
 
-            var result = _controller.AddUser(userRequest, type);
+            var result = _controller.AddUser(userId,userRequest, type);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -93,11 +95,12 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void AddUser_ReturnsBadRequest()
         {
+            var userId = 1;
             var type = UserType.Client;
             var userRequest = new Domain.DTOs.User();
             _model.Setup(m => m.AddUser(userRequest, type)).Throws(new Exception("Failed to add user"));
 
-            var result = _controller.AddUser(userRequest, type);
+            var result = _controller.AddUser(userId,userRequest, type);
 
             Assert.IsType<BadRequestObjectResult>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
