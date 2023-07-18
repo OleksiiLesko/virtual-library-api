@@ -11,6 +11,7 @@ using VirtualLibraryAPI.Repository.Repositories;
 using Serilog;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using VirtualLibraryAPI.Library.Middleware;
 
 namespace VirtualLibraryAPI.Library
 {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.Entities;
+using VirtualLibraryAPI.Library.Middleware;
 using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository;
 using UserType = VirtualLibraryAPI.Common.UserType;
@@ -55,7 +56,6 @@ namespace VirtualLibraryAPI.Library.Controllers
             try
             {
                 ///8.merge main with feature-user-type
-                ///10.manager add  with database 
                 var validationUserResult = _validationUserModel.CanUserReserveCopy(clientId);
 
                 if (validationUserResult == ValidationUserStatus.Valid)
