@@ -33,7 +33,7 @@ namespace VirtualLibraryAPI.Library.Middleware
                     return;
                 }
 
-                if (userType == UserType.Manager && requestUserType != UserType.Administrator.ToString())
+                if (userType == UserType.Manager && requestUserType == UserType.Manager.ToString())
                 {
                     _logger.LogWarning("User {UserId} attempted to add a non-administrator user as a Manager.", userid);
                     context.Response.StatusCode = 403;
