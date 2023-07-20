@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 
 namespace VirtualLibraryAPI.Domain.DTOs
 {
@@ -18,6 +19,11 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? ArticleID { get; set; }
+        /// <summary>
+        /// Type of department
+        /// </summary>
+        [Required]
+        public DepartmentType DepartmentType { get; set; }
         /// <summary>
         /// ID of copy
         /// </summary>
@@ -63,5 +69,6 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public CopyInfo? CopyInfo { get; set; }
+
     }
 }
