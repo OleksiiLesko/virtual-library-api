@@ -136,10 +136,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public User UpdateUser(int id, User user)
+        public User UpdateUser(int id, User user,UserType userType)
         {
             _logger.LogInformation($"Updating user from User model: UserID {id}");
-            var result = _repository.UpdateUser(id, user);
+            var result = _repository.UpdateUser(id, user, userType);
             if (result == null)
             {
                 return result;

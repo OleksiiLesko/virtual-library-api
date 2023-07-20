@@ -52,6 +52,6 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="article"></param>
         /// <returns></returns>
-        Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user);
+        Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user, UserType userType);
     }
 }

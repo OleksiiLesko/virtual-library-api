@@ -119,11 +119,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateUser(int id, [FromBody] Domain.DTOs.User request)
+        public ActionResult UpdateUser(int id, [FromBody] Domain.DTOs.User request,UserType userType)
         {
             try
             {
-                var updatedUser = _model.UpdateUser(id, request);
+                var updatedUser = _model.UpdateUser(id, request, userType);
                 if (updatedUser == null)
                 {
                     return NotFound();

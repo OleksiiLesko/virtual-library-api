@@ -176,12 +176,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="user"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user)
+        public Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user, UserType userType)
         {
             var existingUser = _context.Users.Find(id);
 
             existingUser.FirstName = user.FirstName;
             existingUser.LastName = user.LastName;
+            existingUser.UserTypes = (Domain.Entities.UserTypes)userType;
 
             _context.SaveChanges();
             _logger.LogInformation("Update user by id in the database: {UserID}", existingUser.UserID);
