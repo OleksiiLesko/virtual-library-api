@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 
 namespace VirtualLibraryAPI.Models
 {
@@ -27,7 +28,7 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Article AddArticle(Domain.DTOs.Article article);
+        Domain.DTOs.Article AddArticle(Domain.DTOs.Article article, DepartmentType departmentType);
         /// <summary>
         /// Method for add copy of a article
         /// </summary>
@@ -40,7 +41,7 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article);
+        Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article, DepartmentType departmentTypes);
         /// <summary>
         /// Method for delete article
         /// </summary>

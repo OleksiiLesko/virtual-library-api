@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Repository;
 
 namespace VirtualLibraryAPI.Models
@@ -69,10 +70,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine, DepartmentType departmentType)
         {
             _logger.LogInformation($"Adding magazine from magazine model {magazine}");
-            var result = _repository.AddMagazine(magazine);
+            var result = _repository.AddMagazine(magazine, departmentType);
             if (result == null)
             {
                 return result;
@@ -167,10 +168,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine,DepartmentType departmentType)
         {
             _logger.LogInformation($"Updating magazine from magazine model: MagazineID {id}");
-            var result = _repository.UpdateMagazine(id, magazine);
+            var result = _repository.UpdateMagazine(id, magazine, departmentType);
             if (result == null)
             {
                 return result;

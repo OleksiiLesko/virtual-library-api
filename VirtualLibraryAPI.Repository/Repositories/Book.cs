@@ -7,10 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
 using static System.Reflection.Metadata.BlobBuilder;
+using DepartmentType = VirtualLibraryAPI.Common.DepartmentType;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
 
 namespace VirtualLibraryAPI.Repository.Repositories
@@ -42,7 +44,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book)
+        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book,DepartmentType  departmentType)
         {
             var newBook = new Domain.Entities.Book()
             {
@@ -55,6 +57,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Name = book.Name,
                 PublishingDate = book.PublishingDate,
                 Publisher = book.Publisher,
+                DepartmentTypes = (DepartmentTypes)departmentType,
                 Book = newBook
             };
             _context.Items.Add(item);
@@ -63,6 +66,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var addedBook = new Domain.DTOs.Book
             {
                 BookID = newBook.ItemID,
+                DepartmentType = departmentType,
                 CopyID = null, 
                 Name = book.Name,
                 PublishingDate = book.PublishingDate,
@@ -93,6 +97,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var deletedBookDto = new Domain.DTOs.Book
             {
+                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -159,6 +164,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 BookID = id,
                 CopyID = null,
+                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -175,7 +181,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="bookId"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Book UpdateBook(int bookId, Domain.DTOs.Book book)
+        public Domain.DTOs.Book UpdateBook(int bookId, Domain.DTOs.Book book, DepartmentType departmentTypes)
         {
             var existingBook = _context.Books.Find(bookId);
 
@@ -183,6 +189,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             existingBook.ISBN = book.ISBN;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
 
+            item.DepartmentTypes = (DepartmentTypes)book.DepartmentType;
             item.Name = book.Name;
             item.PublishingDate = (DateTime)book.PublishingDate;
             item.Publisher = book.Publisher;
@@ -207,6 +214,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 BookID = id,
                 CopyID = null,
+                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
@@ -238,6 +246,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                            .Select(x => new Domain.DTOs.Book
                            {
                                BookID = x.Item.ItemID,
+                               DepartmentType = (DepartmentType)x.Item.DepartmentTypes,
                                CopyInfo = new CopyInfo
                                {
                                    CountOfCopies = 0,
@@ -322,6 +331,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             return new Domain.DTOs.Book
             {
                 CopyID = result.Copy.CopyID,
+                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,

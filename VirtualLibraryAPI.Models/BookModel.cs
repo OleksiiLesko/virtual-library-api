@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using DepartmentType = VirtualLibraryAPI.Common.DepartmentType;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
 using VirtualLibraryAPI.Repository;
@@ -34,10 +35,10 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book)
+        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book, DepartmentType departmentType)
         {
             _logger.LogInformation($"Adding book from Book model {book}");
-            var result = _repository.AddBook(book);
+            var result = _repository.AddBook(book, departmentType);
             if (result == null)
             {
                 return result;
@@ -51,10 +52,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
 
-        public Domain.DTOs.Book UpdateBook(int id, Domain.DTOs.Book book)
+        public Domain.DTOs.Book UpdateBook(int id, Domain.DTOs.Book book, DepartmentType departmentTypes)
         {
             _logger.LogInformation($"Updating book from Book model: BookID {id}");
-            var result = _repository.UpdateBook(id, book);
+            var result = _repository.UpdateBook(id, book, departmentTypes);
             if (result == null)
             {
                 return result;

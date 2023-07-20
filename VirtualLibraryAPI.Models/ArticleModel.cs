@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Repository;
 using VirtualLibraryAPI.Repository.Repositories;
 
@@ -39,10 +40,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Article AddArticle(Domain.DTOs.Article article)
+        public Domain.DTOs.Article AddArticle(Domain.DTOs.Article article, DepartmentType departmentType)
         {
             _logger.LogInformation($"Adding article from Article model {article}");
-            var result = _repository.AddArticle(article);
+            var result = _repository.AddArticle(article, departmentType);
             if (result == null)
             {
                 return result;
@@ -169,10 +170,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article)
+        public Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article, DepartmentType departmentTypes)
         {
             _logger.LogInformation($"Updating article from Article model: ArticleID {id}");
-            var result = _repository.UpdateArticle(id, article);
+            var result = _repository.UpdateArticle(id, article, departmentTypes);
             if (result == null)
             {
                 return result;

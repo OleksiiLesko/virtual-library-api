@@ -9,6 +9,8 @@ using VirtualLibraryAPI.Domain;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
 using VirtualLibraryAPI.Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
+using VirtualLibraryAPI.Common;
+using DepartmentType = VirtualLibraryAPI.Common.DepartmentType;
 
 namespace VirtualLibraryAPI.Repository.Repositories
 {
@@ -39,7 +41,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine,DepartmentType departmentType)
         {
             var newMagazine = new Domain.Entities.Magazine()
             {
@@ -51,6 +53,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Name = magazine.Name,
                 PublishingDate = (DateTime)magazine.PublishingDate,
                 Publisher = magazine.Publisher,
+                DepartmentTypes = (DepartmentTypes)departmentType,
                 Magazine = newMagazine
             };
             _context.Items.Add(item);
@@ -61,6 +64,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 MagazineID = newMagazine.ItemID,
                 CopyID = null,
+                DepartmentType = departmentType,
                 Name = magazine.Name,
                 PublishingDate = magazine.PublishingDate,
                 Publisher = magazine.Publisher,
@@ -90,6 +94,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var deletedMagazineDto = new Domain.DTOs.Magazine
             {
+                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -155,6 +160,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 MagazineID = magazineEntity.ItemID,
                 CopyID = null,
+                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -170,12 +176,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="bookId"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Magazine UpdateMagazine(int bookId, Domain.DTOs.Magazine magazine)
+        public Domain.DTOs.Magazine UpdateMagazine(int bookId, Domain.DTOs.Magazine magazine, DepartmentType departmentTypes)
         {
             var existingMagazine = _context.Magazines.Find(bookId);
             existingMagazine.IssueNumber = magazine.IssueNumber;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
 
+            item.DepartmentTypes = (DepartmentTypes)magazine.DepartmentType;
             item.Name = magazine.Name;
             item.PublishingDate = (DateTime)magazine.PublishingDate;
             item.Publisher = magazine.Publisher;
@@ -203,6 +210,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var magazineDTO = new Domain.DTOs.Magazine
             {
                 CopyID = null,
+                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 CopyInfo = new CopyInfo
                 {
                     CountOfCopies = GetNumberOfCopiesOfMagazineById(id),
@@ -229,6 +237,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                            .Select(x => new Domain.DTOs.Magazine
                            {
                                MagazineID = x.Item.ItemID,
+                               DepartmentType = (DepartmentType)x.Item.DepartmentTypes,
                                CopyInfo = new CopyInfo
                                {
                                    CountOfCopies = 0,
@@ -309,6 +318,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             return new Domain.DTOs.Magazine
             {
                 CopyID = result.Copy.CopyID,
+                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
