@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace VirtualLibraryAPI.Domain.Entities
 {
+    /// <summary>
+    /// Enumeration of user types
+    /// </summary>
     public enum  UserTypes
     {
         Administrator = 0,
