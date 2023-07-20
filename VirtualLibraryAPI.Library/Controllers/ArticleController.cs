@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Models;
 
@@ -57,11 +58,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddArticle([FromBody] Domain.DTOs.Article request)
+        public IActionResult AddArticle([FromBody] Domain.DTOs.Article request,DepartmentType departmentType)
         {
             try
             {
-                var addedArticle = _model.AddArticle(request);
+                var addedArticle = _model.AddArticle(request, departmentType);
                 if (addedArticle == null)
                 {
                     return NotFound();
@@ -72,6 +73,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Article
                 {
                     ArticleID = addedArticle.ArticleID,
+                    DepartmentType = departmentType,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -147,11 +149,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateArticle(int id, [FromBody] Domain.DTOs.Article request)
+        public ActionResult UpdateArticle(int id, [FromBody] Domain.DTOs.Article request, DepartmentType departmentType)
         {
             try
             {
-                var updatedArticle = _model.UpdateArticle(id, request);
+                var updatedArticle = _model.UpdateArticle(id, request, departmentType);
                 if (updatedArticle == null)
                 {
                     return NotFound();
@@ -162,6 +164,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Article
                 {
                     ArticleID = updatedArticle.ArticleID,
+                    DepartmentType = updatedArticle.DepartmentType,
                     Name = request.Name,
                     Author = request.Author,
                     Version = updatedArticle.Version,

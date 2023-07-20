@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Models;
 
 namespace VirtualLibraryAPI.Library.Controllers
@@ -58,11 +59,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddBook([FromBody] Domain.DTOs.Book request)
+        public IActionResult AddBook([FromBody] Domain.DTOs.Book request,DepartmentType departmentType)
         {
             try
             {
-                var addedBook = _model.AddBook(request);
+                var addedBook = _model.AddBook(request, departmentType);
                 if (addedBook == null)
                 {
                     return NotFound();
@@ -73,6 +74,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Book
                 {
                     BookID = addedBook.BookID,
+                    DepartmentType = departmentType,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -147,11 +149,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateBook(int id, [FromBody] Domain.DTOs.Book request)
+        public ActionResult UpdateBook(int id, [FromBody] Domain.DTOs.Book request,DepartmentType departmentType)
         {
             try
             {
-                var updatedBook = _model.UpdateBook(id, request);
+                var updatedBook = _model.UpdateBook(id, request, departmentType);
                 if (updatedBook == null)
                 {
                     return NotFound();
@@ -162,6 +164,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Book
                 {
                     BookID = updatedBook.BookID,
+                    DepartmentType = updatedBook.DepartmentType,
                     Name = request.Name,
                     Author = updatedBook.Author,
                     ISBN = updatedBook.ISBN,

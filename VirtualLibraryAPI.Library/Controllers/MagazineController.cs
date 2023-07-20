@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Models;
 
@@ -58,11 +59,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddMagazine([FromBody] Domain.DTOs.Magazine request)
+        public IActionResult AddMagazine([FromBody] Domain.DTOs.Magazine request, DepartmentType departmentType)
         {
             try
             {
-                var addedMagazine = _model.AddMagazine(request);
+                var addedMagazine = _model.AddMagazine(request, departmentType);
                 if (addedMagazine == null)
                 {
                     return NotFound();
@@ -73,6 +74,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Magazine
                 {
                     MagazineID = addedMagazine.MagazineID,
+                    DepartmentType = departmentType,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -144,11 +146,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateMagazine(int id, [FromBody] Domain.DTOs.Magazine request)
+        public ActionResult UpdateMagazine(int id, [FromBody] Domain.DTOs.Magazine request,DepartmentType departmentType)
         {
             try
             {
-                var updatedMagazine = _model.UpdateMagazine(id, request);
+                var updatedMagazine = _model.UpdateMagazine(id, request, departmentType);
                 if (updatedMagazine == null)
                 {
                     return NotFound();
@@ -159,6 +161,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Magazine
                 {
                     MagazineID = updatedMagazine.MagazineID,
+                    DepartmentType = updatedMagazine.DepartmentType,
                     Name = request.Name,
                     Publisher = request.Publisher,
                     PublishingDate = request.PublishingDate,
