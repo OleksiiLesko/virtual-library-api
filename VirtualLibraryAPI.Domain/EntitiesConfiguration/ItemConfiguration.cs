@@ -43,10 +43,19 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                .HasMaxLength(25)
                .IsRequired();
 
+            builder.Property(e => e.DepartmentTypes)
+               .HasMaxLength(25)
+               .IsRequired();
+
             builder.HasOne(e => e.ItemType)
                .WithMany(e => e.Item)
                .HasForeignKey(e => e.Type)
                .HasConstraintName("FK_Item_ItemType");
+
+            builder.HasOne(e => e.DepartmentType)
+            .WithMany(e => e.Item)
+            .HasForeignKey(e => e.DepartmentTypes)
+            .HasConstraintName("FK_Item_DepartmentType");
         }
     }
 }
