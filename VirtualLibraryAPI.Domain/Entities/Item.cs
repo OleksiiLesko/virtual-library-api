@@ -17,7 +17,11 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// Type of item (book, magazine, article, copy)
         /// </summary>
-        public  Type Type { get; set; } 
+        public  Type Type { get; set; }
+        /// <summary>
+        /// Type of department 
+        /// </summary>
+        public DepartmentTypes DepartmentTypes { get; set; }
         /// <summary>
         /// Publishing date of item
         /// </summary>
@@ -31,6 +35,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         public virtual Magazine Magazine { get; set; }
         public virtual Copy Copy { get; set; }
         public virtual ItemType ItemType { get; set; }
+        public virtual DepartmentType DepartmentType { get; set; }
 
     }
 }
