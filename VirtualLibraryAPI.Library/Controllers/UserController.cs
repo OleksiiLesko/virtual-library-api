@@ -59,11 +59,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <returns></returns>
         [HttpPost]
         [MiddlewareFilter(typeof(UserAuthorizationMiddleware))]
-        public IActionResult AddUser([FromHeader] int userid, [FromBody] Domain.DTOs.User request, UserType userType)
+        public IActionResult AddUser([FromHeader] int userid, [FromBody] Domain.DTOs.User request, UserType userType,DepartmentType departmentType)
         {
             try
             {
-                var addedArticle = _model.AddUser(request, userType);
+                var addedArticle = _model.AddUser(request, userType, departmentType);
                 if (addedArticle == null)
                 {
                     return NotFound();
@@ -76,7 +76,8 @@ namespace VirtualLibraryAPI.Library.Controllers
                    UserID = addedArticle.UserID,
                    FirstName = addedArticle.FirstName,
                    LastName = addedArticle.LastName,
-                   UserType = userType
+                   UserType = userType,
+                   DepartmentType = departmentType
                 });
             }
             catch (Exception ex)
@@ -119,11 +120,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateUser(int id, [FromBody] Domain.DTOs.User request,UserType userType)
+        public ActionResult UpdateUser(int id, [FromBody] Domain.DTOs.User request,UserType userType, DepartmentType departmentType)
         {
             try
             {
-                var updatedUser = _model.UpdateUser(id, request, userType);
+                var updatedUser = _model.UpdateUser(id, request, userType, departmentType);
                 if (updatedUser == null)
                 {
                     return NotFound();
@@ -135,7 +136,9 @@ namespace VirtualLibraryAPI.Library.Controllers
                 {
                     UserID = updatedUser.UserID,
                     FirstName = request.FirstName,
-                    LastName = request.LastName
+                    LastName = request.LastName,
+                    UserType = userType,
+                    DepartmentType = departmentType
                 });
             }
 

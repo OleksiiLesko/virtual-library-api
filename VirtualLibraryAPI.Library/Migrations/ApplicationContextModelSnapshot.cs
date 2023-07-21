@@ -143,6 +143,11 @@ namespace VirtualLibraryAPI.Library.Migrations
                         {
                             TypeId = (short)4,
                             TypeName = "Horror"
+                        },
+                        new
+                        {
+                            TypeId = (short)5,
+                            TypeName = "NoDepartment"
                         });
                 });
 
