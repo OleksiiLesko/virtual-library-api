@@ -9,7 +9,7 @@ namespace VirtualLibraryAPI.Common
     /// </summary>
     public enum DepartmentType
     {
-        Fantasy,
+        Fantasy = 1,
         Adventure,
         Science,
         Romance,

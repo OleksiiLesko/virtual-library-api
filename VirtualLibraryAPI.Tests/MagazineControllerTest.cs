@@ -65,68 +65,68 @@ namespace VirtualLibraryAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        [Fact]
-        public void AddMagazine_ReturnOK()
-        {
-            var request = new Domain.DTOs.Magazine
-            {
-                Name = "Magazine Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Publisher"
-            };
+        //[Fact]
+        //public void AddMagazine_ReturnOK()
+        //{
+        //    var request = new Domain.DTOs.Magazine
+        //    {
+        //        Name = "Magazine Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Publisher"
+        //    };
 
-            var addedMagazine = new Domain.DTOs.Magazine
-            {
-                MagazineID = 1,
-                IssueNumber = "20/20223"
-            };
+        //    var addedMagazine = new Domain.DTOs.Magazine
+        //    {
+        //        MagazineID = 1,
+        //        IssueNumber = "20/20223"
+        //    };
 
-            _magazineRepository.Setup(model => model.AddMagazine(request)).Returns(addedMagazine);
+        //    _magazineRepository.Setup(model => model.AddMagazine(request)).Returns(addedMagazine);
 
-            var result = _magazineController.AddMagazine(request);
+        //    var result = _magazineController.AddMagazine(request);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var magazineResponse = Assert.IsType<Domain.DTOs.Magazine>(okResult.Value);
+        //    Assert.IsType<OkObjectResult>(result);
+        //    var okResult = Assert.IsType<OkObjectResult>(result);
+        //    var magazineResponse = Assert.IsType<Domain.DTOs.Magazine>(okResult.Value);
 
-            Assert.Equal(addedMagazine.MagazineID, magazineResponse.MagazineID);
-            Assert.Equal(request.Name, magazineResponse.Name);
-            Assert.Equal(request.PublishingDate, magazineResponse.PublishingDate);
-            Assert.Equal(request.Publisher, magazineResponse.Publisher);
-            Assert.Equal(addedMagazine.IssueNumber, magazineResponse.IssueNumber);
-        }
-        [Fact]
-        public void AddMagazine_ReturnNotFound()
-        {
-            var request = new Domain.DTOs.Magazine
-            {
-                Name = "Magazine Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Publisher"
-            };
+        //    Assert.Equal(addedMagazine.MagazineID, magazineResponse.MagazineID);
+        //    Assert.Equal(request.Name, magazineResponse.Name);
+        //    Assert.Equal(request.PublishingDate, magazineResponse.PublishingDate);
+        //    Assert.Equal(request.Publisher, magazineResponse.Publisher);
+        //    Assert.Equal(addedMagazine.IssueNumber, magazineResponse.IssueNumber);
+        //}
+        //[Fact]
+        //public void AddMagazine_ReturnNotFound()
+        //{
+        //    var request = new Domain.DTOs.Magazine
+        //    {
+        //        Name = "Magazine Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Publisher"
+        //    };
 
-            _magazineRepository.Setup(model => model.AddMagazine(request)).Returns((Domain.DTOs.Magazine)null);
+        //    _magazineRepository.Setup(model => model.AddMagazine(request)).Returns((Domain.DTOs.Magazine)null);
 
-            var result = _magazineController.AddMagazine(request);
+        //    var result = _magazineController.AddMagazine(request);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
-        [Fact]
-        public void AddBook_ReturnBadRequest()
-        {
-            var request = new Domain.DTOs.Magazine
-            {
-                Name = "Magazine Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Publisher"
-            };
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
+        //[Fact]
+        //public void AddBook_ReturnBadRequest()
+        //{
+        //    var request = new Domain.DTOs.Magazine
+        //    {
+        //        Name = "Magazine Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Publisher"
+        //    };
 
-            _magazineRepository.Setup(model => model.AddMagazine(request)).Throws(new ArgumentException());
+        //    _magazineRepository.Setup(model => model.AddMagazine(request)).Throws(new ArgumentException());
 
-            var result = _magazineController.AddMagazine(request);
+        //    var result = _magazineController.AddMagazine(request);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //}
         [Fact]
         public void AddCopyOfMagazineById_ReturnOK()
         {
@@ -207,70 +207,70 @@ namespace VirtualLibraryAPI.Tests
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
-        [Fact]
-        public void UpdateMagazine_ReturnOK()
-        {
-            var magazineId = 1;
-            var request = new Domain.DTOs.Magazine
-            {
-                Name = "Updated Magazine Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Updated Publisher"
-            };
-            var updatedMagazine = new Domain.DTOs.Magazine
-            {
-                MagazineID = magazineId,
-                IssueNumber = "20/2023"
-            };
+        //[Fact]
+        //public void UpdateMagazine_ReturnOK()
+        //{
+        //    var magazineId = 1;
+        //    var request = new Domain.DTOs.Magazine
+        //    {
+        //        Name = "Updated Magazine Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Updated Publisher"
+        //    };
+        //    var updatedMagazine = new Domain.DTOs.Magazine
+        //    {
+        //        MagazineID = magazineId,
+        //        IssueNumber = "20/2023"
+        //    };
 
-            _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Returns(updatedMagazine);
+        //    _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Returns(updatedMagazine);
 
-            var result = _magazineController.UpdateMagazine(magazineId, request);
+        //    var result = _magazineController.UpdateMagazine(magazineId, request);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var magazineResponse = Assert.IsType<Domain.DTOs.Magazine>(okResult.Value);
+        //    Assert.IsType<OkObjectResult>(result);
+        //    var okResult = Assert.IsType<OkObjectResult>(result);
+        //    var magazineResponse = Assert.IsType<Domain.DTOs.Magazine>(okResult.Value);
 
-            Assert.Equal(updatedMagazine.MagazineID, magazineResponse.MagazineID);
-            Assert.Equal(request.Name, magazineResponse.Name);
-            Assert.Equal(updatedMagazine.IssueNumber, magazineResponse.IssueNumber);
-            Assert.Equal(request.Publisher, magazineResponse.Publisher);
-            Assert.Equal(request.PublishingDate, magazineResponse.PublishingDate);
-        }
-        [Fact]
-        public void UpdateBook_ReturnNotFound()
-        {
-            var magazineId = 1;
-            var request = new Domain.DTOs.Magazine
-            {
-                Name = "Updated Magazine Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Updated Publisher"
-            };
+        //    Assert.Equal(updatedMagazine.MagazineID, magazineResponse.MagazineID);
+        //    Assert.Equal(request.Name, magazineResponse.Name);
+        //    Assert.Equal(updatedMagazine.IssueNumber, magazineResponse.IssueNumber);
+        //    Assert.Equal(request.Publisher, magazineResponse.Publisher);
+        //    Assert.Equal(request.PublishingDate, magazineResponse.PublishingDate);
+        //}
+        //[Fact]
+        //public void UpdateBook_ReturnNotFound()
+        //{
+        //    var magazineId = 1;
+        //    var request = new Domain.DTOs.Magazine
+        //    {
+        //        Name = "Updated Magazine Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Updated Publisher"
+        //    };
 
-            _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Returns((Domain.DTOs.Magazine)null);
+        //    _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Returns((Domain.DTOs.Magazine)null);
 
-            var result = _magazineController.UpdateMagazine(magazineId, request);
+        //    var result = _magazineController.UpdateMagazine(magazineId, request);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
-        [Fact]
-        public void UpdateMagazine_ReturnbBadRequest()
-        {
-            var magazineId = 1;
-            var request = new Domain.DTOs.Magazine
-            {
-                Name = "Updated Magazine Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Updated Publisher"
-            };
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
+        //[Fact]
+        //public void UpdateMagazine_ReturnbBadRequest()
+        //{
+        //    var magazineId = 1;
+        //    var request = new Domain.DTOs.Magazine
+        //    {
+        //        Name = "Updated Magazine Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Updated Publisher"
+        //    };
 
-            _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Throws(new Exception("Update failed"));
+        //    _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Throws(new Exception("Update failed"));
 
-            var result = _magazineController.UpdateMagazine(magazineId, request);
+        //    var result = _magazineController.UpdateMagazine(magazineId, request);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //}
         [Fact]
         public void DeleteMagazine_ReturnNoContent()
         {

@@ -22,6 +22,6 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// <summary>
         /// Connect with User
         /// </summary>
-        public virtual ICollection<Item> Item { get; set; }
+        public virtual ICollection<User> User { get; set; }
     }
 }

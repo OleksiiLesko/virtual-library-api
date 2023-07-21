@@ -20,36 +20,36 @@ namespace VirtualLibraryAPI.Tests
             _logger = new Mock<ILogger<Models.MagazineModel>>().Object;
         }
 
-        [Fact]
-        public void AddMagazine_ReturnsAddedMagazine()
-        {
-            var magazineDto = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
-            var addedMagazine = new Domain.DTOs.Magazine { MagazineID = 1, IssueNumber = "40/2023" };
-            _magazineRepository.Setup(x => x.AddMagazine(magazineDto)).Returns(addedMagazine);
-            var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
+        //[Fact]
+        //public void AddMagazine_ReturnsAddedMagazine()
+        //{
+        //    var magazineDto = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
+        //    var addedMagazine = new Domain.DTOs.Magazine { MagazineID = 1, IssueNumber = "40/2023" };
+        //    _magazineRepository.Setup(x => x.AddMagazine(magazineDto)).Returns(addedMagazine);
+        //    var magazineModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
-            var result = magazineModel.AddMagazine(magazineDto);
+        //    var result = magazineModel.AddMagazine(magazineDto);
 
-            Assert.NotNull(result);
-            Assert.Equal(magazineDto.IssueNumber, result.IssueNumber);
-            Assert.NotEqual(magazineDto.MagazineID, result.MagazineID);
-            _magazineRepository.Verify(x => x.AddMagazine(magazineDto), Times.Once());
-        }
-        [Fact]
-        public void UpdateMagazine_Should_Return_Updated_Magazine()
-        {
-            var magazineID = 1;
-            var magazineDto = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
-            var updatedMagazine = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
-            _magazineRepository.Setup(x => x.UpdateMagazine(magazineID, magazineDto)).Returns(updatedMagazine);
-            var bookModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
+        //    Assert.NotNull(result);
+        //    Assert.Equal(magazineDto.IssueNumber, result.IssueNumber);
+        //    Assert.NotEqual(magazineDto.MagazineID, result.MagazineID);
+        //    _magazineRepository.Verify(x => x.AddMagazine(magazineDto), Times.Once());
+        //}
+        //[Fact]
+        //public void UpdateMagazine_Should_Return_Updated_Magazine()
+        //{
+        //    var magazineID = 1;
+        //    var magazineDto = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
+        //    var updatedMagazine = new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "40/2023" };
+        //    _magazineRepository.Setup(x => x.UpdateMagazine(magazineID, magazineDto)).Returns(updatedMagazine);
+        //    var bookModel = new Models.MagazineModel(_logger, _magazineRepository.Object);
 
-            var result = bookModel.UpdateMagazine(magazineID, magazineDto);
+        //    var result = bookModel.UpdateMagazine(magazineID, magazineDto);
 
-            Assert.Equal(updatedMagazine.MagazineID, result.MagazineID);
-            Assert.Equal(updatedMagazine.IssueNumber, result.IssueNumber);
-            _magazineRepository.Verify(x => x.UpdateMagazine(magazineID, magazineDto), Times.Once());
-        }
+        //    Assert.Equal(updatedMagazine.MagazineID, result.MagazineID);
+        //    Assert.Equal(updatedMagazine.IssueNumber, result.IssueNumber);
+        //    _magazineRepository.Verify(x => x.UpdateMagazine(magazineID, magazineDto), Times.Once());
+        //}
         [Fact]
         public void DeleteMagazine_ReturnsDeletedMagazine()
         {

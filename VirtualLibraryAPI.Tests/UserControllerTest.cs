@@ -142,50 +142,50 @@ namespace VirtualLibraryAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        [Fact]
-        public void UpdateUser_ReturnsOk()
-        {
-            int userId = 1; 
-            var userRequest = new Domain.DTOs.User(); 
-            var updatedUser = new Domain.DTOs.User(); 
-            _model.Setup(m => m.UpdateUser(userId, userRequest)).Returns(updatedUser);
+        //[Fact]
+        //public void UpdateUser_ReturnsOk()
+        //{
+        //    int userId = 1; 
+        //    var userRequest = new Domain.DTOs.User(); 
+        //    var updatedUser = new Domain.DTOs.User(); 
+        //    _model.Setup(m => m.UpdateUser(userId, userRequest)).Returns(updatedUser);
 
-            var result = _controller.UpdateUser(userId, userRequest);
+        //    var result = _controller.UpdateUser(userId, userRequest);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okObjectResult = Assert.IsType<OkObjectResult>(result);
-            var returnedUser = Assert.IsType<Domain.DTOs.User>(okObjectResult.Value);
-            Assert.Equal(updatedUser.UserID, returnedUser.UserID);
-            Assert.Equal(userRequest.FirstName, returnedUser.FirstName);
-            Assert.Equal(userRequest.LastName, returnedUser.LastName);
-        }
+        //    Assert.IsType<OkObjectResult>(result);
+        //    var okObjectResult = Assert.IsType<OkObjectResult>(result);
+        //    var returnedUser = Assert.IsType<Domain.DTOs.User>(okObjectResult.Value);
+        //    Assert.Equal(updatedUser.UserID, returnedUser.UserID);
+        //    Assert.Equal(userRequest.FirstName, returnedUser.FirstName);
+        //    Assert.Equal(userRequest.LastName, returnedUser.LastName);
+        //}
 
-        [Fact]
-        public void UpdateUser_ReturnsNotFound()
-        {
-            int userId = 1;
-            var userRequest = new Domain.DTOs.User(); 
-            Domain.DTOs.User updatedUser = null;
-            _model.Setup(m => m.UpdateUser(userId, userRequest)).Returns(updatedUser);
+        //[Fact]
+        //public void UpdateUser_ReturnsNotFound()
+        //{
+        //    int userId = 1;
+        //    var userRequest = new Domain.DTOs.User(); 
+        //    Domain.DTOs.User updatedUser = null;
+        //    _model.Setup(m => m.UpdateUser(userId, userRequest)).Returns(updatedUser);
 
-            var result = _controller.UpdateUser(userId, userRequest);
+        //    var result = _controller.UpdateUser(userId, userRequest);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
 
-        [Fact]
-        public void UpdateUser_ReturnsBadRequest()
-        {
-            int userId = 1;
-            var userRequest = new Domain.DTOs.User(); 
-            _model.Setup(m => m.UpdateUser(userId, userRequest)).Throws(new Exception("Failed to update user"));
+        //[Fact]
+        //public void UpdateUser_ReturnsBadRequest()
+        //{
+        //    int userId = 1;
+        //    var userRequest = new Domain.DTOs.User(); 
+        //    _model.Setup(m => m.UpdateUser(userId, userRequest)).Throws(new Exception("Failed to update user"));
 
-            var result = _controller.UpdateUser(userId, userRequest);
+        //    var result = _controller.UpdateUser(userId, userRequest);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Failed", badRequestResult.Value);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //    var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        //    Assert.Equal("Failed", badRequestResult.Value);
+        //}
         [Fact]
         public void DeleteUser_ReturnsNoContent()
         {

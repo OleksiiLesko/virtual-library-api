@@ -50,8 +50,8 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="bookingPeriod"></param>
         /// <returns></returns>
         [HttpPost("Copy/{copyId}/Booking")]
-        [MiddlewareFilter(typeof(AdminAuthenticationMiddleware))]
-        public IActionResult ReserveCopyById( [FromHeader] int adminId,int clientId, int copyId, int bookingPeriod)
+        [MiddlewareFilter(typeof(IssuerAuthenticationMiddleware))]
+        public IActionResult ReserveCopyById( [FromHeader] int issuerId,int clientId, int copyId, int bookingPeriod)
         {
             try
             {

@@ -154,10 +154,6 @@ namespace VirtualLibraryAPI.Library.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemID"));
 
-                    b.Property<short>("DepartmentTypes")
-                        .HasMaxLength(25)
-                        .HasColumnType("smallint");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -177,8 +173,6 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasColumnType("smallint");
 
                     b.HasKey("ItemID");
-
-                    b.HasIndex("DepartmentTypes");
 
                     b.HasIndex("Type");
 
@@ -246,6 +240,10 @@ namespace VirtualLibraryAPI.Library.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
 
+                    b.Property<short>("DepartmentTypes")
+                        .HasMaxLength(25)
+                        .HasColumnType("smallint");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -261,6 +259,8 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasColumnType("smallint");
 
                     b.HasKey("UserID");
+
+                    b.HasIndex("DepartmentTypes");
 
                     b.HasIndex("UserTypes");
 
@@ -346,21 +346,12 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
                 {
-                    b.HasOne("VirtualLibraryAPI.Domain.Entities.DepartmentType", "DepartmentType")
-                        .WithMany("Item")
-                        .HasForeignKey("DepartmentTypes")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Item_DepartmentType");
-
                     b.HasOne("VirtualLibraryAPI.Domain.Entities.ItemType", "ItemType")
                         .WithMany("Item")
                         .HasForeignKey("Type")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Item_ItemType");
-
-                    b.Navigation("DepartmentType");
 
                     b.Navigation("ItemType");
                 });
@@ -379,6 +370,13 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
                 {
+                    b.HasOne("VirtualLibraryAPI.Domain.Entities.DepartmentType", "DepartmentType")
+                        .WithMany("User")
+                        .HasForeignKey("DepartmentTypes")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_User_DepartmentType");
+
                     b.HasOne("VirtualLibraryAPI.Domain.Entities.UserType", "UserType")
                         .WithMany("User")
                         .HasForeignKey("UserTypes")
@@ -386,12 +384,14 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_User_UserType");
 
+                    b.Navigation("DepartmentType");
+
                     b.Navigation("UserType");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.DepartmentType", b =>
                 {
-                    b.Navigation("Item");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>

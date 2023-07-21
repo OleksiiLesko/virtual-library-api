@@ -53,7 +53,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Name = article.Name,
                 PublishingDate = article.PublishingDate,
                 Publisher = article.Publisher,
-                DepartmentTypes = (DepartmentTypes)departmentTypes,
                 Article = newArticle
             };
             _context.Items.Add(item);
@@ -129,7 +128,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             return new Domain.DTOs.Article
             {
                 CopyID = result.Copy.CopyID,
-                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
@@ -160,7 +158,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var deletedArticleDto = new Domain.DTOs.Article
             {
-                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -219,7 +216,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 .Select(x => new Domain.DTOs.Article
                 {
                     ArticleID = x.Item.ItemID,
-                    DepartmentType = (DepartmentType)x.Item.DepartmentTypes,
                     CopyInfo = new CopyInfo
                     {
                         CountOfCopies = 0,
@@ -268,7 +264,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var articleDto = new Domain.DTOs.Article
             {
                 ArticleID = articleEntity.ItemID,
-                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 CopyID = null,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
@@ -299,7 +294,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var articleDTO = new Domain.DTOs.Article
             {
-                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 Name = result?.Item.Name,
                 CopyID = null,
                 PublishingDate = (DateTime)(result?.Item.PublishingDate),
@@ -334,7 +328,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             existingArticle.Version = article.Version;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == id);
 
-            item.DepartmentTypes = (DepartmentTypes)article.DepartmentType;
             item.Name = article.Name;
             item.PublishingDate = (DateTime)article.PublishingDate;
             item.Publisher = article.Publisher;

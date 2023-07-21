@@ -57,7 +57,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Name = book.Name,
                 PublishingDate = book.PublishingDate,
                 Publisher = book.Publisher,
-                DepartmentTypes = (DepartmentTypes)departmentType,
                 Book = newBook
             };
             _context.Items.Add(item);
@@ -97,7 +96,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var deletedBookDto = new Domain.DTOs.Book
             {
-                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -164,7 +162,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 BookID = id,
                 CopyID = null,
-                DepartmentType = (DepartmentType)itemEntity.DepartmentTypes,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -189,7 +186,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             existingBook.ISBN = book.ISBN;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
 
-            item.DepartmentTypes = (DepartmentTypes)book.DepartmentType;
             item.Name = book.Name;
             item.PublishingDate = (DateTime)book.PublishingDate;
             item.Publisher = book.Publisher;
@@ -214,7 +210,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 BookID = id,
                 CopyID = null,
-                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
@@ -246,7 +241,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                            .Select(x => new Domain.DTOs.Book
                            {
                                BookID = x.Item.ItemID,
-                               DepartmentType = (DepartmentType)x.Item.DepartmentTypes,
                                CopyInfo = new CopyInfo
                                {
                                    CountOfCopies = 0,
@@ -331,7 +325,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             return new Domain.DTOs.Book
             {
                 CopyID = result.Copy.CopyID,
-                DepartmentType = (DepartmentType)result.Item.DepartmentTypes,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,

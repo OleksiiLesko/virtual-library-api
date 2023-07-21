@@ -38,6 +38,10 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
               .HasMaxLength(25)
               .IsRequired();
 
+            builder.Property(e => e.DepartmentTypes)
+             .HasMaxLength(25)
+             .IsRequired();
+
             builder.HasMany(e => e.Copies)
               .WithOne(e => e.User)
               .HasForeignKey(e => e.UserID)
@@ -48,6 +52,11 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
              .WithMany(e => e.User)
              .HasForeignKey(e => e.UserTypes)
              .HasConstraintName("FK_User_UserType");
+
+            builder.HasOne(e => e.DepartmentType)
+             .WithMany(e => e.User)
+             .HasForeignKey(e => e.DepartmentTypes)
+             .HasConstraintName("FK_User_DepartmentType");
 
 
         }

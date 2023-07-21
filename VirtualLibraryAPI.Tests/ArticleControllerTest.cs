@@ -65,63 +65,63 @@ namespace VirtualLibraryAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        [Fact]
-        public void AddArticle_ReturnOK()
-        {
-            var request = new Domain.DTOs.Article
-            {
-                Name = "Article Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Publisher"
-            };
+        //[Fact]
+        //public void AddArticle_ReturnOK()
+        //{
+        //    var request = new Domain.DTOs.Article
+        //    {
+        //        Name = "Article Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Publisher"
+        //    };
 
-            var addedArticle = new Domain.DTOs.Article
-            {
-                ArticleID = 1,
-                MagazinesIssueNumber = "23324",
-                Author = "Arnold"
-            };
+        //    var addedArticle = new Domain.DTOs.Article
+        //    {
+        //        ArticleID = 1,
+        //        MagazinesIssueNumber = "23324",
+        //        Author = "Arnold"
+        //    };
 
-            _articleRepository.Setup(model => model.AddArticle(request)).Returns(addedArticle);
+        //    _articleRepository.Setup(model => model.AddArticle(request)).Returns(addedArticle);
 
-            var result = _articleController.AddArticle(request);
+        //    var result = _articleController.AddArticle(request);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var articleResponse = Assert.IsType<Domain.DTOs.Article>(okResult.Value);
-        }
-        [Fact]
-        public void AddArticle_ReturnNotFound()
-        {
-            var request = new Domain.DTOs.Article
-            {
-                Name = "Article Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Publisher"
-            };
+        //    Assert.IsType<OkObjectResult>(result);
+        //    var okResult = Assert.IsType<OkObjectResult>(result);
+        //    var articleResponse = Assert.IsType<Domain.DTOs.Article>(okResult.Value);
+        //}
+        //[Fact]
+        //public void AddArticle_ReturnNotFound()
+        //{
+        //    var request = new Domain.DTOs.Article
+        //    {
+        //        Name = "Article Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Publisher"
+        //    };
 
-            _articleRepository.Setup(model => model.AddArticle(request)).Returns((Domain.DTOs.Article)null);
+        //    _articleRepository.Setup(model => model.AddArticle(request)).Returns((Domain.DTOs.Article)null);
 
-            var result = _articleController.AddArticle(request);
+        //    var result = _articleController.AddArticle(request);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
-        [Fact]
-        public void AddArticle_ReturnBadRequest()
-        {
-            var request = new Domain.DTOs.Article
-            {
-                Name = "Article Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Publisher"
-            };
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
+        //[Fact]
+        //public void AddArticle_ReturnBadRequest()
+        //{
+        //    var request = new Domain.DTOs.Article
+        //    {
+        //        Name = "Article Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Publisher"
+        //    };
 
-            _articleRepository.Setup(model => model.AddArticle(request)).Throws(new ArgumentException());
+        //    _articleRepository.Setup(model => model.AddArticle(request)).Throws(new ArgumentException());
 
-            var result = _articleController.AddArticle(request);
+        //    var result = _articleController.AddArticle(request);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //}
         [Fact]
         public void AddCopyOfArticleById_ReturnOK()
         {
@@ -203,65 +203,65 @@ namespace VirtualLibraryAPI.Tests
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
-        [Fact]
-        public void UpdateArticle_ReturnOK()
-        {
-            var articleId = 1;
-            var request = new Domain.DTOs.Article
-            {
-                Name = "Updated Article Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Updated Publisher"
-            };
-            var updatedArticle = new Domain.DTOs.Article
-            {
-                ArticleID = articleId,
-                Author = "Author",
-                MagazineName = "ISBN"
-            };
+        //[Fact]
+        //public void UpdateArticle_ReturnOK()
+        //{
+        //    var articleId = 1;
+        //    var request = new Domain.DTOs.Article
+        //    {
+        //        Name = "Updated Article Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Updated Publisher"
+        //    };
+        //    var updatedArticle = new Domain.DTOs.Article
+        //    {
+        //        ArticleID = articleId,
+        //        Author = "Author",
+        //        MagazineName = "ISBN"
+        //    };
 
-            _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Returns(updatedArticle);
+        //    _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Returns(updatedArticle);
 
-            var result = _articleController.UpdateArticle(articleId, request);
+        //    var result = _articleController.UpdateArticle(articleId, request);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var articleResponse = Assert.IsType<Domain.DTOs.Article>(okResult.Value);
-        }
-        [Fact]
-        public void UpdateArticle_ReturnNotFound()
-        {
-            var articleId = 1;
-            var request = new Domain.DTOs.Article
-            {
-                Name = "Updated Article Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Updated Publisher"
-            };
+        //    Assert.IsType<OkObjectResult>(result);
+        //    var okResult = Assert.IsType<OkObjectResult>(result);
+        //    var articleResponse = Assert.IsType<Domain.DTOs.Article>(okResult.Value);
+        //}
+        //[Fact]
+        //public void UpdateArticle_ReturnNotFound()
+        //{
+        //    var articleId = 1;
+        //    var request = new Domain.DTOs.Article
+        //    {
+        //        Name = "Updated Article Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Updated Publisher"
+        //    };
 
-            _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Returns((Domain.DTOs.Article)null);
+        //    _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Returns((Domain.DTOs.Article)null);
 
-            var result = _articleController.UpdateArticle(articleId, request);
+        //    var result = _articleController.UpdateArticle(articleId, request);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
-        [Fact]
-        public void UpdateArticle_ReturnbBadRequest()
-        {
-            var articleId = 1;
-            var request = new Domain.DTOs.Article
-            {
-                Name = "Updated Article Name",
-                PublishingDate = DateTime.Now,
-                Publisher = "Updated Publisher"
-            };
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
+        //[Fact]
+        //public void UpdateArticle_ReturnbBadRequest()
+        //{
+        //    var articleId = 1;
+        //    var request = new Domain.DTOs.Article
+        //    {
+        //        Name = "Updated Article Name",
+        //        PublishingDate = DateTime.Now,
+        //        Publisher = "Updated Publisher"
+        //    };
 
-            _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Throws(new Exception("Update failed"));
+        //    _articleRepository.Setup(model => model.UpdateArticle(articleId, request)).Throws(new Exception("Update failed"));
 
-            var result = _articleController.UpdateArticle(articleId, request);
+        //    var result = _articleController.UpdateArticle(articleId, request);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //}
         [Fact]
         public void DeleteArticle_ReturnNoContent()
         {

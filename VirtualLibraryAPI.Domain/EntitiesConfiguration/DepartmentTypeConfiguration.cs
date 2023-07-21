@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.Entities;
-using DepartmentType = VirtualLibraryAPI.Domain.Entities.DepartmentType;
 
 namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 {
@@ -17,7 +15,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
     public class DepartmentTypeConfiguration : IEntityTypeConfiguration<DepartmentType>
     {
         /// <summary>
-        /// Builder configuration for UserType
+        /// Builder configuration for DepartmentType
         /// </summary>
         /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<DepartmentType> builder)
