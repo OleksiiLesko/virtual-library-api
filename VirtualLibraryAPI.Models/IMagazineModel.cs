@@ -28,7 +28,7 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine, DepartmentType departmentType);
+        Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine);
         /// <summary>
         /// Method for add copy of a magazine
         /// </summary>
@@ -41,7 +41,7 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine, DepartmentType departmentTypes);
+        Domain.DTOs.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine);
         /// <summary>
         /// Method for delete magazine
         /// </summary>

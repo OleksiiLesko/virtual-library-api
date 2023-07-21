@@ -51,6 +51,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <returns></returns>
         [HttpPost("Copy/{copyId}/Booking")]
         [MiddlewareFilter(typeof(IssuerAuthenticationMiddleware))]
+        [MiddlewareFilter(typeof(DepartmentValidationMiddleware))]
         public IActionResult ReserveCopyById( [FromHeader] int issuerId,int clientId, int copyId, int bookingPeriod)
         {
             try

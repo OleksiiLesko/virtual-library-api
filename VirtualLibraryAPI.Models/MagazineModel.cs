@@ -70,10 +70,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine, DepartmentType departmentType)
+        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
         {
             _logger.LogInformation($"Adding magazine from magazine model {magazine}");
-            var result = _repository.AddMagazine(magazine, departmentType);
+            var result = _repository.AddMagazine(magazine);
             if (result == null)
             {
                 return result;
@@ -168,10 +168,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="book"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine,DepartmentType departmentType)
+        public Domain.DTOs.Magazine UpdateMagazine(int id, Domain.DTOs.Magazine magazine)
         {
             _logger.LogInformation($"Updating magazine from magazine model: MagazineID {id}");
-            var result = _repository.UpdateMagazine(id, magazine, departmentType);
+            var result = _repository.UpdateMagazine(id, magazine);
             if (result == null)
             {
                 return result;

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualLibraryAPI.Domain;
 
@@ -11,9 +12,11 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230721115400_AddedGenreToItem")]
+    partial class AddedGenreToItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,6 +106,54 @@ namespace VirtualLibraryAPI.Library.Migrations
                     b.ToTable("Copies", (string)null);
                 });
 
+            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.DepartmentType", b =>
+                {
+                    b.Property<short>("TypeId")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("TypeName")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(60)");
+
+                    b.HasKey("TypeId");
+
+                    b.ToTable("DepartmentType");
+
+                    b.HasData(
+                        new
+                        {
+                            TypeId = (short)0,
+                            TypeName = "Fantasy"
+                        },
+                        new
+                        {
+                            TypeId = (short)1,
+                            TypeName = "Adventure"
+                        },
+                        new
+                        {
+                            TypeId = (short)2,
+                            TypeName = "Science"
+                        },
+                        new
+                        {
+                            TypeId = (short)3,
+                            TypeName = "Romance"
+                        },
+                        new
+                        {
+                            TypeId = (short)4,
+                            TypeName = "Horror"
+                        },
+                        new
+                        {
+                            TypeId = (short)5,
+                            TypeName = "NoDepartment"
+                        });
+                });
+
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
                 {
                     b.Property<int>("ItemID")
@@ -110,6 +161,10 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemID"));
+
+                    b.Property<int>("Genre")
+                        .HasMaxLength(25)
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -197,6 +252,10 @@ namespace VirtualLibraryAPI.Library.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
 
+                    b.Property<short>("DepartmentTypes")
+                        .HasMaxLength(25)
+                        .HasColumnType("smallint");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -212,6 +271,8 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasColumnType("smallint");
 
                     b.HasKey("UserID");
+
+                    b.HasIndex("DepartmentTypes");
 
                     b.HasIndex("UserTypes");
 
@@ -321,6 +382,13 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
                 {
+                    b.HasOne("VirtualLibraryAPI.Domain.Entities.DepartmentType", "DepartmentType")
+                        .WithMany("User")
+                        .HasForeignKey("DepartmentTypes")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_User_DepartmentType");
+
                     b.HasOne("VirtualLibraryAPI.Domain.Entities.UserType", "UserType")
                         .WithMany("User")
                         .HasForeignKey("UserTypes")
@@ -328,7 +396,14 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_User_UserType");
 
+                    b.Navigation("DepartmentType");
+
                     b.Navigation("UserType");
+                });
+
+            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.DepartmentType", b =>
+                {
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>

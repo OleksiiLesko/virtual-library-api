@@ -10,7 +10,6 @@ using Type = VirtualLibraryAPI.Domain.Entities.Type;
 using VirtualLibraryAPI.Domain.DTOs;
 using Microsoft.EntityFrameworkCore;
 using VirtualLibraryAPI.Common;
-using DepartmentType = VirtualLibraryAPI.Common.DepartmentType;
 
 namespace VirtualLibraryAPI.Repository.Repositories
 {
@@ -41,7 +40,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine,DepartmentType departmentType)
+        public Domain.DTOs.Magazine AddMagazine(Domain.DTOs.Magazine magazine)
         {
             var newMagazine = new Domain.Entities.Magazine()
             {
@@ -63,7 +62,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 MagazineID = newMagazine.ItemID,
                 CopyID = null,
-                DepartmentType = departmentType,
                 Name = magazine.Name,
                 PublishingDate = magazine.PublishingDate,
                 Publisher = magazine.Publisher,
@@ -173,7 +171,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="bookId"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Magazine UpdateMagazine(int bookId, Domain.DTOs.Magazine magazine, DepartmentType departmentTypes)
+        public Domain.DTOs.Magazine UpdateMagazine(int bookId, Domain.DTOs.Magazine magazine)
         {
             var existingMagazine = _context.Magazines.Find(bookId);
             existingMagazine.IssueNumber = magazine.IssueNumber;

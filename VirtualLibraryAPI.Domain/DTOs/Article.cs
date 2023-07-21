@@ -20,11 +20,6 @@ namespace VirtualLibraryAPI.Domain.DTOs
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? ArticleID { get; set; }
         /// <summary>
-        /// Type of department
-        /// </summary>
-        [Required]
-        public DepartmentType DepartmentType { get; set; }
-        /// <summary>
         /// ID of copy
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

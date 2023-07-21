@@ -39,10 +39,10 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public User AddUser(User user, UserType userType, DepartmentType departmentType)
+        public User AddUser(User user, UserType userType)
         {
             _logger.LogInformation($"Adding user from User model {user}");
-            var result = _repository.AddUser(user, userType, departmentType);
+            var result = _repository.AddUser(user, userType);
             if (result == null)
             {
                 return result;
@@ -136,10 +136,10 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public User UpdateUser(int id, User user,UserType userType, DepartmentType departmentType)
+        public User UpdateUser(int id, User user,UserType userType)
         {
             _logger.LogInformation($"Updating user from User model: UserID {id}");
-            var result = _repository.UpdateUser(id, user, userType, departmentType);
+            var result = _repository.UpdateUser(id, user, userType);
             if (result == null)
             {
                 return result;

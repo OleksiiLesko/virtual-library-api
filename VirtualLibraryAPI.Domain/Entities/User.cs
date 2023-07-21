@@ -29,12 +29,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Type of user 
         /// </summary>
         public UserTypes UserTypes { get; set; }
-        /// <summary>
-        /// Type of user 
-        /// </summary>
-        public DepartmentTypes DepartmentTypes { get; set; }
         public virtual ICollection<Copy> Copies { get; set;}
         public virtual UserType UserType { get; set; }
-        public virtual DepartmentType DepartmentType { get; set; }
     }
 }

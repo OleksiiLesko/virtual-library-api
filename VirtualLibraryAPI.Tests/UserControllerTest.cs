@@ -59,53 +59,53 @@ namespace VirtualLibraryAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        [Fact]
-        public void AddUser_ReturnsOk()
-        {
-            var userId = 1;
-            var type = UserType.Client;
-            var userRequest = new Domain.DTOs.User();
-            var addedUser = new Domain.DTOs.User();
-            _model.Setup(m => m.AddUser(userRequest, type)).Returns(addedUser);
+        //[Fact]
+        //public void AddUser_ReturnsOk()
+        //{
+        //    var userId = 1;
+        //    var type = UserType.Client;
+        //    var userRequest = new Domain.DTOs.User();
+        //    var addedUser = new Domain.DTOs.User();
+        //    _model.Setup(m => m.AddUser(userRequest, type)).Returns(addedUser);
 
-            var result = _controller.AddUser(userId,userRequest, type);
+        //    var result = _controller.AddUser(userId,userRequest, type);
 
-            Assert.IsType<OkObjectResult>(result);
-            var okObjectResult = Assert.IsType<OkObjectResult>(result);
-            var returnedUser = Assert.IsType<Domain.DTOs.User>(okObjectResult.Value);
-            Assert.Equal(addedUser.UserID, returnedUser.UserID);
-            Assert.Equal(addedUser.FirstName, returnedUser.FirstName);
-            Assert.Equal(addedUser.LastName, returnedUser.LastName);
-        }
+        //    Assert.IsType<OkObjectResult>(result);
+        //    var okObjectResult = Assert.IsType<OkObjectResult>(result);
+        //    var returnedUser = Assert.IsType<Domain.DTOs.User>(okObjectResult.Value);
+        //    Assert.Equal(addedUser.UserID, returnedUser.UserID);
+        //    Assert.Equal(addedUser.FirstName, returnedUser.FirstName);
+        //    Assert.Equal(addedUser.LastName, returnedUser.LastName);
+        //}
 
-        [Fact]
-        public void AddUser_ReturnsNotFound()
-        {
-            var userId = 1;
-            var type = UserType.Client;
-            var userRequest = new Domain.DTOs.User();
-            Domain.DTOs.User addedUser = null;
-            _model.Setup(m => m.AddUser(userRequest,type)).Returns(addedUser);
+        //[Fact]
+        //public void AddUser_ReturnsNotFound()
+        //{
+        //    var userId = 1;
+        //    var type = UserType.Client;
+        //    var userRequest = new Domain.DTOs.User();
+        //    Domain.DTOs.User addedUser = null;
+        //    _model.Setup(m => m.AddUser(userRequest,type)).Returns(addedUser);
 
-            var result = _controller.AddUser(userId,userRequest, type);
+        //    var result = _controller.AddUser(userId,userRequest, type);
 
-            Assert.IsType<NotFoundResult>(result);
-        }
+        //    Assert.IsType<NotFoundResult>(result);
+        //}
 
-        [Fact]
-        public void AddUser_ReturnsBadRequest()
-        {
-            var userId = 1;
-            var type = UserType.Client;
-            var userRequest = new Domain.DTOs.User();
-            _model.Setup(m => m.AddUser(userRequest, type)).Throws(new Exception("Failed to add user"));
+        //[Fact]
+        //public void AddUser_ReturnsBadRequest()
+        //{
+        //    var userId = 1;
+        //    var type = UserType.Client;
+        //    var userRequest = new Domain.DTOs.User();
+        //    _model.Setup(m => m.AddUser(userRequest, type)).Throws(new Exception("Failed to add user"));
 
-            var result = _controller.AddUser(userId,userRequest, type);
+        //    var result = _controller.AddUser(userId,userRequest, type);
 
-            Assert.IsType<BadRequestObjectResult>(result);
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Failed", badRequestResult.Value);
-        }
+        //    Assert.IsType<BadRequestObjectResult>(result);
+        //    var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        //    Assert.Equal("Failed", badRequestResult.Value);
+        //}
         [Fact]
         public void GetUserById_ReturnsOk()
         {

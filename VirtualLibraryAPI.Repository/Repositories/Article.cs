@@ -5,7 +5,6 @@ using VirtualLibraryAPI.Domain;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
-using DepartmentType = VirtualLibraryAPI.Common.DepartmentType;
 
 
 namespace VirtualLibraryAPI.Repository.Repositories
@@ -38,7 +37,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Article AddArticle(Domain.DTOs.Article article, DepartmentType departmentTypes)
+        public Domain.DTOs.Article AddArticle(Domain.DTOs.Article article)
         {
             var newArticle = new Domain.Entities.Article()
             {
@@ -62,7 +61,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var addedArticle = new Domain.DTOs.Article
             {
                 ArticleID = newArticle.ItemID,
-                DepartmentType = departmentTypes,
                 CopyID = null,
                 Name = article.Name,
                 PublishingDate = article.PublishingDate,
@@ -318,7 +316,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="article"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article, DepartmentType departmentTypes)
+        public Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article)
         {
             var existingArticle = _context.Articles.Find(id);
 
@@ -326,8 +324,8 @@ namespace VirtualLibraryAPI.Repository.Repositories
             existingArticle.MagazinesIssueNumber = article.MagazinesIssueNumber;
             existingArticle.MagazineName = article.MagazineName;
             existingArticle.Version = article.Version;
-            var item = _context.Items.FirstOrDefault(i => i.ItemID == id);
 
+            var item = _context.Items.FirstOrDefault(i => i.ItemID == id);
             item.Name = article.Name;
             item.PublishingDate = (DateTime)article.PublishingDate;
             item.Publisher = article.Publisher;

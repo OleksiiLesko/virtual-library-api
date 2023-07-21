@@ -28,7 +28,7 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Article AddArticle(Domain.DTOs.Article article, DepartmentType departmentType);
+        Domain.DTOs.Article AddArticle(Domain.DTOs.Article article);
         /// <summary>
         /// Method for add copy of a article
         /// </summary>
@@ -41,7 +41,7 @@ namespace VirtualLibraryAPI.Models
         /// <param name="id"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article, DepartmentType departmentTypes);
+        Domain.DTOs.Article UpdateArticle(int id, Domain.DTOs.Article article);
         /// <summary>
         /// Method for delete article
         /// </summary>

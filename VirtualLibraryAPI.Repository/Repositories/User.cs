@@ -37,14 +37,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public Domain.DTOs.User AddUser(Domain.DTOs.User user,UserType userType, DepartmentType departmentType)
+        public Domain.DTOs.User AddUser(Domain.DTOs.User user,UserType userType)
         {
             var newUser = new Domain.Entities.User()
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserTypes = (Domain.Entities.UserTypes)userType,
-                DepartmentTypes = (Domain.Entities.DepartmentTypes)departmentType
+                UserTypes = (Domain.Entities.UserTypes)userType
             };
 
             _context.Users.Add(newUser);
@@ -124,8 +123,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 UserID = userEntity.UserID,
                 FirstName = userEntity.FirstName,
                 LastName = userEntity.LastName,
-                UserType = (UserType)userEntity.UserTypes,
-                DepartmentType = (DepartmentType)userEntity.DepartmentTypes,
+                UserType = (UserType)userEntity.UserTypes
             };
 
             return userDto;
@@ -144,8 +142,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                     UserID = x.UserID,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
-                    UserType =(UserType)x.UserTypes,
-                    DepartmentType = (DepartmentType)x.DepartmentTypes,
+                    UserType =(UserType)x.UserTypes
                 }).ToList();
             return users;
         }
@@ -169,7 +166,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 FirstName = result.FirstName,
                 LastName = result.LastName,
                 UserType = (UserType)result.UserTypes,
-                DepartmentType = (DepartmentType)result.DepartmentTypes,
             };
             return userDTO;
         }
@@ -180,14 +176,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="user"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user, UserType userType, DepartmentType departmentType)
+        public Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user, UserType userType)
         {
             var existingUser = _context.Users.Find(id);
 
             existingUser.FirstName = user.FirstName;
             existingUser.LastName = user.LastName;
             existingUser.UserTypes = (Domain.Entities.UserTypes)userType;
-            existingUser.DepartmentTypes = (Domain.Entities.DepartmentTypes)departmentType;
 
             _context.SaveChanges();
             _logger.LogInformation("Update user by id in the database: {UserID}", existingUser.UserID);

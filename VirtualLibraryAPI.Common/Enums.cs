@@ -5,18 +5,6 @@ using System.Text.Json.Serialization;
 namespace VirtualLibraryAPI.Common
 {
     /// <summary>
-    /// Enumeration for department types
-    /// </summary>
-    public enum DepartmentType
-    {
-        Fantasy,
-        Adventure,
-        Science,
-        Romance,
-        Horror,
-        NoDepartment
-    }
-    /// <summary>
     /// Enumeration for user types
     /// </summary>
     public enum UserType

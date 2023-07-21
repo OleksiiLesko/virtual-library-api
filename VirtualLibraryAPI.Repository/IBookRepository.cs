@@ -1,7 +1,6 @@
 ﻿using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
-using DepartmentType = VirtualLibraryAPI.Common.DepartmentType;
 
 namespace VirtualLibraryAPI.Repository
 {
@@ -26,7 +25,7 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Book AddBook(Domain.DTOs.Book book, DepartmentType departmentTypes);
+        Domain.DTOs.Book AddBook(Domain.DTOs.Book book);
         /// <summary>
         /// Method for add copy of a book
         /// </summary>
@@ -39,7 +38,7 @@ namespace VirtualLibraryAPI.Repository
         /// <param name="id"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.Book UpdateBook(int id, Domain.DTOs.Book book, DepartmentType departmentTypes);
+        Domain.DTOs.Book UpdateBook(int id, Domain.DTOs.Book book);
         /// <summary>
         /// Method for delete book
         /// </summary>

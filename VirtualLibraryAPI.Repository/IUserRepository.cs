@@ -28,7 +28,7 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        Domain.DTOs.User AddUser(Domain.DTOs.User user,UserType userType, DepartmentType departmentType);
+        Domain.DTOs.User AddUser(Domain.DTOs.User user,UserType userType);
         /// <summary>
         /// Method for delete user
         /// </summary>
@@ -52,7 +52,7 @@ namespace VirtualLibraryAPI.Repository
         /// <param name="id"></param>
         /// <param name="article"></param>
         /// <returns></returns>
-        Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user, UserType userType, DepartmentType departmentType);
+        Domain.DTOs.User UpdateUser(int id, Domain.DTOs.User user, UserType userType);
         /// <summary>
         /// Count user copies
         /// </summary>

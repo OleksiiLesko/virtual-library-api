@@ -58,11 +58,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddArticle([FromBody] Domain.DTOs.Article request,DepartmentType departmentType)
+        public IActionResult AddArticle([FromBody] Domain.DTOs.Article request)
         {
             try
             {
-                var addedArticle = _model.AddArticle(request, departmentType);
+                var addedArticle = _model.AddArticle(request);
                 if (addedArticle == null)
                 {
                     return NotFound();
@@ -73,7 +73,6 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Article
                 {
                     ArticleID = addedArticle.ArticleID,
-                    DepartmentType = departmentType,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -149,11 +148,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateArticle(int id, [FromBody] Domain.DTOs.Article request, DepartmentType departmentType)
+        public ActionResult UpdateArticle(int id, [FromBody] Domain.DTOs.Article request)
         {
             try
             {
-                var updatedArticle = _model.UpdateArticle(id, request, departmentType);
+                var updatedArticle = _model.UpdateArticle(id, request);
                 if (updatedArticle == null)
                 {
                     return NotFound();
@@ -164,7 +163,6 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Article
                 {
                     ArticleID = updatedArticle.ArticleID,
-                    DepartmentType = updatedArticle.DepartmentType,
                     Name = request.Name,
                     Author = request.Author,
                     Version = updatedArticle.Version,

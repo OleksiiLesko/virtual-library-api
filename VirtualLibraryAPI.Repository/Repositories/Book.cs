@@ -12,7 +12,6 @@ using VirtualLibraryAPI.Domain;
 using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Domain.Entities;
 using static System.Reflection.Metadata.BlobBuilder;
-using DepartmentType = VirtualLibraryAPI.Common.DepartmentType;
 using Type = VirtualLibraryAPI.Domain.Entities.Type;
 
 namespace VirtualLibraryAPI.Repository.Repositories
@@ -44,7 +43,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book,DepartmentType  departmentType)
+        public Domain.DTOs.Book AddBook(Domain.DTOs.Book book)
         {
             var newBook = new Domain.Entities.Book()
             {
@@ -65,7 +64,6 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var addedBook = new Domain.DTOs.Book
             {
                 BookID = newBook.ItemID,
-                DepartmentType = departmentType,
                 CopyID = null, 
                 Name = book.Name,
                 PublishingDate = book.PublishingDate,
@@ -178,7 +176,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// <param name="bookId"></param>
         /// <param name="book"></param>
         /// <returns></returns>
-        public Domain.DTOs.Book UpdateBook(int bookId, Domain.DTOs.Book book, DepartmentType departmentTypes)
+        public Domain.DTOs.Book UpdateBook(int bookId, Domain.DTOs.Book book)
         {
             var existingBook = _context.Books.Find(bookId);
 

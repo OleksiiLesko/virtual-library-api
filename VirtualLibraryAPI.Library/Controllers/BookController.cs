@@ -59,11 +59,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddBook([FromBody] Domain.DTOs.Book request,DepartmentType departmentType)
+        public IActionResult AddBook([FromBody] Domain.DTOs.Book request)
         {
             try
             {
-                var addedBook = _model.AddBook(request, departmentType);
+                var addedBook = _model.AddBook(request);
                 if (addedBook == null)
                 {
                     return NotFound();
@@ -74,7 +74,6 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Book
                 {
                     BookID = addedBook.BookID,
-                    DepartmentType = departmentType,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -149,11 +148,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateBook(int id, [FromBody] Domain.DTOs.Book request,DepartmentType departmentType)
+        public ActionResult UpdateBook(int id, [FromBody] Domain.DTOs.Book request)
         {
             try
             {
-                var updatedBook = _model.UpdateBook(id, request, departmentType);
+                var updatedBook = _model.UpdateBook(id, request);
                 if (updatedBook == null)
                 {
                     return NotFound();
@@ -164,7 +163,6 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Book
                 {
                     BookID = updatedBook.BookID,
-                    DepartmentType = updatedBook.DepartmentType,
                     Name = request.Name,
                     Author = updatedBook.Author,
                     ISBN = updatedBook.ISBN,

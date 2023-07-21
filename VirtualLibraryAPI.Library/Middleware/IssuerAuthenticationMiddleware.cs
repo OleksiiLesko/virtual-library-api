@@ -36,7 +36,7 @@ namespace VirtualLibraryAPI.Library.Middleware
                     await _next(context);
                     return;
                 }
-                _logger.LogWarning("Authentication failed for adminId: {IssuerId}", issuerId);
+                _logger.LogWarning("Authentication failed for issuerId: {IssuerId}", issuerId);
             }
             context.Response.StatusCode = 401;
             await context.Response.WriteAsync("Authentication failed");

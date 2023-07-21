@@ -59,11 +59,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddMagazine([FromBody] Domain.DTOs.Magazine request, DepartmentType departmentType)
+        public IActionResult AddMagazine([FromBody] Domain.DTOs.Magazine request)
         {
             try
             {
-                var addedMagazine = _model.AddMagazine(request, departmentType);
+                var addedMagazine = _model.AddMagazine(request);
                 if (addedMagazine == null)
                 {
                     return NotFound();
@@ -74,7 +74,6 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Magazine
                 {
                     MagazineID = addedMagazine.MagazineID,
-                    DepartmentType = departmentType,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -146,11 +145,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ActionResult UpdateMagazine(int id, [FromBody] Domain.DTOs.Magazine request,DepartmentType departmentType)
+        public ActionResult UpdateMagazine(int id, [FromBody] Domain.DTOs.Magazine request)
         {
             try
             {
-                var updatedMagazine = _model.UpdateMagazine(id, request, departmentType);
+                var updatedMagazine = _model.UpdateMagazine(id, request);
                 if (updatedMagazine == null)
                 {
                     return NotFound();
@@ -161,7 +160,6 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Magazine
                 {
                     MagazineID = updatedMagazine.MagazineID,
-                    DepartmentType = updatedMagazine.DepartmentType,
                     Name = request.Name,
                     Publisher = request.Publisher,
                     PublishingDate = request.PublishingDate,
