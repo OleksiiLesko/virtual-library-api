@@ -33,5 +33,10 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public UserType UserType { get; set; }
+        /// <summary>
+        /// Type of department 
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DepartmentType DepartmentType { get; set; }
     }
 }
