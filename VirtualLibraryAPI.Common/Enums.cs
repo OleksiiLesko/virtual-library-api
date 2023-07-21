@@ -9,11 +9,12 @@ namespace VirtualLibraryAPI.Common
     /// </summary>
     public enum DepartmentType
     {
-        Fantasy = 1,
+        Fantasy,
         Adventure,
         Science,
         Romance,
-        Horror
+        Horror,
+        NoDepartment
     }
     /// <summary>
     /// Enumeration for user types
