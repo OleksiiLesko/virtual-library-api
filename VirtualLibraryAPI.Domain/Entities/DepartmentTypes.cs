@@ -12,6 +12,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         Adventure,
         Science,
         Romance,
-        Horror
+        Horror,
+        NoDepartment
     }
 }
