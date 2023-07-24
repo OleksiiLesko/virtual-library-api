@@ -35,6 +35,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                 .HasMaxLength(50)
                 .IsRequired();
 
+
             builder.Property(e => e.Publisher)
                 .HasMaxLength(50)
                 .IsRequired();

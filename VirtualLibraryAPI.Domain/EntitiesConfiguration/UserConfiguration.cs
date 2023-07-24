@@ -49,7 +49,6 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
              .HasForeignKey(e => e.UserTypes)
              .HasConstraintName("FK_User_UserType");
 
-
         }
     }
 }
