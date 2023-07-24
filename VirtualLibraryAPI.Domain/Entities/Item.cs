@@ -11,6 +11,10 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// </summary>
         public int ItemID { get; set; }
         /// <summary>
+        /// ID of item
+        /// </summary>
+        public int DepartmentID { get; set; }
+        /// <summary>
         /// Name of item
         /// </summary>
         public string Name { get; set; } = string.Empty;
@@ -26,6 +30,7 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Publisher of item
         /// </summary>
         public string Publisher { get; set; } = string.Empty;
+        public virtual Department Department { get; set; }
         public virtual Book Book { get; set; }
         public virtual Article Article { get; set; }
         public virtual Magazine Magazine { get; set; }

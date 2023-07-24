@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualLibraryAPI.Domain;
 
@@ -11,9 +12,11 @@ using VirtualLibraryAPI.Domain;
 namespace VirtualLibraryAPI.Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230724135513_AddDepartmentsConnectionsWithItems")]
+    partial class AddDepartmentsConnectionsWithItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -334,7 +337,7 @@ namespace VirtualLibraryAPI.Library.Migrations
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
                 {
                     b.HasOne("VirtualLibraryAPI.Domain.Entities.Department", "Department")
-                        .WithMany("Item")
+                        .WithMany("Items")
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
@@ -378,7 +381,7 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Department", b =>
                 {
-                    b.Navigation("Item");
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
