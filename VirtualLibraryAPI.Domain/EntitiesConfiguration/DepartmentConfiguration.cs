@@ -23,24 +23,25 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
             builder.HasKey(e => e.DepartmentID);
 
             builder.Property(e => e.DepartmentID)
-                .IsRequired()
-              .ValueGeneratedOnAdd();
+               .IsRequired()
+             .UseIdentityColumn();
 
             builder.Property(e => e.DepartmentName)
                   .HasMaxLength(50)
                   .IsRequired();
 
-            builder.HasOne(d => d.User)
-               .WithOne(u => u.Department)
-               .HasForeignKey<Department>(u => u.DepartmentID)
-               .OnDelete(DeleteBehavior.NoAction)
-               .HasConstraintName("FK_Department_User");
+            builder.HasMany(e => e.Items)
+           .WithOne(e => e.Department)
+           .HasForeignKey(e => e.DepartmentID)
+           .OnDelete(DeleteBehavior.NoAction)
+           .HasConstraintName("FK_Department_Items");
 
-            builder.HasMany(i => i.Item)
-             .WithOne(d => d.Department)
-              .HasForeignKey(e => e.DepartmentID)
-               .OnDelete(DeleteBehavior.NoAction)
-              .HasConstraintName("FK_Department_Items");
+            builder.HasMany(e => e.Users)
+           .WithOne(e => e.Department)
+           .HasForeignKey(e => e.DepartmentID)
+           .OnDelete(DeleteBehavior.NoAction)
+           .HasConstraintName("FK_Department_Users");
+
         }
     }
 }
