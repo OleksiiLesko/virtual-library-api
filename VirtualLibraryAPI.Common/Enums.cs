@@ -10,8 +10,8 @@ namespace VirtualLibraryAPI.Common
     public enum UserType
     {
         Administrator,
-        Client,
-        Manager
+        Manager,
+        Unknown
     }
     /// <summary>
     /// Enumeration for item types
