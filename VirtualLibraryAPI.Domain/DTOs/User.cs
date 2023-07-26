@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -21,12 +22,19 @@ namespace VirtualLibraryAPI.Domain.DTOs
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public int? UserID { get; set; }
         /// <summary>
+        /// ID of department
+        /// </summary>
+        [Required]
+        public int DepartmentID { get; set; }
+        /// <summary>
         /// First name of user
         /// </summary>
-        public string FirstName { get; set; } 
+        [Required]
+        public string FirstName { get; set; }
         /// <summary>
         /// Last name of user
         /// </summary>
+        [Required]
         public string LastName { get; set; }
         /// <summary>
         /// Type of user 
