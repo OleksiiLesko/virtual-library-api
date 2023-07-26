@@ -48,6 +48,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             };
             var item = new Domain.Entities.Item()
             {
+                DepartmentID = article.DepartmentID,
                 Type = Type.Article,
                 Name = article.Name,
                 PublishingDate = article.PublishingDate,
@@ -62,6 +63,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 ArticleID = newArticle.ItemID,
                 CopyID = null,
+                DepartmentID = article.DepartmentID,
                 Name = article.Name,
                 PublishingDate = article.PublishingDate,
                 Publisher = article.Publisher,
@@ -156,6 +158,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var deletedArticleDto = new Domain.DTOs.Article
             {
+                DepartmentID = itemEntity.DepartmentID,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -214,6 +217,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 .Select(x => new Domain.DTOs.Article
                 {
                     ArticleID = x.Item.ItemID,
+                    DepartmentID = x.Item.DepartmentID,
                     CopyInfo = new CopyInfo
                     {
                         CountOfCopies = 0,
@@ -263,6 +267,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 ArticleID = articleEntity.ItemID,
                 CopyID = null,
+                DepartmentID = itemEntity.DepartmentID,
                 Name = itemEntity.Name,
                 PublishingDate = itemEntity.PublishingDate,
                 Publisher = itemEntity.Publisher,
@@ -292,6 +297,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             var articleDTO = new Domain.DTOs.Article
             {
+                DepartmentID = result.Item.DepartmentID,
                 Name = result?.Item.Name,
                 CopyID = null,
                 PublishingDate = (DateTime)(result?.Item.PublishingDate),
@@ -326,6 +332,8 @@ namespace VirtualLibraryAPI.Repository.Repositories
             existingArticle.Version = article.Version;
 
             var item = _context.Items.FirstOrDefault(i => i.ItemID == id);
+
+            item.DepartmentID = article.DepartmentID;
             item.Name = article.Name;
             item.PublishingDate = (DateTime)article.PublishingDate;
             item.Publisher = article.Publisher;

@@ -52,6 +52,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             };
             var item = new Domain.Entities.Item()
             {
+                DepartmentID = book.DepartmentID,
                 Type = Type.Book,
                 Name = book.Name,
                 PublishingDate = book.PublishingDate,
@@ -65,6 +66,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 BookID = newBook.ItemID,
                 CopyID = null, 
+                DepartmentID = book.DepartmentID,
                 Name = book.Name,
                 PublishingDate = book.PublishingDate,
                 Publisher = book.Publisher,
@@ -184,6 +186,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             existingBook.ISBN = book.ISBN;
             var item = _context.Items.FirstOrDefault(i => i.ItemID == bookId);
 
+            item.DepartmentID = book.DepartmentID;
             item.Name = book.Name;
             item.PublishingDate = (DateTime)book.PublishingDate;
             item.Publisher = book.Publisher;
@@ -208,6 +211,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 BookID = id,
                 CopyID = null,
+                DepartmentID = result.Item.DepartmentID,
                 Name = result.Item.Name,
                 PublishingDate = result.Item.PublishingDate,
                 Publisher = result.Item.Publisher,
@@ -239,6 +243,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                            .Select(x => new Domain.DTOs.Book
                            {
                                BookID = x.Item.ItemID,
+                               DepartmentID = x.Item.DepartmentID,
                                CopyInfo = new CopyInfo
                                {
                                    CountOfCopies = 0,

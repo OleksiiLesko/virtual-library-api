@@ -41,6 +41,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         {
             var newUser = new Domain.Entities.User()
             {
+                DepartmentID = user.DepartmentID,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 UserTypes = (Domain.Entities.UserTypes)userType
@@ -54,6 +55,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var addedUser = new Domain.DTOs.User
             {
                 UserID = newUser.UserID,
+                DepartmentID = newUser.DepartmentID,
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
                 UserType = userType
@@ -75,6 +77,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var deletedUserDto = new Domain.DTOs.User
             {
                 UserID = user.UserID,
+                DepartmentID = user.DepartmentID,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
             };
@@ -121,6 +124,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var userDto = new Domain.DTOs.User
             {
                 UserID = userEntity.UserID,
+                DepartmentID=userEntity.DepartmentID,
                 FirstName = userEntity.FirstName,
                 LastName = userEntity.LastName,
                 UserType = (UserType)userEntity.UserTypes
@@ -140,6 +144,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 .Select(x => new Domain.DTOs.User
                 {
                     UserID = x.UserID,
+                    DepartmentID = x.DepartmentID,  
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     UserType =(UserType)x.UserTypes
@@ -163,6 +168,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             var userDTO = new Domain.DTOs.User
             {
                 UserID = result.UserID,
+                DepartmentID = result.DepartmentID,
                 FirstName = result.FirstName,
                 LastName = result.LastName,
                 UserType = (UserType)result.UserTypes,
@@ -180,6 +186,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         {
             var existingUser = _context.Users.Find(id);
 
+            existingUser.DepartmentID = user.DepartmentID;  
             existingUser.FirstName = user.FirstName;
             existingUser.LastName = user.LastName;
             existingUser.UserTypes = (Domain.Entities.UserTypes)userType;
@@ -247,7 +254,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 return (UserType)user.UserTypes;
             }
-            return UserType.Client;
+            return UserType.Unknown;
         }
     }
 }
