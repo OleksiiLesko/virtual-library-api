@@ -33,7 +33,7 @@ namespace VirtualLibraryAPI.Tests
             _userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Returns((Domain.DTOs.User)null);
             var validationUserModel = new ValidationUserModel(_loggerMock.Object, _userRepositoryMock.Object, _configurationMock.Object);
 
-            var result = validationUserModel.CanUserReserveCopy(userId);
+            var result = validationUserModel.CanClientReserveCopy(userId);
 
             Assert.Equal(ValidationUserStatus.UserNotFound, result);
         }
@@ -47,7 +47,7 @@ namespace VirtualLibraryAPI.Tests
             _configurationMock.Setup(config => config["MaxCopies:Copy"]).Returns("3");
             var validationUserModel = new ValidationUserModel(_loggerMock.Object, _userRepositoryMock.Object, _configurationMock.Object);
 
-            var result = validationUserModel.CanUserReserveCopy(userId);
+            var result = validationUserModel.CanClientReserveCopy(userId);
 
             Assert.Equal(ValidationUserStatus.MaxCopiesExceeded, result);
         }
@@ -62,7 +62,7 @@ namespace VirtualLibraryAPI.Tests
             _configurationMock.Setup(config => config["MaxCopies:Copy"]).Returns("5"); 
             var validationUserModel = new ValidationUserModel(_loggerMock.Object, _userRepositoryMock.Object, _configurationMock.Object);
 
-            var result = validationUserModel.CanUserReserveCopy(userId);
+            var result = validationUserModel.CanClientReserveCopy(userId);
 
             Assert.Equal(ValidationUserStatus.ExpiredCopy, result);
         }
@@ -77,7 +77,7 @@ namespace VirtualLibraryAPI.Tests
             _configurationMock.Setup(config => config["MaxCopies:Copy"]).Returns("5"); 
             var validationUserModel = new ValidationUserModel(_loggerMock.Object, _userRepositoryMock.Object, _configurationMock.Object);
 
-            var result = validationUserModel.CanUserReserveCopy(userId);
+            var result = validationUserModel.CanClientReserveCopy(userId);
 
             Assert.Equal(ValidationUserStatus.Valid, result);
         }
@@ -90,7 +90,7 @@ namespace VirtualLibraryAPI.Tests
             var validationUserModel = new ValidationUserModel(_loggerMock.Object, _userRepositoryMock.Object, _configurationMock.Object);
 
 
-            var result = validationUserModel.CanUserReserveCopy(userId);
+            var result = validationUserModel.CanClientReserveCopy(userId);
 
             Assert.Equal(ValidationUserStatus.DbError, result);
         }
@@ -102,7 +102,7 @@ namespace VirtualLibraryAPI.Tests
             _userRepositoryMock.Setup(repo => repo.GetUserById(userId)).Throws<Exception>();
             var validationUserModel = new ValidationUserModel(_loggerMock.Object, _userRepositoryMock.Object, _configurationMock.Object);
 
-            var result = validationUserModel.CanUserReserveCopy(userId);
+            var result = validationUserModel.CanClientReserveCopy(userId);
 
             Assert.Equal(ValidationUserStatus.InternalServerError, result);
         }

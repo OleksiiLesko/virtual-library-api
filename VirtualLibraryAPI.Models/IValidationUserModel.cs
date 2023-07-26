@@ -17,6 +17,6 @@ namespace VirtualLibraryAPI.Models
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public ValidationUserStatus CanUserReserveCopy(int userId);
+        public ValidationUserStatus CanClientReserveCopy(int userId);
     }
 }

@@ -72,7 +72,7 @@ namespace VirtualLibraryAPI.Tests
             var clientID = 1;
             var adminID = 2;
 
-            _validationUserModel.Setup(c => c.CanUserReserveCopy(clientID)).Returns(ValidationUserStatus.Valid);
+            _validationUserModel.Setup(c => c.CanClientReserveCopy(clientID)).Returns(ValidationUserStatus.Valid);
             _validationCopyModel.Setup(v => v.IsCopyValidForBooking(copyId, bookingPeriod))
                 .Returns(ValidationCopyStatus.Valid);
 

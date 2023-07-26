@@ -56,7 +56,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var validationUserResult = _validationUserModel.CanUserReserveCopy(clientId);
+                var validationUserResult = _validationUserModel.CanClientReserveCopy(clientId);
 
                 if (validationUserResult == ValidationUserStatus.Valid)
                 {
