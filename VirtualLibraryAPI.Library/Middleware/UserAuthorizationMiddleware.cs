@@ -25,13 +25,13 @@ namespace VirtualLibraryAPI.Library.Middleware
 
                 var requestUserType = context.Request.Query["userType"];
 
-                if (userType == UserType.Administrator && requestUserType != UserType.Client.ToString())
-                {
-                    _logger.LogWarning("User {UserId} attempted to add a non-client user as an Administrator.", userid);
-                    context.Response.StatusCode = 403;
-                    await context.Response.WriteAsync("Forbidden. Only clients can be added by administrators.");
-                    return;
-                }
+                //if (userType == UserType.Administrator && requestUserType != UserType.Client.ToString())
+                //{
+                //    _logger.LogWarning("User {UserId} attempted to add a non-client user as an Administrator.", userid);
+                //    context.Response.StatusCode = 403;
+                //    await context.Response.WriteAsync("Forbidden. Only clients can be added by administrators.");
+                //    return;
+                //}
 
                 if (userType == UserType.Manager && requestUserType == UserType.Manager.ToString())
                 {
@@ -41,13 +41,13 @@ namespace VirtualLibraryAPI.Library.Middleware
                     return;
                 }
 
-                if (userType == UserType.Client)
-                {
-                    _logger.LogWarning("User {UserId} attempted to add a user as a Client. Clients can't add users.", userid);
-                    context.Response.StatusCode = 403;
-                    await context.Response.WriteAsync("Forbidden. Clients can't be added by clients.");
-                    return;
-                }
+                //if (userType == UserType.Client)
+                //{
+                //    _logger.LogWarning("User {UserId} attempted to add a user as a Client. Clients can't add users.", userid);
+                //    context.Response.StatusCode = 403;
+                //    await context.Response.WriteAsync("Forbidden. Clients can't be added by clients.");
+                //    return;
+                //}
 
                 await _next(context);
                 return;
