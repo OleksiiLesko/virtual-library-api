@@ -19,8 +19,8 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// Name of department
         /// </summary> 
         public string DepartmentName { get; set; } = string.Empty;
-        public virtual User User { get; set; }
+        public virtual ICollection<User> Users { get; set; }
 
-        public virtual ICollection<Item> Item { get; set; } 
+        public virtual ICollection<Item> Items { get; set; } 
     }
 }
