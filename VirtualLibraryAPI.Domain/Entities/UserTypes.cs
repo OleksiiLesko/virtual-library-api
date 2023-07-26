@@ -13,7 +13,6 @@ namespace VirtualLibraryAPI.Domain.Entities
     public enum  UserTypes
     {
         Administrator = 0,
-        Client = 1,
-        Manager = 2
+        Manager = 1
     }
 }
