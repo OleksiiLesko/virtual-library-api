@@ -74,6 +74,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Magazine
                 {
                     MagazineID = addedMagazine.MagazineID,
+                    DepartmentID = addedMagazine.DepartmentID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -160,6 +161,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Magazine
                 {
                     MagazineID = updatedMagazine.MagazineID,
+                    DepartmentID = updatedMagazine.DepartmentID,
                     Name = request.Name,
                     Publisher = request.Publisher,
                     PublishingDate = request.PublishingDate,

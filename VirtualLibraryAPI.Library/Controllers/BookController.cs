@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 using VirtualLibraryAPI.Common;
+using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Models;
 
 namespace VirtualLibraryAPI.Library.Controllers
@@ -74,6 +75,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Book
                 {
                     BookID = addedBook.BookID,
+                    DepartmentID = addedBook.DepartmentID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -163,6 +165,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Book
                 {
                     BookID = updatedBook.BookID,
+                    DepartmentID = updatedBook.DepartmentID,
                     Name = request.Name,
                     Author = updatedBook.Author,
                     ISBN = updatedBook.ISBN,

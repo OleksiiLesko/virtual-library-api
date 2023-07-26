@@ -74,6 +74,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.User
                 {
                    UserID = addedArticle.UserID,
+                   DepartmentID = addedArticle.DepartmentID,
                    FirstName = addedArticle.FirstName,
                    LastName = addedArticle.LastName,
                    UserType = userType
@@ -134,6 +135,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.User
                 {
                     UserID = updatedUser.UserID,
+                    DepartmentID = updatedUser.DepartmentID,
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     UserType = userType

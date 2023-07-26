@@ -73,6 +73,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Article
                 {
                     ArticleID = addedArticle.ArticleID,
+                    DepartmentID = addedArticle.DepartmentID,
                     Name = request.Name,
                     PublishingDate = request.PublishingDate,
                     Publisher = request.Publisher,
@@ -163,6 +164,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 return Ok(new Domain.DTOs.Article
                 {
                     ArticleID = updatedArticle.ArticleID,
+                    DepartmentID = updatedArticle.DepartmentID,
                     Name = request.Name,
                     Author = request.Author,
                     Version = updatedArticle.Version,
