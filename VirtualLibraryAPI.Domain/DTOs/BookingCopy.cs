@@ -14,7 +14,7 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// <summary>
         /// Id of user
         /// </summary>
-        public int UserID { get; set; }
+        public int ClientID { get; set; }
         /// <summary>
         /// Id of copy
         /// </summary>

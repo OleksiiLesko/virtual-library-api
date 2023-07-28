@@ -19,10 +19,13 @@ namespace VirtualLibraryAPI.Domain.DTOs
         ///  ID of user
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public int? UserID { get; set; }
+        public int? ClientID { get; set; }
         /// <summary>
         /// ID of copy
         public int CopyID { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? DepartmentID { get; set; }
+
         /// <summary>
         /// Name of copy
         /// </summary>
