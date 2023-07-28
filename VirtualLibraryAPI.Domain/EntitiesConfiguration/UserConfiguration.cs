@@ -38,12 +38,6 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
               .HasMaxLength(25)
               .IsRequired();
 
-            builder.HasMany(e => e.Copies)
-              .WithOne(e => e.User)
-              .HasForeignKey(e => e.UserID)
-              .OnDelete(DeleteBehavior.NoAction)
-              .HasConstraintName("FK_User_Copies");
-
             builder.HasOne(e => e.UserType)
              .WithMany(e => e.User)
              .HasForeignKey(e => e.UserTypes)
