@@ -34,7 +34,6 @@ namespace VirtualLibraryAPI.Domain.Entities
         /// </summary>
         public int DepartmentID { get; set; }
         public virtual Department Department { get; set; }
-        public virtual ICollection<Copy> Copies { get; set;}
         public virtual UserType UserType { get; set; }
     }
 }
