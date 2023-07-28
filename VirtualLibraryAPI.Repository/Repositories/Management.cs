@@ -48,13 +48,13 @@ namespace VirtualLibraryAPI.Repository.Repositories
 
             copy.IsAvailable = false;
             copy.ExpirationDate = DateTime.Now.AddDays(bookingPeriod);
-            copy.UserID = userId;
+            copy.ClientID = userId;
             _context.SaveChanges();
 
             _logger.LogInformation("Copy booked: {CopyID}", copy.CopyID);
             var copyDTO = new Domain.DTOs.Copy
             {
-                UserID = user.UserID,
+                ClientID = user.UserID,
                 CopyID = copy.CopyID,
                 IsAvailable = copy.IsAvailable,
                 ExpirationDate = copy.ExpirationDate
@@ -71,7 +71,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
         public Domain.DTOs.Copy ReturnCopyById(int copyId)
         {
             var copy = _context.Copies.FirstOrDefault(c => c.CopyID == copyId);
-            copy.UserID = null;
+            copy.ClientID = null;
             copy.IsAvailable = true;
             copy.ExpirationDate = null;
             _context.SaveChanges();
