@@ -95,6 +95,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
             {
                 CopyID = copyEntity.CopyID,
                 ItemID = copyEntity.ItemID,
+                DepartmentID = itemEntity.DepartmentID,
                 IsAvailable = copyEntity.IsAvailable,
                 ExpirationDate = copyEntity.ExpirationDate,
                 Type = (Common.Type)itemEntity.Type

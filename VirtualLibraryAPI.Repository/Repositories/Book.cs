@@ -50,6 +50,7 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Author = book.Author,
                 ISBN = book.ISBN
             };
+
             var item = new Domain.Entities.Item()
             {
                 DepartmentID = book.DepartmentID,
@@ -59,6 +60,8 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 Publisher = book.Publisher,
                 Book = newBook
             };
+
+
             _context.Items.Add(item);
             _context.SaveChanges();
             _logger.LogInformation("Adding book to the database: {BookID}", newBook.ItemID);
