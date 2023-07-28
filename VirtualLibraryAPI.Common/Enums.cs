@@ -47,4 +47,16 @@ namespace VirtualLibraryAPI.Common
         DbError,
         InternalServerError
     }
+    /// <summary>
+    /// Enum status of issuer vaidation
+    /// </summary>
+    public enum ValidationIssuerStatus
+    {
+        Valid,
+        UserNotFound,
+        CopyNotFound,
+        UserDepartmentNotEqualCopyDepartment,
+        DbError,
+        InternalServerError
+    }
 }
