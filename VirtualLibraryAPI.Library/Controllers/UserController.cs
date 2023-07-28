@@ -17,17 +17,22 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         private readonly ILogger<UserController> _logger;
         /// <summary>
-        /// Article model
+        /// User model
         /// </summary>
-        private readonly IUserModel _model;
+        private readonly IUserModel _userModel;
+        /// <summary>
+        /// User model
+        /// </summary>
+        private readonly IDepartmentModel _departmentModel;
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public UserController(ILogger<UserController> logger, IUserModel model)
+        public UserController(ILogger<UserController> logger, IUserModel userModel,IDepartmentModel departmentModel)
         {
             _logger = logger;
-            _model = model;
+            _userModel = userModel;
+            _departmentModel = departmentModel;
         }
         /// <summary>
         /// Get all users
@@ -39,13 +44,13 @@ namespace VirtualLibraryAPI.Library.Controllers
             try
             {
                 _logger.LogInformation("Get all users ");
-                var users = _model.GetAllUsers();
+                var users = _userModel.GetAllUsers();
                 if (users == null)
                 {
                     return NotFound();
                 }
                 _logger.LogInformation("Users received ");
-                return Ok(_model.GetAllUsersResponse());
+                return Ok(_userModel.GetAllUsersResponse());
             }
             catch (Exception ex)
             {
@@ -63,7 +68,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedArticle = _model.AddUser(request, userType);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var addedArticle = _userModel.AddUser(request, userType);
                 if (addedArticle == null)
                 {
                     return NotFound();
@@ -96,7 +106,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var article = _model.GetUserById(id);
+                var article = _userModel.GetUserById(id);
 
                 if (article == null)
                 {
@@ -105,7 +115,7 @@ namespace VirtualLibraryAPI.Library.Controllers
 
                 _logger.LogInformation("Getting user by ID:{UserID}", article.UserID);
                 _logger.LogInformation("User received ");
-                return Ok(_model.GetUserByIdResponse(id));
+                return Ok(_userModel.GetUserByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -124,7 +134,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var updatedUser = _model.UpdateUser(id, request, userType);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var updatedUser = _userModel.UpdateUser(id, request, userType);
                 if (updatedUser == null)
                 {
                     return NotFound();
@@ -158,13 +173,13 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var article = _model.GetUserById(id);
+                var article = _userModel.GetUserById(id);
                 if (article == null)
                 {
                     return NotFound();
                 }
 
-                _model.DeleteUser(id);
+                _userModel.DeleteUser(id);
                 _logger.LogInformation("Deleting user by ID:{UserID}", article.UserID);
                 _logger.LogInformation("User deleted ");
 

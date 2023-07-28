@@ -19,16 +19,22 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Magazine model
         /// </summary>
-        private readonly IMagazineModel _model;
+        private readonly IMagazineModel _magazineModel;
+        /// <summary>
+        /// Department model
+        /// </summary>
+        private readonly IDepartmentModel _departmentModel;
 
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public MagazineController(ILogger<MagazineController> logger, IMagazineModel model)
+        public MagazineController(ILogger<MagazineController> logger, IMagazineModel magazineModel,IDepartmentModel departmentModel)
         {
             _logger = logger;
-            _model = model;
+            _magazineModel = magazineModel;
+            _departmentModel = departmentModel;
+
         }
         /// <summary>
         /// Get all magazines
@@ -40,13 +46,13 @@ namespace VirtualLibraryAPI.Library.Controllers
             try
             {
                 _logger.LogInformation("Get all magazines ");
-                var magazines = _model.GetAllMagazines();
+                var magazines = _magazineModel.GetAllMagazines();
                 if (magazines == null)
                 {
                     return NotFound();
                 }
                 _logger.LogInformation("Magazines received ");
-                return Ok(_model.GetAllMagazinesResponse());
+                return Ok(_magazineModel.GetAllMagazinesResponse());
             }
             catch (Exception ex)
             {
@@ -63,7 +69,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedMagazine = _model.AddMagazine(request);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var addedMagazine = _magazineModel.AddMagazine(request);
                 if (addedMagazine == null)
                 {
                     return NotFound();
@@ -96,7 +107,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedMagazine = _model.AddCopyOfMagazineById(id, isAvailable: true);
+                var addedMagazine = _magazineModel.AddCopyOfMagazineById(id, isAvailable: true);
                 if (addedMagazine == null)
                 {
                     return NotFound();
@@ -104,7 +115,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 _logger.LogInformation("Adding copy:{CopyID}", id);
 
                 _logger.LogInformation("Copy added");
-                return Ok(_model.AddCopyOfMagazineByIdResponse(id));
+                return Ok(_magazineModel.AddCopyOfMagazineByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -122,7 +133,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var magazine = _model.GetMagazineById(id);
+                var magazine = _magazineModel.GetMagazineById(id);
 
                 if (magazine == null)
                 {
@@ -131,7 +142,7 @@ namespace VirtualLibraryAPI.Library.Controllers
 
                 _logger.LogInformation("Getting magazine by ID:{MagazineID}", magazine.MagazineID);
                 _logger.LogInformation("Magazine received ");
-                return Ok(_model.GetMagazineByIdResponse(id));
+                return Ok(_magazineModel.GetMagazineByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -150,7 +161,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var updatedMagazine = _model.UpdateMagazine(id, request);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var updatedMagazine = _magazineModel.UpdateMagazine(id, request);
                 if (updatedMagazine == null)
                 {
                     return NotFound();
@@ -185,13 +201,13 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var magazine = _model.GetMagazineById(id);
+                var magazine = _magazineModel.GetMagazineById(id);
                 if (magazine == null)
                 {
                     return NotFound();
                 }
 
-                _model.DeleteMagazine(id);
+                _magazineModel.DeleteMagazine(id);
                 _logger.LogInformation("Deleting magazine by ID:{MagazineID}", magazine.MagazineID);
                 _logger.LogInformation("Magazine deleted ");
 

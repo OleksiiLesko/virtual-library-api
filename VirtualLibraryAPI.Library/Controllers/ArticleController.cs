@@ -19,15 +19,20 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Article model
         /// </summary>
-        private readonly IArticleModel _model;
+        private readonly IArticleModel _articleModel;
+        /// <summary>
+        /// Department model
+        /// </summary>
+        private readonly IDepartmentModel _departmentModel;
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public ArticleController(ILogger<ArticleController> logger, IArticleModel model)
+        public ArticleController(ILogger<ArticleController> logger, IArticleModel articleModel, IDepartmentModel departmentModel)
         {
             _logger = logger;
-            _model = model;
+            _articleModel = articleModel;
+            _departmentModel = departmentModel;
         }
         /// <summary>
         /// Get all articles
@@ -39,13 +44,13 @@ namespace VirtualLibraryAPI.Library.Controllers
             try
             {
                 _logger.LogInformation("Get all articles ");
-                var articles = _model.GetAllArticles();
+                var articles = _articleModel.GetAllArticles();
                 if (articles == null)
                 {
                     return NotFound();
                 }
                 _logger.LogInformation("Articles received ");
-                return Ok(_model.GetAllArticlesResponse());
+                return Ok(_articleModel.GetAllArticlesResponse());
             }
             catch (Exception ex)
             {
@@ -62,7 +67,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedArticle = _model.AddArticle(request);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var addedArticle = _articleModel.AddArticle(request);
                 if (addedArticle == null)
                 {
                     return NotFound();
@@ -99,7 +109,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedArticle = _model.AddCopyOfArticleById(id, isAvailable: true);
+                var addedArticle = _articleModel.AddCopyOfArticleById(id, isAvailable: true);
                 if (addedArticle == null)
                 {
                     return NotFound();
@@ -107,7 +117,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 _logger.LogInformation("Adding copy:{CopyID}", id);
 
                 _logger.LogInformation("Copy added");
-                return Ok(_model.AddCopyOfArticlesByIdResponse(id));
+                return Ok(_articleModel.AddCopyOfArticlesByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -125,7 +135,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var article = _model.GetArticleById(id);
+                var article = _articleModel.GetArticleById(id);
 
                 if (article == null)
                 {
@@ -134,7 +144,7 @@ namespace VirtualLibraryAPI.Library.Controllers
 
                 _logger.LogInformation("Getting article by ID:{ArticleID}", article.ArticleID);
                 _logger.LogInformation("Article received ");
-                return Ok(_model.GetArticleByIdResponse(id));
+                return Ok(_articleModel.GetArticleByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -153,7 +163,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var updatedArticle = _model.UpdateArticle(id, request);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var updatedArticle = _articleModel.UpdateArticle(id, request);
                 if (updatedArticle == null)
                 {
                     return NotFound();
@@ -191,13 +206,13 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var article = _model.GetArticleById(id);
+                var article = _articleModel.GetArticleById(id);
                 if (article == null)
                 {
                     return NotFound();
                 }
 
-                _model.DeleteArticle(id);
+                _articleModel.DeleteArticle(id);
                 _logger.LogInformation("Deleting article by ID:{ArticleID}", article.ArticleID);
                 _logger.LogInformation("Article deleted ");
 

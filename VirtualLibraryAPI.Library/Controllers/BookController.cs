@@ -20,16 +20,21 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Book model
         /// </summary>
-        private readonly IBookModel _model;
+        private readonly IBookModel _bookModel;
+        /// <summary>
+        /// Book model
+        /// </summary>
+        private readonly IDepartmentModel _departmentModel;
 
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public BookController(ILogger<BookController> logger, IBookModel model)
+        public BookController(ILogger<BookController> logger, IBookModel bookModel,IDepartmentModel departmentModel)
         {
             _logger = logger;
-            _model = model;
+            _bookModel = bookModel;
+            _departmentModel = departmentModel;
         }
         /// <summary>
         /// Get all books
@@ -41,13 +46,13 @@ namespace VirtualLibraryAPI.Library.Controllers
             try
             {
                 _logger.LogInformation("Get all books ");
-                var books = _model.GetAllBooks();
+                var books = _bookModel.GetAllBooks();
                 if (books == null)
                 {
                     return NotFound();
                 }
                 _logger.LogInformation("Books received ");
-                return Ok(_model.GetAllBooksResponse());
+                return Ok(_bookModel.GetAllBooksResponse());
             }
             catch (Exception ex)
             {
@@ -64,7 +69,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedBook = _model.AddBook(request);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var addedBook = _bookModel.AddBook(request);
                 if (addedBook == null)
                 {
                     return NotFound();
@@ -99,7 +109,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var addedBook = _model.AddCopyOfBookById(id, isAvailable: true);
+                var addedBook = _bookModel.AddCopyOfBookById(id, isAvailable: true);
                 if (addedBook == null)
                 {
                     return NotFound();
@@ -108,7 +118,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                 _logger.LogInformation("Adding copy:{CopyID}", id);
 
                 _logger.LogInformation("Copy added");
-                return Ok(_model.AddCopyOfBookByIdResponse(id));
+                return Ok(_bookModel.AddCopyOfBookByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -126,7 +136,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var book = _model.GetBookById(id);
+                var book = _bookModel.GetBookById(id);
 
                 if (book == null)
                 {
@@ -135,7 +145,7 @@ namespace VirtualLibraryAPI.Library.Controllers
 
                 _logger.LogInformation("Getting book by ID:{BookID}", book.BookID);
                 _logger.LogInformation("Book received ");
-                return Ok(_model.GetBookByIdResponse(id));
+                return Ok(_bookModel.GetBookByIdResponse(id));
             }
             catch (Exception ex)
             {
@@ -154,7 +164,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var updatedBook = _model.UpdateBook(id, request);
+                var department = _departmentModel.GetDepartmentById(request.DepartmentID);
+                if (department == null)
+                {
+                    return BadRequest("Invalid DepartmentID. Department with the specified ID does not exist.");
+                }
+                var updatedBook = _bookModel.UpdateBook(id, request);
                 if (updatedBook == null)
                 {
                     return NotFound();
@@ -190,13 +205,13 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                var book = _model.GetBookById(id);
+                var book = _bookModel.GetBookById(id);
                 if (book == null)
                 {
                     return NotFound();
                 }
 
-                _model.DeleteBook(id);
+                _bookModel.DeleteBook(id);
                 _logger.LogInformation("Deleting book by ID:{BookID}", book.BookID);
                 _logger.LogInformation("Book deleted ");
 
