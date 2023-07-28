@@ -201,20 +201,20 @@ namespace VirtualLibraryAPI.Repository.Repositories
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public int CountUserCopies(int userId)
-        {
-            var user = _context.Users
-                .Include(u => u.Copies)
-                .FirstOrDefault(u => u.UserID == userId);
+        //public int CountUserCopies(int userId)
+        //{
+        //    var user = _context.Users
+        //        //.Include(u => u.Copies)
+        //        .FirstOrDefault(u => u.UserID == userId);
 
-            if (user == null)
-            {
-                _logger.LogInformation($"UserID: {userId} not found");
-                return 0;
-            }
+        //    if (user == null)
+        //    {
+        //        _logger.LogInformation($"UserID: {userId} not found");
+        //        return 0;
+        //    }
 
-            return user.Copies.Count;
-        }
+        //    return user.Copies.Count;
+        //}
         /// <summary>
         /// Check if user have expired copies
         /// </summary>
@@ -228,17 +228,17 @@ namespace VirtualLibraryAPI.Repository.Repositories
                 _logger.LogInformation($"UserID: {userId} not found");
                 return false;
             }
-            if(user.Copies == null)
-            {
-                return false;
-            }
-            foreach (var copy in user.Copies)
-            {
-                if (copy.ExpirationDate <= DateTime.Now)
-                {
-                    return true;
-                }
-            }
+            //if(user.Copies == null)
+            //{
+            //    return false;
+            //}
+            //foreach (var copy in user.Copies)
+            //{
+            //    if (copy.ExpirationDate <= DateTime.Now)
+            //    {
+            //        return true;
+            //    }
+            //}
 
             return false;
         }
