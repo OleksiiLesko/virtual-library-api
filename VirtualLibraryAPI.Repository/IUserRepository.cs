@@ -8,7 +8,7 @@ using VirtualLibraryAPI.Common;
 namespace VirtualLibraryAPI.Repository
 {
     /// <summary>
-    /// Article repository interface 
+    /// User repository interface 
     /// </summary>
     public interface IUserRepository
     {
@@ -58,7 +58,7 @@ namespace VirtualLibraryAPI.Repository
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public int CountUserCopies(int userId);
+        //public int CountUserCopies(int userId);
         /// <summary>
         /// Check if user have expired copies
         /// </summary>
