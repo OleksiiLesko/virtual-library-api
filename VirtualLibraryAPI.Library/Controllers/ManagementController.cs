@@ -25,23 +25,28 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         private readonly IManagementModel _managementModel;
         /// <summary>
+        /// Validation issuer model
+        /// </summary>
+        private readonly IValidationIssuerModel _validationIssuerModel;
+        /// <summary>
         /// Validation copy model
         /// </summary>
         private readonly IValidationCopyModel _validationCopyModel;
         /// <summary>
         /// Validation user model
         /// </summary>
-        private readonly IValidationUserModel _validationUserModel;
+        private readonly IValidationClientModel _validationClientModel;
         /// <summary>
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public ManagementController(ILogger<ManagementController> logger, IManagementModel model, IValidationCopyModel validationCopyModel, IValidationUserModel validationUserModel)
+        public ManagementController(ILogger<ManagementController> logger, IManagementModel model, IValidationCopyModel validationCopyModel, IValidationClientModel validationClientModel, IValidationIssuerModel validationIssuerModel)
         {
             _logger = logger;
             _managementModel = model;
             _validationCopyModel = validationCopyModel;
-            _validationUserModel = validationUserModel;
+            _validationClientModel = validationClientModel;
+            _validationIssuerModel = validationIssuerModel;
         }
         /// <summary>
         /// Reserve copy by id
@@ -51,40 +56,39 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <returns></returns>
         [HttpPost("Copy/{copyId}/Booking")]
         [MiddlewareFilter(typeof(IssuerAuthenticationMiddleware))]
-        [MiddlewareFilter(typeof(DepartmentValidationMiddleware))]
-        public IActionResult ReserveCopyById( [FromHeader] int issuerId,int clientId, int copyId, int bookingPeriod)
+        public IActionResult ReserveCopyById([FromHeader] int issuerId, int clientId, int copyId, int bookingPeriod)
         {
             try
             {
-                var validationUserResult = _validationUserModel.CanClientReserveCopy(clientId);
-
-                if (validationUserResult == ValidationUserStatus.Valid)
+                var validationIssuerResult = _validationIssuerModel.CanIssuerIssueCopy(issuerId, copyId);
+                if (validationIssuerResult != ValidationIssuerStatus.Valid)
                 {
-                    var validationCopyResult = _validationCopyModel.IsCopyValidForBooking(copyId, bookingPeriod);
-                    if (validationCopyResult == ValidationCopyStatus.Valid)
-                    {
-                        var copy = _managementModel.ReserveCopyById(clientId, copyId, bookingPeriod);
-                        _logger.LogInformation("Booking copy by ID: {CopyID}", copy.CopyID);
-                        _logger.LogInformation("Copy booked.");
-                        var expirationDate = copy.ExpirationDate;
-
-                        return Ok(new Domain.DTOs.BookingCopy
-                        {
-                            UserID = clientId,
-                            CopyID = copyId,
-                            ExpirationDate = expirationDate,
-                        });
-                    }
-                    else
-                    {
-                        return HandleCopyNotValidResult(validationCopyResult, copyId);
-                    }
+                    return HandleIssuerNotValidResult(validationIssuerResult, issuerId, copyId);
                 }
-                else
+
+                var validationUserResult = _validationClientModel.CanClientReserveCopy(clientId);
+                if (validationUserResult != ValidationUserStatus.Valid)
                 {
                     return HandleUserNotValidResult(validationUserResult, clientId);
                 }
-                
+
+                var validationCopyResult = _validationCopyModel.IsCopyValidForBooking(copyId, bookingPeriod);
+                if (validationCopyResult != ValidationCopyStatus.Valid)
+                {
+                    return HandleCopyNotValidResult(validationCopyResult, copyId);
+                }
+
+                var copy = _managementModel.ReserveCopyById(clientId, copyId, bookingPeriod);
+                _logger.LogInformation("Booking copy by ID: {CopyID}", copy.CopyID);
+                _logger.LogInformation("Copy booked.");
+                var expirationDate = copy.ExpirationDate;
+
+                return Ok(new Domain.DTOs.BookingCopy
+                {
+                    ClientID = clientId,
+                    CopyID = copyId,
+                    ExpirationDate = expirationDate,
+                });
             }
             catch (Exception ex)
             {
@@ -147,6 +151,34 @@ namespace VirtualLibraryAPI.Library.Controllers
 
                 default:
                     return BadRequest($"Invalid validation status of UserID {clientId}");
+            }
+        }
+        /// <summary>
+        /// Return validation status of issuer
+        /// </summary>
+        /// <param name="validationResult"></param>
+        /// <returns></returns>
+        private IActionResult HandleIssuerNotValidResult(ValidationIssuerStatus validationResult, int issuerId,int copyId)
+        {
+            switch (validationResult)
+            {
+                case ValidationIssuerStatus.UserNotFound:
+                    return NotFound($"UserID: {issuerId}  not found");
+
+                case ValidationIssuerStatus.CopyNotFound:
+                    return NotFound($"CopyID: {copyId}  not found");
+
+                case ValidationIssuerStatus.DbError:
+                    return StatusCode(500, "Database error");
+
+                case ValidationIssuerStatus.InternalServerError:
+                    return StatusCode(500, "Internal server error");
+
+                case ValidationIssuerStatus.UserDepartmentNotEqualCopyDepartment:
+                    return BadRequest($"IssuerID {issuerId} deaprtment not equal CopyID {copyId} deaprtment");
+
+                default:
+                    return BadRequest($"Invalid validation status of IssuerID {issuerId}");
             }
         }
         /// <summary>
