@@ -29,7 +29,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
                 .HasMaxLength(50)
                 .IsRequired();
 
-            builder.Property(e => e.UserID)
+            builder.Property(e => e.ClientID)
             .ValueGeneratedNever()
             .IsRequired(false);
 
@@ -52,7 +52,7 @@ namespace VirtualLibraryAPI.Domain.EntitiesConfiguration
 
             builder.HasIndex(e => e.ItemID).IsUnique(false);
 
-            builder.HasIndex(e => e.UserID).IsUnique(false);
+            builder.HasIndex(e => e.ClientID).IsUnique(false);
 
         }
     }
