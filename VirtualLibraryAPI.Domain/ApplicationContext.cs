@@ -51,6 +51,10 @@ namespace VirtualLibraryAPI.Domain
         ///  Department entity type  used to interact with a corresponding table in the database.
         /// </summary>
         public DbSet<Department> Departments { get; set; }
+        /// <summary>
+        ///  Client entity type  used to interact with a corresponding table in the database.
+        /// </summary>
+        public DbSet<Client> Clients { get; set; }
 
         /// <summary>
         /// Application context that has options 
@@ -65,6 +69,8 @@ namespace VirtualLibraryAPI.Domain
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Client>()
+              .ToTable("Clients");
 
             modelBuilder.Entity<Department>()
               .ToTable("Departments");
@@ -87,6 +93,7 @@ namespace VirtualLibraryAPI.Domain
             modelBuilder.Entity<Copy>()
                 .ToTable("Copies");
 
+            modelBuilder.ApplyConfiguration(new ClientConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
             modelBuilder.ApplyConfiguration(new ItemTypeConfiguration());
