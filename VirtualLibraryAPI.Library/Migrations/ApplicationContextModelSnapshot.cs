@@ -72,6 +72,29 @@ namespace VirtualLibraryAPI.Library.Migrations
                     b.ToTable("Books", (string)null);
                 });
 
+            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Client", b =>
+                {
+                    b.Property<int>("ClientID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientID"));
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ClientID");
+
+                    b.ToTable("Clients", (string)null);
+                });
+
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Copy", b =>
                 {
                     b.Property<int>("CopyID")
@@ -79,6 +102,9 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CopyID"));
+
+                    b.Property<int?>("ClientID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ExpirationDate")
                         .HasMaxLength(50)
@@ -91,14 +117,11 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
                     b.HasKey("CopyID");
 
-                    b.HasIndex("ItemID");
+                    b.HasIndex("ClientID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("ItemID");
 
                     b.ToTable("Copies", (string)null);
                 });
@@ -300,6 +323,12 @@ namespace VirtualLibraryAPI.Library.Migrations
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Copy", b =>
                 {
+                    b.HasOne("VirtualLibraryAPI.Domain.Entities.Client", "Client")
+                        .WithMany("Copies")
+                        .HasForeignKey("ClientID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasConstraintName("FK_Client_Copies");
+
                     b.HasOne("VirtualLibraryAPI.Domain.Entities.Item", "Item")
                         .WithOne("Copy")
                         .HasForeignKey("VirtualLibraryAPI.Domain.Entities.Copy", "ItemID")
@@ -307,15 +336,9 @@ namespace VirtualLibraryAPI.Library.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Copy_Item");
 
-                    b.HasOne("VirtualLibraryAPI.Domain.Entities.User", "User")
-                        .WithMany("Copies")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .HasConstraintName("FK_User_Copies");
+                    b.Navigation("Client");
 
                     b.Navigation("Item");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Item", b =>
@@ -372,6 +395,11 @@ namespace VirtualLibraryAPI.Library.Migrations
                     b.Navigation("UserType");
                 });
 
+            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Client", b =>
+                {
+                    b.Navigation("Copies");
+                });
+
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.Department", b =>
                 {
                     b.Navigation("Items");
@@ -397,11 +425,6 @@ namespace VirtualLibraryAPI.Library.Migrations
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.ItemType", b =>
                 {
                     b.Navigation("Item");
-                });
-
-            modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Copies");
                 });
 
             modelBuilder.Entity("VirtualLibraryAPI.Domain.Entities.UserType", b =>
