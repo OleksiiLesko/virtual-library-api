@@ -16,38 +16,39 @@ namespace VirtualLibraryAPI.Tests
             _logger = new Mock<ILogger<Models.UserModel>>().Object;
         }
 
-        //[Fact]
-        //public void AddUser_ReturnsAddedUser()
-        //{
-        //    var type = UserType.Client;
-        //    var userDto = new Domain.DTOs.User { UserID = 2, FirstName = "40", LastName = "32" };
-        //    var addedUser = new Domain.DTOs.User { UserID = 1, FirstName = "40", LastName = "32" };
-        //    _repository.Setup(x => x.AddUser(userDto, type)).Returns(addedUser);
-        //    var userModel = new Models.UserModel(_logger, _repository.Object);
+        [Fact]
+        public void AddUser_ReturnsAddedUser()
+        {
+            var type = UserType.Administrator;
+            var userDto = new Domain.DTOs.User { UserID = 2, FirstName = "40", LastName = "32" };
+            var addedUser = new Domain.DTOs.User { UserID = 1, FirstName = "40", LastName = "32" };
+            _repository.Setup(x => x.AddUser(userDto, type)).Returns(addedUser);
+            var userModel = new Models.UserModel(_logger, _repository.Object);
 
-        //    var result = userModel.AddUser(userDto, type);
+            var result = userModel.AddUser(userDto, type);
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(userDto.LastName, result.LastName);
-        //    Assert.Equal(userDto.FirstName, result.FirstName);
-        //    Assert.NotEqual(userDto.UserID, result.UserID);
-        //    _repository.Verify(x => x.AddUser(userDto, type), Times.Once());
-        //}
-        //[Fact]
-        //public void UpdateUser_Should_Return_Updated_User()
-        //{
-        //    var userID = 1;
-        //    var userDto = new Domain.DTOs.User { UserID = 2, FirstName = "40", LastName = "32" };
-        //    var updatedUser = new Domain.DTOs.User { UserID = 2, FirstName = "40", LastName = "32" };
-        //    _repository.Setup(x => x.UpdateUser(userID, userDto)).Returns(updatedUser);
-        //    var userModel = new Models.UserModel(_logger, _repository.Object);
+            Assert.NotNull(result);
+            Assert.Equal(userDto.LastName, result.LastName);
+            Assert.Equal(userDto.FirstName, result.FirstName);
+            Assert.NotEqual(userDto.UserID, result.UserID);
+            _repository.Verify(x => x.AddUser(userDto, type), Times.Once());
+        }
+        [Fact]
+        public void UpdateUser_Should_Return_Updated_User()
+        {
+            var userID = 1;
+            var type = UserType.Administrator;
+            var userDto = new Domain.DTOs.User { UserID = 2, FirstName = "40", LastName = "32" };
+            var updatedUser = new Domain.DTOs.User { UserID = 2, FirstName = "40", LastName = "32" };
+            _repository.Setup(x => x.UpdateUser(userID, userDto, type)).Returns(updatedUser);
+            var userModel = new Models.UserModel(_logger, _repository.Object);
 
-        //    var result = userModel.UpdateUser(userID, userDto);
+            var result = userModel.UpdateUser(userID, userDto, type);
 
-        //    Assert.Equal(updatedUser.UserID, result.UserID);
-        //    Assert.Equal(updatedUser.FirstName, result.FirstName);
-        //    _repository.Verify(x => x.UpdateUser(userID, userDto), Times.Once());
-        //}
+            Assert.Equal(updatedUser.UserID, result.UserID);
+            Assert.Equal(updatedUser.FirstName, result.FirstName);
+            _repository.Verify(x => x.UpdateUser(userID, userDto, type), Times.Once());
+        }
         [Fact]
         public void DeleteUser_ReturnsDeletedUser()
         {
