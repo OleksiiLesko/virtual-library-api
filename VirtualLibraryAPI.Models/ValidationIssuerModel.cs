@@ -64,7 +64,7 @@ namespace VirtualLibraryAPI.Models
                 var copy = _copyRepository.GetCopyById(copyId);
                 if (copy == null)
                 {
-                    _logger.LogInformation($"ItemID: {copy.ItemID} not found");
+                    _logger.LogInformation($"ItemID: {copyId} not found");
                     return ValidationIssuerStatus.CopyNotFound;
                 }
                 if (user.UserType == UserType.Manager)
