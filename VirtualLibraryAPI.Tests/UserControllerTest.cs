@@ -1,36 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Library.Controllers;
 using VirtualLibraryAPI.Models;
-using VirtualLibraryAPI.Repository;
 
 namespace VirtualLibraryAPI.Tests
 {
     public class UserControllerTest
     {
         private readonly Mock<ILogger<UserController>> _logger;
-        private readonly Mock<IUserModel> _model;
+        private readonly Mock<IUserModel> _userModel;
+        private readonly Mock<IDepartmentModel> _departmentModel;
         private readonly UserController _controller;
 
         public UserControllerTest()
         {
             _logger = new Mock<ILogger<UserController>>();
-            _model = new Mock<IUserModel>();
-            _controller = new UserController(_logger.Object, _model.Object);
+            _userModel = new Mock<IUserModel>();
+            _departmentModel = new Mock<IDepartmentModel>();
+            _controller = new UserController(_logger.Object, _userModel.Object, _departmentModel.Object);
         }
 
         [Fact]
         public void GetAllUsers_ReturnsOk()
         {
             var users = new List<Domain.DTOs.User>(); 
-            _model.Setup(m => m.GetAllUsers()).Returns(users);
+            _userModel.Setup(m => m.GetAllUsers()).Returns(users);
 
             var result = _controller.GetAllUsers();
 
@@ -41,7 +37,7 @@ namespace VirtualLibraryAPI.Tests
         public void GetAllUsers_ReturnsNotFound()
         {
             List<Domain.DTOs.User> users = null;
-            _model.Setup(m => m.GetAllUsers()).Returns(users);
+            _userModel.Setup(m => m.GetAllUsers()).Returns(users);
 
             var result = _controller.GetAllUsers();
 
@@ -51,7 +47,7 @@ namespace VirtualLibraryAPI.Tests
         [Fact]
         public void GetAllUsers_ReturnsBadRequest()
         {
-            _model.Setup(m => m.GetAllUsers()).Throws(new Exception());
+            _userModel.Setup(m => m.GetAllUsers()).Throws(new Exception());
 
             var result = _controller.GetAllUsers();
 
@@ -59,59 +55,60 @@ namespace VirtualLibraryAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        //[Fact]
-        //public void AddUser_ReturnsOk()
-        //{
-        //    var userId = 1;
-        //    var type = UserType.Client;
-        //    var userRequest = new Domain.DTOs.User();
-        //    var addedUser = new Domain.DTOs.User();
-        //    _model.Setup(m => m.AddUser(userRequest, type)).Returns(addedUser);
+        [Fact]
+        public void AddUser_ValidData_ReturnsOkResult()
+        {
+            var request = new Domain.DTOs.User();
+            var userType = UserType.Administrator;
 
-        //    var result = _controller.AddUser(userId,userRequest, type);
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    Assert.IsType<OkObjectResult>(result);
-        //    var okObjectResult = Assert.IsType<OkObjectResult>(result);
-        //    var returnedUser = Assert.IsType<Domain.DTOs.User>(okObjectResult.Value);
-        //    Assert.Equal(addedUser.UserID, returnedUser.UserID);
-        //    Assert.Equal(addedUser.FirstName, returnedUser.FirstName);
-        //    Assert.Equal(addedUser.LastName, returnedUser.LastName);
-        //}
+            _userModel.Setup(m => m.AddUser(It.IsAny<Domain.DTOs.User>(), It.IsAny<UserType>())).Returns(new Domain.DTOs.User { });
 
-        //[Fact]
-        //public void AddUser_ReturnsNotFound()
-        //{
-        //    var userId = 1;
-        //    var type = UserType.Client;
-        //    var userRequest = new Domain.DTOs.User();
-        //    Domain.DTOs.User addedUser = null;
-        //    _model.Setup(m => m.AddUser(userRequest,type)).Returns(addedUser);
+            var result = _controller.AddUser(123, request, userType);
 
-        //    var result = _controller.AddUser(userId,userRequest, type);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var userResponse = Assert.IsType<Domain.DTOs.User>(okResult.Value);
+            Assert.Equal(userType, userResponse.UserType);
+        }
+        [Fact]
+        public void AddUser_UserModelReturnsNull_ReturnsNotFound()
+        {
+            var request = new Domain.DTOs.User();
+            var userType = UserType.Administrator;
 
-        //    Assert.IsType<NotFoundResult>(result);
-        //}
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //[Fact]
-        //public void AddUser_ReturnsBadRequest()
-        //{
-        //    var userId = 1;
-        //    var type = UserType.Client;
-        //    var userRequest = new Domain.DTOs.User();
-        //    _model.Setup(m => m.AddUser(userRequest, type)).Throws(new Exception("Failed to add user"));
+            _userModel.Setup(m => m.AddUser(It.IsAny<Domain.DTOs.User>(), It.IsAny<UserType>())).Returns((Domain.DTOs.User)null);
 
-        //    var result = _controller.AddUser(userId,userRequest, type);
+            var result = _controller.AddUser(123, request, userType);
 
-        //    Assert.IsType<BadRequestObjectResult>(result);
-        //    var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        //    Assert.Equal("Failed", badRequestResult.Value);
-        //}
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+
+        [Fact]
+        public void AddUser_InvalidDepartment_ReturnsBadRequest()
+        {
+            var request = new Domain.DTOs.User
+            {
+                DepartmentID = 999 
+            };
+            var userType = UserType.Administrator;
+
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns((Domain.DTOs.Department)null);
+
+            var result = _controller.AddUser(123, request, userType);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Invalid DepartmentID. Department with the specified ID does not exist.", badRequestResult.Value);
+        }
         [Fact]
         public void GetUserById_ReturnsOk()
         {
             int userId = 1; 
             var user = new Domain.DTOs.User(); 
-            _model.Setup(m => m.GetUserById(userId)).Returns(user);
+            _userModel.Setup(m => m.GetUserById(userId)).Returns(user);
 
             var result = _controller.GetUserById(userId);
 
@@ -123,7 +120,7 @@ namespace VirtualLibraryAPI.Tests
         {
             int userId = 1; 
             Domain.DTOs.User user = null;
-            _model.Setup(m => m.GetUserById(userId)).Returns(user);
+            _userModel.Setup(m => m.GetUserById(userId)).Returns(user);
 
             var result = _controller.GetUserById(userId);
 
@@ -134,7 +131,7 @@ namespace VirtualLibraryAPI.Tests
         public void GetUserById_ReturnsBadRequest()
         {
             int userId = 1; 
-            _model.Setup(m => m.GetUserById(userId)).Throws(new Exception("Failed to retrieve user"));
+            _userModel.Setup(m => m.GetUserById(userId)).Throws(new Exception("Failed to retrieve user"));
 
             var result = _controller.GetUserById(userId);
 
@@ -142,56 +139,62 @@ namespace VirtualLibraryAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        //[Fact]
-        //public void UpdateUser_ReturnsOk()
-        //{
-        //    int userId = 1; 
-        //    var userRequest = new Domain.DTOs.User(); 
-        //    var updatedUser = new Domain.DTOs.User(); 
-        //    _model.Setup(m => m.UpdateUser(userId, userRequest)).Returns(updatedUser);
+        [Fact]
+        public void UpdateUser_ValidData_ReturnsOkResult()
+        {
+            int userId = 123;
+            var request = new Domain.DTOs.User();
+            var userType = UserType.Administrator;
 
-        //    var result = _controller.UpdateUser(userId, userRequest);
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    Assert.IsType<OkObjectResult>(result);
-        //    var okObjectResult = Assert.IsType<OkObjectResult>(result);
-        //    var returnedUser = Assert.IsType<Domain.DTOs.User>(okObjectResult.Value);
-        //    Assert.Equal(updatedUser.UserID, returnedUser.UserID);
-        //    Assert.Equal(userRequest.FirstName, returnedUser.FirstName);
-        //    Assert.Equal(userRequest.LastName, returnedUser.LastName);
-        //}
+            _userModel.Setup(m => m.UpdateUser(It.IsAny<int>(), It.IsAny<Domain.DTOs.User>(), It.IsAny<UserType>())).Returns(new Domain.DTOs.User { });
 
-        //[Fact]
-        //public void UpdateUser_ReturnsNotFound()
-        //{
-        //    int userId = 1;
-        //    var userRequest = new Domain.DTOs.User(); 
-        //    Domain.DTOs.User updatedUser = null;
-        //    _model.Setup(m => m.UpdateUser(userId, userRequest)).Returns(updatedUser);
+            var result = _controller.UpdateUser(userId, request, userType);
 
-        //    var result = _controller.UpdateUser(userId, userRequest);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+        }
 
-        //    Assert.IsType<NotFoundResult>(result);
-        //}
+        [Fact]
+        public void UpdateUser_UserModelReturnsNull_ReturnsNotFound()
+        {
+            int userId = 123;
+            var request = new Domain.DTOs.User();
+            var userType = UserType.Administrator;
 
-        //[Fact]
-        //public void UpdateUser_ReturnsBadRequest()
-        //{
-        //    int userId = 1;
-        //    var userRequest = new Domain.DTOs.User(); 
-        //    _model.Setup(m => m.UpdateUser(userId, userRequest)).Throws(new Exception("Failed to update user"));
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    var result = _controller.UpdateUser(userId, userRequest);
+            _userModel.Setup(m => m.UpdateUser(It.IsAny<int>(), It.IsAny<Domain.DTOs.User>(), It.IsAny<UserType>())).Returns((Domain.DTOs.User)null);
 
-        //    Assert.IsType<BadRequestObjectResult>(result);
-        //    var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        //    Assert.Equal("Failed", badRequestResult.Value);
-        //}
+            var result = _controller.UpdateUser(userId, request, userType);
+
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public void UpdateUser_InvalidDepartment_ReturnsBadRequest()
+        {
+            int userId = 123; 
+            var request = new Domain.DTOs.User()
+            {
+                DepartmentID = 999 
+            };
+            var userType = UserType.Administrator;
+
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns((Domain.DTOs.Department)null);
+
+            var result = _controller.UpdateUser(userId, request, userType);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Invalid DepartmentID. Department with the specified ID does not exist.", badRequestResult.Value);
+        }
+
         [Fact]
         public void DeleteUser_ReturnsNoContent()
         {
             int userId = 1; 
             var user = new Domain.DTOs.User();
-            _model.Setup(m => m.GetUserById(userId)).Returns(user);
+            _userModel.Setup(m => m.GetUserById(userId)).Returns(user);
 
             var result = _controller.DeleteUser(userId);
 
@@ -203,7 +206,7 @@ namespace VirtualLibraryAPI.Tests
         {
             int userId = 1; 
             Domain.DTOs.User user = null;
-            _model.Setup(m => m.GetUserById(userId)).Returns(user);
+            _userModel.Setup(m => m.GetUserById(userId)).Returns(user);
 
             var result = _controller.DeleteUser(userId);
 
@@ -215,8 +218,8 @@ namespace VirtualLibraryAPI.Tests
         {
             int userId = 1; 
             var user = new Domain.DTOs.User(); 
-            _model.Setup(m => m.GetUserById(userId)).Returns(user);
-            _model.Setup(m => m.DeleteUser(userId)).Throws(new Exception("Failed to delete user"));
+            _userModel.Setup(m => m.GetUserById(userId)).Returns(user);
+            _userModel.Setup(m => m.DeleteUser(userId)).Throws(new Exception("Failed to delete user"));
 
             var result = _controller.DeleteUser(userId);
 
