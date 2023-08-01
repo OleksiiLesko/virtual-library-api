@@ -45,6 +45,6 @@ namespace VirtualLibraryAPI.Models
         /// Method for response get all departmens
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Domain.DTOs.Department> GetAllDepartmensResponse();
+        IEnumerable<Domain.DTOs.Department> GetAllDepartmentsResponse();
     }
 }

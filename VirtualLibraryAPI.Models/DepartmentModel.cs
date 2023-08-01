@@ -117,7 +117,7 @@ namespace VirtualLibraryAPI.Models
         /// Get all departmens for response DTO
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Domain.DTOs.Department> GetAllDepartmensResponse()
+        public IEnumerable<Domain.DTOs.Department> GetAllDepartmentsResponse()
         {
             _logger.LogInformation("Get all departmens for response DTO from Departmen model  ");
             var result = _repository.GetAllDepartmentsResponse();

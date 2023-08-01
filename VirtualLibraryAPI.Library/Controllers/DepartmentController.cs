@@ -44,7 +44,7 @@ namespace VirtualLibraryAPI.Library.Controllers
                     return NotFound();
                 }
                 _logger.LogInformation("Departments received ");
-                return Ok(_model.GetAllDepartmensResponse());
+                return Ok(_model.GetAllDepartmentsResponse());
             }
             catch (Exception ex)
             {
