@@ -20,41 +20,41 @@ namespace VirtualLibraryAPI.Tests
             _logger = new Mock<ILogger<Models.ArticleModel>>().Object;
         }
 
-        //[Fact]
-        //public void AddArticle_ReturnsAddedArticle()
-        //{
-        //    var articleDto = new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time",MagazinesIssueNumber = "40/2023" };
-        //    var addedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
-        //    _articleRepository.Setup(x => x.AddArticle(articleDto)).Returns(addedArticle);
-        //    var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
+        [Fact]
+        public void AddArticle_ReturnsAddedArticle()
+        {
+            var articleDto = new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            var addedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            _articleRepository.Setup(x => x.AddArticle(articleDto)).Returns(addedArticle);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
-        //    var result = articleModel.AddArticle(articleDto);
+            var result = articleModel.AddArticle(articleDto);
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(articleDto.Version, result.Version);
-        //    Assert.Equal(articleDto.MagazineName, result.MagazineName);
-        //    Assert.Equal(articleDto.MagazinesIssueNumber, result.MagazinesIssueNumber);
-        //    Assert.NotEqual(articleDto.ArticleID, result.ArticleID);
-        //    _articleRepository.Verify(x => x.AddArticle(articleDto), Times.Once());
-        //}
-        //[Fact]
-        //public void UpdateArticle_Should_Return_Updated_Article()
-        //{
-        //    var asrticleID = 1;
-        //    var articleDto = new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
-        //    var updatedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
-        //    _articleRepository.Setup(x => x.UpdateArticle(asrticleID, articleDto)).Returns(updatedArticle);
-        //    var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
+            Assert.NotNull(result);
+            Assert.Equal(articleDto.Version, result.Version);
+            Assert.Equal(articleDto.MagazineName, result.MagazineName);
+            Assert.Equal(articleDto.MagazinesIssueNumber, result.MagazinesIssueNumber);
+            Assert.NotEqual(articleDto.ArticleID, result.ArticleID);
+            _articleRepository.Verify(x => x.AddArticle(articleDto), Times.Once());
+        }
+        [Fact]
+        public void UpdateArticle_Should_Return_Updated_Article()
+        {
+            var asrticleID = 1;
+            var articleDto = new Domain.DTOs.Article { ArticleID = 2, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            var updatedArticle = new Domain.DTOs.Article { ArticleID = 1, Version = "1.0.0", MagazineName = "Time", MagazinesIssueNumber = "40/2023" };
+            _articleRepository.Setup(x => x.UpdateArticle(asrticleID, articleDto)).Returns(updatedArticle);
+            var articleModel = new Models.ArticleModel(_logger, _articleRepository.Object);
 
-        //    var result = articleModel.UpdateArticle(asrticleID, articleDto);
+            var result = articleModel.UpdateArticle(asrticleID, articleDto);
 
-        //    Assert.True(result.ArticleID == 1);
-        //    Assert.Equal(articleDto.Version, result.Version);
-        //    Assert.Equal(articleDto.MagazineName, result.MagazineName);
-        //    Assert.Equal(articleDto.MagazinesIssueNumber, result.MagazinesIssueNumber);
-        //    Assert.NotEqual(articleDto.ArticleID, result.ArticleID);
-        //    _articleRepository.Verify(x => x.UpdateArticle(asrticleID, articleDto), Times.Once());
-        //}
+            Assert.True(result.ArticleID == 1);
+            Assert.Equal(articleDto.Version, result.Version);
+            Assert.Equal(articleDto.MagazineName, result.MagazineName);
+            Assert.Equal(articleDto.MagazinesIssueNumber, result.MagazinesIssueNumber);
+            Assert.NotEqual(articleDto.ArticleID, result.ArticleID);
+            _articleRepository.Verify(x => x.UpdateArticle(asrticleID, articleDto), Times.Once());
+        }
         [Fact]
         public void DeleteArticle_ReturnsDeletedArticle()
         {
