@@ -16,16 +16,18 @@ namespace VirtualLibraryAPI.Tests
         private readonly Mock<ILogger<ManagementController>> _loggerMock;
         private readonly Mock<IManagementModel> _managementModelMock;
         private readonly Mock<IValidationCopyModel> _validationCopyModel;
-        private readonly Mock<IValidationUserModel> _validationUserModel;
+        private readonly Mock<IValidationClientModel> _validationUserModel;
+        private readonly Mock<IValidationIssuerModel> _validationIssuerModel;
         private readonly ManagementController _managementController;
 
         public ManagementControllerTest()
         {
             _loggerMock = new Mock<ILogger<ManagementController>>();
             _managementModelMock = new Mock<IManagementModel>();
-            _validationUserModel = new Mock<IValidationUserModel>();
+            _validationIssuerModel = new Mock<IValidationIssuerModel>();
+            _validationUserModel = new Mock<IValidationClientModel>();
             _validationCopyModel = new Mock<IValidationCopyModel>();
-            _managementController = new ManagementController(_loggerMock.Object, _managementModelMock.Object, _validationCopyModel.Object, _validationUserModel.Object);
+            _managementController = new ManagementController(_loggerMock.Object, _managementModelMock.Object, _validationCopyModel.Object, _validationUserModel.Object, _validationIssuerModel.Object);
         }
 
         [Fact]
@@ -78,7 +80,7 @@ namespace VirtualLibraryAPI.Tests
 
             var reservedCopy = new Domain.DTOs.Copy
             {
-                UserID = clientID,
+                ClientID = clientID,
                 CopyID = copyId,
                 ExpirationDate = DateTime.Now.AddDays(bookingPeriod)
             };
@@ -91,7 +93,7 @@ namespace VirtualLibraryAPI.Tests
             var bookingCopy = Assert.IsType<BookingCopy>(okResult.Value);
 
             Assert.Equal(copyId, bookingCopy.CopyID);
-            Assert.Equal(clientID, bookingCopy.UserID);
+            Assert.Equal(clientID, bookingCopy.ClientID);
             Assert.Equal(reservedCopy.ExpirationDate, bookingCopy.ExpirationDate);
         }
         [Fact]
