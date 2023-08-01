@@ -6,26 +6,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Library.Controllers;
+using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository;
 
 namespace VirtualLibraryAPI.Tests
 {
     public class MagazineControllerTest
     {
-        private readonly Mock<ILogger<MagazineController>> _loggerMock;
-        private readonly Mock<ILogger<Models.MagazineModel>> _loggerMagazine;
-        private readonly Mock<IMagazineRepository> _magazineRepository;
-        private readonly Models.MagazineModel _magazineModelMock;
-        private readonly MagazineController _magazineController;
+
+        private readonly Mock<ILogger<MagazineController>> _logger;
+        private readonly Mock<IMagazineModel> _magazineModel;
+        private readonly Mock<IDepartmentModel> _departmentModel;
+        private readonly MagazineController _controller;
 
         public MagazineControllerTest()
         {
-            _loggerMock = new Mock<ILogger<MagazineController>>();
-            _loggerMagazine = new Mock<ILogger<Models.MagazineModel>>();
-            _magazineRepository = new Mock<IMagazineRepository>();
-            _magazineModelMock = new Models.MagazineModel(_loggerMagazine.Object,_magazineRepository.Object);
-            _magazineController = new MagazineController(_loggerMock.Object, _magazineModelMock);
+            _logger = new Mock<ILogger<MagazineController>>();
+            _magazineModel = new Mock<IMagazineModel>();
+            _departmentModel = new Mock<IDepartmentModel>();
+            _controller = new MagazineController(_logger.Object, _magazineModel.Object, _departmentModel.Object);
         }
 
 
@@ -38,95 +39,78 @@ namespace VirtualLibraryAPI.Tests
             new Domain.DTOs.Magazine { MagazineID = 2, IssueNumber = "20/20223" },
             new Domain.DTOs.Magazine { MagazineID = 3, IssueNumber = "20/20223" }
         };
-            _magazineRepository.Setup(model => model.GetAllMagazines()).Returns(magazines);
+            _magazineModel.Setup(model => model.GetAllMagazines()).Returns(magazines);
 
 
-            var result = _magazineController.GetAllMagazines();
+            var result = _controller.GetAllMagazines();
 
             Assert.IsType<OkObjectResult>(result);
         }
         [Fact]
         public void GettAllMagazines_ReturnNotFound()
         {
-            _magazineRepository.Setup(model => model.GetAllMagazines()).Returns(new List<Domain.DTOs.Magazine>());
+            List<Domain.DTOs.Magazine> magazines = null;
+            _magazineModel.Setup(m => m.GetAllMagazines()).Returns(magazines);
 
-            var result = _magazineController.GetAllMagazines();
+            var result = _controller.GetAllMagazines();
 
             Assert.IsType<NotFoundResult>(result);
         }
         [Fact]
         public void GettAllMagazines_ReturnbBadRequest()
         {
-            _magazineRepository.Setup(model => model.GetAllMagazines()).Throws(new Exception("Failed to retrieve magazines"));
+            _magazineModel.Setup(model => model.GetAllMagazines()).Throws(new Exception("Failed to retrieve magazines"));
 
-            var result = _magazineController.GetAllMagazines();
+            var result = _controller.GetAllMagazines();
 
             Assert.IsType<BadRequestObjectResult>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        //[Fact]
-        //public void AddMagazine_ReturnOK()
-        //{
-        //    var request = new Domain.DTOs.Magazine
-        //    {
-        //        Name = "Magazine Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Publisher"
-        //    };
+        [Fact]
+        public void AddMagazine_ValidData_ReturnsOkResult()
+        {
+            var request = new Domain.DTOs.Magazine();
+            var userType = UserType.Administrator;
 
-        //    var addedMagazine = new Domain.DTOs.Magazine
-        //    {
-        //        MagazineID = 1,
-        //        IssueNumber = "20/20223"
-        //    };
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    _magazineRepository.Setup(model => model.AddMagazine(request)).Returns(addedMagazine);
+            _magazineModel.Setup(m => m.AddMagazine(It.IsAny<Domain.DTOs.Magazine>())).Returns(new Domain.DTOs.Magazine { });
 
-        //    var result = _magazineController.AddMagazine(request);
+            var result = _controller.AddMagazine( request);
 
-        //    Assert.IsType<OkObjectResult>(result);
-        //    var okResult = Assert.IsType<OkObjectResult>(result);
-        //    var magazineResponse = Assert.IsType<Domain.DTOs.Magazine>(okResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+        }
+        [Fact]
+        public void AddMagazine_ReturnNotFound()
+        {
+            var request = new Domain.DTOs.Magazine();
+            var userType = UserType.Administrator;
 
-        //    Assert.Equal(addedMagazine.MagazineID, magazineResponse.MagazineID);
-        //    Assert.Equal(request.Name, magazineResponse.Name);
-        //    Assert.Equal(request.PublishingDate, magazineResponse.PublishingDate);
-        //    Assert.Equal(request.Publisher, magazineResponse.Publisher);
-        //    Assert.Equal(addedMagazine.IssueNumber, magazineResponse.IssueNumber);
-        //}
-        //[Fact]
-        //public void AddMagazine_ReturnNotFound()
-        //{
-        //    var request = new Domain.DTOs.Magazine
-        //    {
-        //        Name = "Magazine Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Publisher"
-        //    };
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    _magazineRepository.Setup(model => model.AddMagazine(request)).Returns((Domain.DTOs.Magazine)null);
+            _magazineModel.Setup(m => m.AddMagazine(It.IsAny<Domain.DTOs.Magazine>())).Returns((Domain.DTOs.Magazine)null);
 
-        //    var result = _magazineController.AddMagazine(request);
+            var result = _controller.AddMagazine(request);
 
-        //    Assert.IsType<NotFoundResult>(result);
-        //}
-        //[Fact]
-        //public void AddBook_ReturnBadRequest()
-        //{
-        //    var request = new Domain.DTOs.Magazine
-        //    {
-        //        Name = "Magazine Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Publisher"
-        //    };
+            Assert.IsType<NotFoundResult>(result);
+        }
+        [Fact]
+        public void AddMagazine_ReturnBadRequest()
+        {
+            var request = new Domain.DTOs.Magazine
+            {
+                Name = "Magazine Name",
+                PublishingDate = DateTime.Now,
+                Publisher = "Publisher"
+            };
 
-        //    _magazineRepository.Setup(model => model.AddMagazine(request)).Throws(new ArgumentException());
+            _magazineModel.Setup(model => model.AddMagazine(request)).Throws(new ArgumentException());
 
-        //    var result = _magazineController.AddMagazine(request);
+            var result = _controller.AddMagazine(request);
 
-        //    Assert.IsType<BadRequestObjectResult>(result);
-        //}
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
         [Fact]
         public void AddCopyOfMagazineById_ReturnOK()
         {
@@ -138,9 +122,9 @@ namespace VirtualLibraryAPI.Tests
                 CopyID = magazineId
             };
 
-            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Returns(addedMagazine);
+            _magazineModel.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Returns(addedMagazine);
 
-            var result = _magazineController.AddCopyOfMagazineById(magazineId);
+            var result = _controller.AddCopyOfMagazineById(magazineId);
 
             Assert.IsType<OkObjectResult>(result);
         }
@@ -149,9 +133,9 @@ namespace VirtualLibraryAPI.Tests
         {
             var magazineId = 1;
             var isAvailable = true;
-            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Returns((Domain.DTOs.Copy)null);
+            _magazineModel.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Returns((Domain.DTOs.Copy)null);
 
-            var result = _magazineController.AddCopyOfMagazineById(magazineId);
+            var result = _controller.AddCopyOfMagazineById(magazineId);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -160,10 +144,10 @@ namespace VirtualLibraryAPI.Tests
         {
             var magazineId = 1;
             var isAvailable = true;
-            _magazineRepository.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Throws(new Exception("Some error message"));
+            _magazineModel.Setup(model => model.AddCopyOfMagazineById(magazineId, isAvailable)).Throws(new Exception("Some error message"));
 
 
-            var result = _magazineController.AddCopyOfMagazineById(magazineId);
+            var result = _controller.AddCopyOfMagazineById(magazineId);
 
             Assert.IsType<BadRequestObjectResult>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -180,10 +164,10 @@ namespace VirtualLibraryAPI.Tests
                 IssueNumber = "20/2023"
             };
 
-            _magazineRepository.Setup(model => model.GetMagazineById(magazineId)).Returns(expectedMagazine);
+            _magazineModel.Setup(model => model.GetMagazineById(magazineId)).Returns(expectedMagazine);
 
 
-            var result = _magazineController.GetMagazineById(magazineId);
+            var result = _controller.GetMagazineById(magazineId);
 
             Assert.IsType<OkObjectResult>(result);
         }
@@ -191,9 +175,9 @@ namespace VirtualLibraryAPI.Tests
         public void GetMagazineById_ReturnNotFound()
         {
             var magazineId = 1;
-            _magazineRepository.Setup(model => model.GetMagazineById(magazineId)).Returns(null as Domain.DTOs.Magazine);
+            _magazineModel.Setup(model => model.GetMagazineById(magazineId)).Returns(null as Domain.DTOs.Magazine);
 
-            var result = _magazineController.GetMagazineById(magazineId);
+            var result = _controller.GetMagazineById(magazineId);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -201,83 +185,66 @@ namespace VirtualLibraryAPI.Tests
         public void GetMagazineById_ReturnbBadRequest()
         {
             var magazineId = 1;
-            _magazineRepository.Setup(model => model.GetMagazineById(magazineId)).Throws(new Exception("Error retrieving book"));
+            _magazineModel.Setup(model => model.GetMagazineById(magazineId)).Throws(new Exception("Error retrieving book"));
 
-            var result = _magazineController.GetMagazineById(magazineId);
+            var result = _controller.GetMagazineById(magazineId);
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
-        //[Fact]
-        //public void UpdateMagazine_ReturnOK()
-        //{
-        //    var magazineId = 1;
-        //    var request = new Domain.DTOs.Magazine
-        //    {
-        //        Name = "Updated Magazine Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Updated Publisher"
-        //    };
-        //    var updatedMagazine = new Domain.DTOs.Magazine
-        //    {
-        //        MagazineID = magazineId,
-        //        IssueNumber = "20/2023"
-        //    };
+        [Fact]
+        public void UpdateMagazine_ReturnOK()
+        {
+            int Id = 123;
+            var request = new Domain.DTOs.Magazine();
+            var userType = UserType.Administrator;
 
-        //    _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Returns(updatedMagazine);
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    var result = _magazineController.UpdateMagazine(magazineId, request);
+            _magazineModel.Setup(m => m.UpdateMagazine(It.IsAny<int>(), It.IsAny<Domain.DTOs.Magazine>())).Returns(new Domain.DTOs.Magazine { });
 
-        //    Assert.IsType<OkObjectResult>(result);
-        //    var okResult = Assert.IsType<OkObjectResult>(result);
-        //    var magazineResponse = Assert.IsType<Domain.DTOs.Magazine>(okResult.Value);
+            var result = _controller.UpdateMagazine(Id, request);
 
-        //    Assert.Equal(updatedMagazine.MagazineID, magazineResponse.MagazineID);
-        //    Assert.Equal(request.Name, magazineResponse.Name);
-        //    Assert.Equal(updatedMagazine.IssueNumber, magazineResponse.IssueNumber);
-        //    Assert.Equal(request.Publisher, magazineResponse.Publisher);
-        //    Assert.Equal(request.PublishingDate, magazineResponse.PublishingDate);
-        //}
-        //[Fact]
-        //public void UpdateBook_ReturnNotFound()
-        //{
-        //    var magazineId = 1;
-        //    var request = new Domain.DTOs.Magazine
-        //    {
-        //        Name = "Updated Magazine Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Updated Publisher"
-        //    };
+            var okResult = Assert.IsType<OkObjectResult>(result);
+        }
+        [Fact]
+        public void UpdateMagazine_ReturnNotFound()
+        {
+            int userId = 123;
+            var request = new Domain.DTOs.Magazine();
+            var userType = UserType.Administrator;
 
-        //    _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Returns((Domain.DTOs.Magazine)null);
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    var result = _magazineController.UpdateMagazine(magazineId, request);
+            _magazineModel.Setup(m => m.UpdateMagazine(It.IsAny<int>(), It.IsAny<Domain.DTOs.Magazine>())).Returns((Domain.DTOs.Magazine)null);
 
-        //    Assert.IsType<NotFoundResult>(result);
-        //}
-        //[Fact]
-        //public void UpdateMagazine_ReturnbBadRequest()
-        //{
-        //    var magazineId = 1;
-        //    var request = new Domain.DTOs.Magazine
-        //    {
-        //        Name = "Updated Magazine Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Updated Publisher"
-        //    };
+            var result = _controller.UpdateMagazine(userId, request);
 
-        //    _magazineRepository.Setup(model => model.UpdateMagazine(magazineId, request)).Throws(new Exception("Update failed"));
+            Assert.IsType<NotFoundResult>(result);
+        }
+        [Fact]
+        public void UpdateMagazine_ReturnbBadRequest()
+        {
+            var magazineId = 1;
+            var request = new Domain.DTOs.Magazine
+            {
+                Name = "Updated Magazine Name",
+                PublishingDate = DateTime.Now,
+                Publisher = "Updated Publisher"
+            };
 
-        //    var result = _magazineController.UpdateMagazine(magazineId, request);
+            _magazineModel.Setup(model => model.UpdateMagazine(magazineId, request)).Throws(new Exception("Update failed"));
 
-        //    Assert.IsType<BadRequestObjectResult>(result);
-        //}
+            var result = _controller.UpdateMagazine(magazineId, request);
+
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
         [Fact]
         public void DeleteMagazine_ReturnNoContent()
         {
             var magazineId = 1;
-            _magazineRepository.Setup(model => model.GetMagazineById(magazineId)).Returns(new Domain.DTOs.Magazine());
+            _magazineModel.Setup(model => model.GetMagazineById(magazineId)).Returns(new Domain.DTOs.Magazine());
 
-            var result = _magazineController.DeleteMagazine(magazineId);
+            var result = _controller.DeleteMagazine(magazineId);
 
             Assert.IsType<NoContentResult>(result);
         }
@@ -285,9 +252,9 @@ namespace VirtualLibraryAPI.Tests
         public void DeleteMagazine_ReturnNotFound()
         {
             var magazineId = 1;
-            _magazineRepository.Setup(model => model.GetMagazineById(magazineId)).Returns((Domain.DTOs.Magazine)null);
+            _magazineModel.Setup(model => model.GetMagazineById(magazineId)).Returns((Domain.DTOs.Magazine)null);
 
-            var result = _magazineController.DeleteMagazine(magazineId);
+            var result = _controller.DeleteMagazine(magazineId);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -295,9 +262,9 @@ namespace VirtualLibraryAPI.Tests
         public void DeleteMagazine_ReturnsBadRequest_WhenExceptionThrown()
         {
             var magazineId = 1;
-            _magazineRepository.Setup(model => model.GetMagazineById(magazineId)).Throws<Exception>();
+            _magazineModel.Setup(model => model.GetMagazineById(magazineId)).Throws<Exception>();
 
-            var result = _magazineController.DeleteMagazine(magazineId);
+            var result = _controller.DeleteMagazine(magazineId);
 
             Assert.IsType<BadRequestObjectResult>(result);
         }

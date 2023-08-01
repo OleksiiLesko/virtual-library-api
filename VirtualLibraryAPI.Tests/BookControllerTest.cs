@@ -4,30 +4,30 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using VirtualLibraryAPI.Common;
 using VirtualLibraryAPI.Domain.Entities;
 using VirtualLibraryAPI.Library.Controllers;
 using VirtualLibraryAPI.Models;
 using VirtualLibraryAPI.Repository;
 using VirtualLibraryAPI.Repository.Repositories;
 using Xunit;
+using UserType = VirtualLibraryAPI.Common.UserType;
 
 namespace VirtualLibraryAPI.Tests
 {
     public class BookControllerTests
     {
-        private readonly Mock<ILogger<BookController>> _loggerMock;
-        private readonly Mock<ILogger<Models.BookModel>> _loggerBook;
-        private readonly Mock<IBookRepository> _bookRepository;
-        private readonly Models.BookModel _bookModelMock;
-        private readonly BookController _bookController;
+        private readonly Mock<ILogger<BookController>> _logger;
+        private readonly Mock<IBookModel> _bookModel;
+        private readonly Mock<IDepartmentModel> _departmentModel;
+        private readonly BookController _controller;
 
         public BookControllerTests()
         {
-            _loggerMock = new Mock<ILogger<BookController>>();
-            _loggerBook = new Mock<ILogger<Models.BookModel>>();
-            _bookRepository = new Mock<IBookRepository>();
-            _bookModelMock = new Models.BookModel(_loggerBook.Object,_bookRepository.Object);
-            _bookController = new BookController(_loggerMock.Object, _bookModelMock);
+            _logger = new Mock<ILogger<BookController>>();
+            _bookModel = new Mock<IBookModel>();
+            _departmentModel = new Mock<IDepartmentModel>();
+            _controller = new BookController(_logger.Object, _bookModel.Object, _departmentModel.Object);
         }
 
 
@@ -40,97 +40,78 @@ namespace VirtualLibraryAPI.Tests
             new Domain.DTOs.Book { BookID = 2, Author = "Book 2" },
             new Domain.DTOs.Book { BookID = 3, Author = "Book 3" }
         };
-            _bookRepository.Setup(model => model.GetAllBooks()).Returns(books);
+            _bookModel.Setup(model => model.GetAllBooks()).Returns(books);
 
 
-            var result = _bookController.GetAllBooks();
+            var result = _controller.GetAllBooks();
 
             Assert.IsType<OkObjectResult>(result);
         }
         [Fact]
         public void GettAllBooks_ReturnNotFound()
         {
-            _bookRepository.Setup(model => model.GetAllBooks()).Returns(new List<Domain.DTOs.Book>());
+            List<Domain.DTOs.Book> books = null;
+            _bookModel.Setup(m => m.GetAllBooks()).Returns(books);
 
-            var result = _bookController.GetAllBooks();
+            var result = _controller.GetAllBooks();
 
             Assert.IsType<NotFoundResult>(result);
         }
         [Fact]
         public void GettAllBooks_ReturnbBadRequest()
         {
-            _bookRepository.Setup(model => model.GetAllBooks()).Throws(new Exception("Failed to retrieve books"));
+            _bookModel.Setup(model => model.GetAllBooks()).Throws(new Exception("Failed to retrieve books"));
 
-            var result = _bookController.GetAllBooks();
+            var result = _controller.GetAllBooks();
 
             Assert.IsType<BadRequestObjectResult>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Failed", badRequestResult.Value);
         }
-        //[Fact]
-        //public void AddBook_ReturnOK()
-        //{
-        //    var request = new Domain.DTOs.Book
-        //    {
-        //        Name = "Book Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Publisher"
-        //    };
+        [Fact]
+        public void AddBook_ReturnOK()
+        {
+            var request = new Domain.DTOs.Book();
+            var userType = UserType.Administrator;
 
-        //    var addedBook = new Domain.DTOs.Book
-        //    {
-        //        BookID = 1,
-        //        ISBN = "23324",
-        //        Author = "Arnold"
-        //    };
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    _bookRepository.Setup(model => model.AddBook(request)).Returns(addedBook);
+            _bookModel.Setup(m => m.AddBook(It.IsAny<Domain.DTOs.Book>())).Returns(new Domain.DTOs.Book { });
 
-        //    var result = _bookController.AddBook(request);
+            var result = _controller.AddBook(request);
 
-        //    Assert.IsType<OkObjectResult>(result);
-        //    var okResult = Assert.IsType<OkObjectResult>(result);
-        //    var bookResponse = Assert.IsType<Domain.DTOs.Book>(okResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+        }
+        [Fact]
+        public void AddBook_ReturnNotFound()
+        {
+            var request = new Domain.DTOs.Book();
+            var userType = UserType.Administrator;
 
-        //    Assert.Equal(addedBook.BookID, bookResponse.BookID);
-        //    Assert.Equal(request.Name, bookResponse.Name);
-        //    Assert.Equal(request.PublishingDate, bookResponse.PublishingDate);
-        //    Assert.Equal(request.Publisher, bookResponse.Publisher);
-        //    Assert.Equal(addedBook.ISBN, bookResponse.ISBN);
-        //    Assert.Equal(addedBook.Author, bookResponse.Author);
-        //}
-        //[Fact]
-        //public void AddBook_ReturnNotFound()
-        //{
-        //    var request = new Domain.DTOs.Book
-        //    {
-        //        Name = "Book Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Publisher"
-        //    };
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    _bookRepository.Setup(model => model.AddBook(request)).Returns((Domain.DTOs.Book)null);
+            _bookModel.Setup(m => m.AddBook(It.IsAny<Domain.DTOs.Book>())).Returns((Domain.DTOs.Book)null);
 
-        //    var result = _bookController.AddBook(request);
+            var result = _controller.AddBook(request);
 
-        //    Assert.IsType<NotFoundResult>(result);
-        //}
-        //[Fact]
-        //public void AddBook_ReturnBadRequest()
-        //{
-        //    var request = new Domain.DTOs.Book
-        //    {
-        //        Name = "Book Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Publisher"
-        //    };
+            Assert.IsType<NotFoundResult>(result);
+        }
+        [Fact]
+        public void AddBook_ReturnBadRequest()
+        {
+            var request = new Domain.DTOs.Book
+            {
+                Name = "Book Name",
+                PublishingDate = DateTime.Now,
+                Publisher = "Publisher"
+            };
 
-        //    _bookRepository.Setup(model => model.AddBook(request)).Throws(new ArgumentException());
+            _bookModel.Setup(model => model.AddBook(request)).Throws(new ArgumentException());
 
-        //    var result = _bookController.AddBook(request);
+            var result = _controller.AddBook(request);
 
-        //    Assert.IsType<BadRequestObjectResult>(result);
-        //}
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
         [Fact]
         public void AddCopyOfBookById_ReturnOK()
         {
@@ -142,9 +123,9 @@ namespace VirtualLibraryAPI.Tests
                 CopyID = bookId
             };
 
-            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Returns(addedBook);
+            _bookModel.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Returns(addedBook);
 
-            var result = _bookController.AddCopyOfBookById(bookId);
+            var result = _controller.AddCopyOfBookById(bookId);
 
             Assert.IsType<OkObjectResult>(result);
         }
@@ -153,9 +134,9 @@ namespace VirtualLibraryAPI.Tests
         {
             var bookId = 1;
             var isAvailable = true;
-            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Returns((Domain.DTOs.Copy)null);
+            _bookModel.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Returns((Domain.DTOs.Copy)null);
 
-            var result = _bookController.AddCopyOfBookById(bookId);
+            var result = _controller.AddCopyOfBookById(bookId);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -164,10 +145,10 @@ namespace VirtualLibraryAPI.Tests
         {
             var bookId = 1;
             var isAvailable = true;
-            _bookRepository.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Throws(new Exception("Some error message"));
+            _bookModel.Setup(model => model.AddCopyOfBookById(bookId, isAvailable)).Throws(new Exception("Some error message"));
 
 
-            var result = _bookController.AddCopyOfBookById(bookId);
+            var result = _controller.AddCopyOfBookById(bookId);
 
             Assert.IsType<BadRequestObjectResult>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -185,10 +166,10 @@ namespace VirtualLibraryAPI.Tests
                 ISBN = "ISBN"
             };
 
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(expectedBook);
+            _bookModel.Setup(model => model.GetBookById(bookId)).Returns(expectedBook);
 
 
-            var result = _bookController.GetBookById(bookId);
+            var result = _controller.GetBookById(bookId);
 
             Assert.IsType<OkObjectResult>(result);
         }
@@ -196,9 +177,9 @@ namespace VirtualLibraryAPI.Tests
         public void GetBookById_ReturnNotFound()
         {
             var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(null as Domain.DTOs.Book);
+            _bookModel.Setup(model => model.GetBookById(bookId)).Returns(null as Domain.DTOs.Book);
 
-            var result = _bookController.GetBookById(bookId);
+            var result = _controller.GetBookById(bookId);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -206,85 +187,66 @@ namespace VirtualLibraryAPI.Tests
         public void GetBookById_ReturnbBadRequest()
         {
             var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Throws(new Exception("Error retrieving book"));
+            _bookModel.Setup(model => model.GetBookById(bookId)).Throws(new Exception("Error retrieving book"));
 
-            var result = _bookController.GetBookById(bookId);
+            var result = _controller.GetBookById(bookId);
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
-        //[Fact]
-        //public void UpdateBook_ReturnOK()
-        //{
-        //    var bookId = 1;
-        //    var request = new Domain.DTOs.Book
-        //    {
-        //        Name = "Updated Book Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Updated Publisher"
-        //    };
-        //    var updatedBook = new Domain.DTOs.Book
-        //    {
-        //        BookID = bookId,
-        //        Author = "Author",
-        //        ISBN = "ISBN"
-        //    };
+        [Fact]
+        public void UpdateBook_ReturnOK()
+        {
+            int Id = 123;
+            var request = new Domain.DTOs.Book();
+            var userType = UserType.Administrator;
 
-        //    _bookRepository.Setup(model => model.UpdateBook(bookId, request)).Returns(updatedBook);
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    var result = _bookController.UpdateBook(bookId, request);
+            _bookModel.Setup(m => m.UpdateBook(It.IsAny<int>(), It.IsAny<Domain.DTOs.Book>())).Returns(new Domain.DTOs.Book { });
 
-        //    Assert.IsType<OkObjectResult>(result);
-        //    var okResult = Assert.IsType<OkObjectResult>(result);
-        //    var bookResponse = Assert.IsType<Domain.DTOs.Book>(okResult.Value);
+            var result = _controller.UpdateBook(Id, request);
 
-        //    Assert.Equal(updatedBook.BookID, bookResponse.BookID);
-        //    Assert.Equal(request.Name, bookResponse.Name);
-        //    Assert.Equal(updatedBook.Author, bookResponse.Author);
-        //    Assert.Equal(updatedBook.ISBN, bookResponse.ISBN);
-        //    Assert.Equal(request.Publisher, bookResponse.Publisher);
-        //    Assert.Equal(request.PublishingDate, bookResponse.PublishingDate);
-        //}
-        //[Fact]
-        //public void UpdateBook_ReturnNotFound()
-        //{
-        //    var bookId = 1;
-        //    var request = new Domain.DTOs.Book
-        //    {
-        //        Name = "Updated Book Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Updated Publisher"
-        //    };
+            var okResult = Assert.IsType<OkObjectResult>(result);
+        }
+        [Fact]
+        public void UpdateBook_ReturnNotFound()
+        {
+            int userId = 123;
+            var request = new Domain.DTOs.Book();
+            var userType = UserType.Administrator;
 
-        //    _bookRepository.Setup(model => model.UpdateBook(bookId, request)).Returns((Domain.DTOs.Book)null);
+            _departmentModel.Setup(m => m.GetDepartmentById(It.IsAny<int>())).Returns(new Domain.DTOs.Department { });
 
-        //    var result = _bookController.UpdateBook(bookId, request);
+            _bookModel.Setup(m => m.UpdateBook(It.IsAny<int>(), It.IsAny<Domain.DTOs.Book>())).Returns((Domain.DTOs.Book)null);
 
-        //    Assert.IsType<NotFoundResult>(result);
-        //}
-        //[Fact]
-        //public void UpdateBook_ReturnbBadRequest()
-        //{
-        //    var bookId = 1;
-        //    var request = new Domain.DTOs.Book
-        //    {
-        //        Name = "Updated Book Name",
-        //        PublishingDate = DateTime.Now,
-        //        Publisher = "Updated Publisher"
-        //    };
+            var result = _controller.UpdateBook(userId, request);
 
-        //    _bookRepository.Setup(model => model.UpdateBook(bookId, request)).Throws(new Exception("Update failed"));
+            Assert.IsType<NotFoundResult>(result);
+        }
+        [Fact]
+        public void UpdateBook_ReturnbBadRequest()
+        {
+            var bookId = 1;
+            var request = new Domain.DTOs.Book
+            {
+                Name = "Updated Book Name",
+                PublishingDate = DateTime.Now,
+                Publisher = "Updated Publisher"
+            };
 
-        //    var result = _bookController.UpdateBook(bookId, request);
+            _bookModel.Setup(model => model.UpdateBook(bookId, request)).Throws(new Exception("Update failed"));
 
-        //    Assert.IsType<BadRequestObjectResult>(result);
-        //}
+            var result = _controller.UpdateBook(bookId, request);
+
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
         [Fact]
         public void DeleteBook_ReturnNoContent()
         {
             var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns(new Domain.DTOs.Book());
+            _bookModel.Setup(model => model.GetBookById(bookId)).Returns(new Domain.DTOs.Book());
 
-            var result = _bookController.DeleteBook(bookId);
+            var result = _controller.DeleteBook(bookId);
 
             Assert.IsType<NoContentResult>(result);
         }
@@ -292,9 +254,9 @@ namespace VirtualLibraryAPI.Tests
         public void DeleteBook_ReturnNotFound()
         {
             var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Returns((Domain.DTOs.Book)null);
+            _bookModel.Setup(model => model.GetBookById(bookId)).Returns((Domain.DTOs.Book)null);
 
-            var result = _bookController.DeleteBook(bookId);
+            var result = _controller.DeleteBook(bookId);
 
             Assert.IsType<NotFoundResult>(result);
         }
@@ -302,9 +264,9 @@ namespace VirtualLibraryAPI.Tests
         public void DeleteBook_ReturnsBadRequest_WhenExceptionThrown()
         {
             var bookId = 1;
-            _bookRepository.Setup(model => model.GetBookById(bookId)).Throws<Exception>();
+            _bookModel.Setup(model => model.GetBookById(bookId)).Throws<Exception>();
 
-            var result = _bookController.DeleteBook(bookId);
+            var result = _controller.DeleteBook(bookId);
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
