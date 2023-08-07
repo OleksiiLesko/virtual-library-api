@@ -58,6 +58,8 @@ namespace VirtualLibraryAPI.Domain.DTOs
         /// </summary>
         [JsonIgnore]
         public bool IsAvailable { get; set; }
+        [JsonIgnore]
+        public int BookingPeriod { get; set; }
         /// <summary>
         /// Expiration date of copy
         /// </summary> 
