@@ -11,76 +11,59 @@ using VirtualLibraryAPI.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using VirtualLibraryAPI.Repository.Repositories;
+using FluentValidation;
+using Copy = VirtualLibraryAPI.Domain.DTOs.Copy;
 
 namespace VirtualLibraryAPI.Models
 {
     /// <summary>
     /// Model for validation copy
     /// </summary>
-    public class ValidationCopyModel : IValidationCopyModel
+    public class ValidationCopyModel : AbstractValidator<Copy>
     {
-        /// <summary>
-        /// Configuration for validation copy
-        /// </summary>
-        private readonly IConfiguration _configuration;
-        /// <summary>
-        /// Using copy repository
-        /// </summary>
-        private readonly ICopyRepository _repository;
-        /// <summary>
-        /// Logger for validation
-        /// </summary>
         private readonly ILogger<ValidationCopyModel> _logger;
-        /// <summary>
-        /// Constructor with  Repository and logger
-        /// </summary>
-        /// <param name="bookRepository"></param>
-        /// <param name="logger"></param>
-        public ValidationCopyModel(ILogger<ValidationCopyModel> logger, IConfiguration configuration, ICopyRepository repository)
+        private readonly ICopyRepository _repository;
+        private readonly IConfiguration _configuration;
+
+        public ValidationCopyModel( ICopyRepository repository, IConfiguration configuration, ILogger<ValidationCopyModel> logger)
         {
-            _logger = logger;
-            _configuration = configuration;
             _repository = repository;
+            _configuration = configuration;
+            _logger = logger;
+
+            RuleFor(model => model.CopyID).NotNull()
+                .NotEmpty()
+                .WithMessage($"Copy must not be null or empty.")
+                .Must(BeValidIsAvailable)
+                .WithMessage("Copy  not available.");
+
+            RuleFor(model => model.BookingPeriod).NotNull()
+                .NotEmpty()
+                .WithMessage("BookingPeriod must not be null or empty.")
+                .Must((model, requestedBookingPeriod) => BeValidBookingPeriod(requestedBookingPeriod, model.CopyID))
+                .WithMessage("BookingPeriod is invalid for the specified CopyID.");
         }
         /// <summary>
-        /// Check if copy is valid  for booking
+        /// Check if copy is available 
         /// </summary>
         /// <param name="copyId"></param>
         /// <returns></returns>
-        public ValidationCopyStatus IsCopyValidForBooking(int copyId, int requestedBookingPeriod)
+        private bool BeValidIsAvailable(int copyId)
         {
-            try
-            {
-                _logger.LogInformation($" Check if copy is valid  from Validation  model: CopyID {copyId} , Requested booking period {requestedBookingPeriod}");
-                var copy = _repository.GetCopyById(copyId);
-                if (copy == null)
-                {
-                    _logger.LogInformation($"Copy: {copyId} not found");
-                    return ValidationCopyStatus.NotFound;
-                }
-                if (!copy.IsAvailable)
-                {
-                    _logger.LogInformation($"Copy: {copyId} is  not available ");
-                    return ValidationCopyStatus.NotAvailable;
-                }
-                var maxPeriod = GetMaxDaysByItemType(copy.Type);
-                if (requestedBookingPeriod > maxPeriod || requestedBookingPeriod < 1)
-                {
-                    _logger.LogInformation($"Copy: {copyId} booking period not suitable ");
-                    return ValidationCopyStatus.InvalidBookingPeriod;
-                }
-                return ValidationCopyStatus.Valid;
-            }
-            catch (DbException ex)
-            {
-                _logger.LogError("An error occurred due to problems with database: {Error}", ex.Message);
-                return ValidationCopyStatus.DbError;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("An error occurred while processing the validation: {Error}", ex.Message);
-                return ValidationCopyStatus.InternalServerError;
-            }
+            var copy = _repository.GetCopyById(copyId);
+            return  copy.IsAvailable;
+        }
+        /// <summary>
+        /// Check if booking period for copy valid
+        /// </summary>
+        /// <param name="requestedBookingPeriod"></param>
+        /// <param name="copyId"></param>
+        /// <returns></returns>
+        private bool BeValidBookingPeriod(int requestedBookingPeriod, int copyId)
+        {
+            var copy = _repository.GetCopyById(copyId);
+            var maxPeriod = GetMaxDaysByItemType(copy.Type);
+            return requestedBookingPeriod >= 1 && requestedBookingPeriod <= maxPeriod;
         }
         /// <summary>
         /// Get max days of copy by item type
@@ -89,7 +72,6 @@ namespace VirtualLibraryAPI.Models
         /// <returns></returns>
         private int GetMaxDaysByItemType(Common.Type itemType)
         {
-            _logger.LogInformation($"Check max days for item type from ValidationCopy model: {itemType}");
             int maxDays;
             switch (itemType)
             {
