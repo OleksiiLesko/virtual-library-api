@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VirtualLibraryAPI.Common\VirtualLibraryAPI.Common.csproj" />
     <ProjectReference Include="..\VirtualLibraryAPI.Domain\VirtualLibraryAPI.Domain.csproj" />
     <ProjectReference Include="..\VirtualLibraryAPI.Repository\VirtualLibraryAPI.Repository.csproj" />
