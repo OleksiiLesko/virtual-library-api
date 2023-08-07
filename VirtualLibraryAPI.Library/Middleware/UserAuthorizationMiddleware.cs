@@ -29,6 +29,7 @@ namespace VirtualLibraryAPI.Library.Middleware
                 {
                     _logger.LogWarning("User {UserId} attempted to add a  user as an Administrator.", userid);
                     context.Response.StatusCode = 403;
+                    context.Response.ContentType = "text/plain";
                     await context.Response.WriteAsync("Forbidden. Only clients can be added by administrators.");
                     return;
                 }
@@ -36,6 +37,7 @@ namespace VirtualLibraryAPI.Library.Middleware
                 {
                     _logger.LogWarning("User {UserId} attempted to add a  user as an Administrator.", userid);
                     context.Response.StatusCode = 403;
+                    context.Response.ContentType = "text/plain";
                     await context.Response.WriteAsync("Forbidden. Only clients can be added by administrators.");
                     return;
                 }
@@ -44,6 +46,7 @@ namespace VirtualLibraryAPI.Library.Middleware
                 {
                     _logger.LogWarning("User {UserId} attempted to add a non-administrator user as a Manager.", userid);
                     context.Response.StatusCode = 403;
+                    context.Response.ContentType = "text/plain";
                     await context.Response.WriteAsync("Forbidden. Only administrators can be added by managers.");
                     return;
                 }
