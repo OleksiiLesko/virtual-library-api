@@ -12,6 +12,10 @@ using Serilog;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using VirtualLibraryAPI.Library.Middleware;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using VirtualLibraryAPI.Domain.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace VirtualLibraryAPI.Library
 {
@@ -66,7 +70,6 @@ namespace VirtualLibraryAPI.Library
             services.AddScoped<IUserModel, UserModel>();
             services.AddScoped<IUserRepository, Repository.Repositories.User>();
             services.AddScoped<IValidationIssuerModel, ValidationIssuerModel>();
-            services.AddScoped<IValidationCopyModel, ValidationCopyModel>();
             services.AddScoped<IValidationClientModel, ValidationClientModel>();
             services.AddScoped<IArticleModel, ArticleModel>();
             services.AddScoped<IArticleRepository, Repository.Repositories.Article>();
@@ -78,6 +81,7 @@ namespace VirtualLibraryAPI.Library
             services.AddScoped<IBookRepository, Repository.Repositories.Book>();
             services.AddScoped<ICopyModel, CopyModel>();
             services.AddScoped<ICopyRepository, Repository.Repositories.Copy>();
+            services.AddScoped<IValidator<Domain.DTOs.Copy>, ValidationCopyModel>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
