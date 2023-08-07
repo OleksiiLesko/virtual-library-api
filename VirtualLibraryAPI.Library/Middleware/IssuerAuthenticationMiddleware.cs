@@ -39,7 +39,8 @@ namespace VirtualLibraryAPI.Library.Middleware
                 _logger.LogWarning("Authentication failed for issuerId: {IssuerId}", issuerId);
             }
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync("Authentication failed");
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync($"Authentication for issuerId {issuerId} failed");
         }
         public void Configure(IApplicationBuilder app)
         {
