@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using VirtualLibraryAPI.Common;
-using VirtualLibraryAPI.Domain.Entities;
+using VirtualLibraryAPI.Domain.DTOs;
 using VirtualLibraryAPI.Library.Middleware;
 using VirtualLibraryAPI.Models;
-using VirtualLibraryAPI.Repository;
-using UserType = VirtualLibraryAPI.Common.UserType;
 
 namespace VirtualLibraryAPI.Library.Controllers
 {
@@ -31,7 +29,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// <summary>
         /// Validation copy model
         /// </summary>
-        private readonly IValidationCopyModel _validationCopyModel;
+        private readonly IValidator<Copy> _copyValidator;
         /// <summary>
         /// Validation user model
         /// </summary>
@@ -40,11 +38,11 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// Constructor with logger,context and model
         /// </summary>
         /// <param name="logger"></param>
-        public ManagementController(ILogger<ManagementController> logger, IManagementModel model, IValidationCopyModel validationCopyModel, IValidationClientModel validationClientModel, IValidationIssuerModel validationIssuerModel)
+        public ManagementController(ILogger<ManagementController> logger, IManagementModel model, IValidator<Copy> copyValidator, IValidationClientModel validationClientModel, IValidationIssuerModel validationIssuerModel)
         {
             _logger = logger;
             _managementModel = model;
-            _validationCopyModel = validationCopyModel;
+            _copyValidator = copyValidator;
             _validationClientModel = validationClientModel;
             _validationIssuerModel = validationIssuerModel;
         }
@@ -69,19 +67,24 @@ namespace VirtualLibraryAPI.Library.Controllers
                 var validationUserResult = _validationClientModel.CanClientReserveCopy(clientId);
                 if (validationUserResult != ValidationUserStatus.Valid)
                 {
-                    return HandleUserNotValidResult(validationUserResult, clientId);
+                    return HandleClientNotValidResult(validationUserResult, clientId);
                 }
-
-                var validationCopyResult = _validationCopyModel.IsCopyValidForBooking(copyId, bookingPeriod);
-                if (validationCopyResult != ValidationCopyStatus.Valid)
+                var copy = new Copy()
                 {
-                    return HandleCopyNotValidResult(validationCopyResult, copyId);
+                    CopyID = copyId,
+                    BookingPeriod = bookingPeriod,
+                };
+                var validationResult = _copyValidator.Validate(copy);
+                if (!validationResult.IsValid)
+                {
+                    var errorMessages = validationResult.Errors.Select(error => error.ErrorMessage).ToList();
+                    return BadRequest(new { Errors = errorMessages });
                 }
 
-                var copy = _managementModel.ReserveCopyById(clientId, copyId, bookingPeriod);
-                _logger.LogInformation("Booking copy by ID: {CopyID}", copy.CopyID);
+                var copies = _managementModel.ReserveCopyById(clientId, copyId, bookingPeriod);
+                _logger.LogInformation("Booking copy by ID: {CopyID}", copies.CopyID);
                 _logger.LogInformation("Copy booked.");
-                var expirationDate = copy.ExpirationDate;
+                var expirationDate = copies.ExpirationDate;
 
                 return Ok(new Domain.DTOs.BookingCopy
                 {
@@ -97,12 +100,13 @@ namespace VirtualLibraryAPI.Library.Controllers
             }
         }
 
+
         /// <summary>
         /// Return validation status of copy
         /// </summary>
         /// <param name="validationResult"></param>
         /// <returns></returns>
-        private IActionResult HandleCopyNotValidResult(ValidationCopyStatus validationResult,int copyId)
+        private IActionResult HandleCopyNotValidResult(ValidationCopyStatus validationResult, int copyId)
         {
             switch (validationResult)
             {
@@ -130,12 +134,12 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <param name="validationResult"></param>
         /// <returns></returns>
-        private IActionResult HandleUserNotValidResult(ValidationUserStatus validationResult, int clientId)
+        private IActionResult HandleClientNotValidResult(ValidationUserStatus validationResult, int clientId)
         {
             switch (validationResult)
             {
                 case ValidationUserStatus.UserNotFound:
-                    return NotFound($"UserID: {clientId}  not found");
+                    return NotFound($"ClientID: {clientId}  not found");
 
                 case ValidationUserStatus.DbError:
                     return StatusCode(500, "Database error");
@@ -158,7 +162,7 @@ namespace VirtualLibraryAPI.Library.Controllers
         /// </summary>
         /// <param name="validationResult"></param>
         /// <returns></returns>
-        private IActionResult HandleIssuerNotValidResult(ValidationIssuerStatus validationResult, int issuerId,int copyId)
+        private IActionResult HandleIssuerNotValidResult(ValidationIssuerStatus validationResult, int issuerId, int copyId)
         {
             switch (validationResult)
             {
@@ -191,14 +195,14 @@ namespace VirtualLibraryAPI.Library.Controllers
         {
             try
             {
-                    var copy = _managementModel.ReturnCopyById(copyId);
-                    if (copy == null)
-                    {
-                        return NotFound();
-                    }
-                    _logger.LogInformation("Return copy by ID:{CopyID}", copy.CopyID);
-                    _logger.LogInformation("Copy  returned ");
-                    return Ok("Copy returned");
+                var copy = _managementModel.ReturnCopyById(copyId);
+                if (copy == null)
+                {
+                    return NotFound();
+                }
+                _logger.LogInformation("Return copy by ID:{CopyID}", copy.CopyID);
+                _logger.LogInformation("Copy  returned ");
+                return Ok("Copy returned");
 
             }
             catch (Exception ex)
